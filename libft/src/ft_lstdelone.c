@@ -1,42 +1,19 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   filler.h                                           :+:      :+:    :+:   */
+/*   ft_lstdelone.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: tpolonen <tpolonen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/10/01 19:16:22 by tpolonen          #+#    #+#             */
-/*   Updated: 2022/10/01 20:48:13 by tpolonen         ###   ########.fr       */
+/*   Created: 2021/11/12 11:52:13 by tpolonen          #+#    #+#             */
+/*   Updated: 2021/12/13 14:11:27 by tpolonen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef FILLER_H
-# define FILLER_H
+#include "libft.h"
 
-/*
- * read, write
- */
-# include <unistd.h>
-
-/*
- * malloc, read
- */
-# include <stdlib.h>
-
-/*
- * perror
- */
-# include <stdio.h>
-
-# include "libft.h"
-
-typedef struct s_gamedata
+void	ft_lstdelone(t_list **alst, void (*del)(void *, size_t))
 {
-	char	player;
-	int		width;
-	int		height;
-	void	*oboard_ptr;
-	void	*xboard_ptr;
-}	t_data;
-
-#endif
+	del((*alst)->content, (*alst)->content_size);
+	ft_memdel((void **) alst);
+}

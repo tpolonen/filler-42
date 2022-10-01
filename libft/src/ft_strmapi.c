@@ -1,42 +1,28 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   filler.h                                           :+:      :+:    :+:   */
+/*   ft_strmapi.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: tpolonen <tpolonen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/10/01 19:16:22 by tpolonen          #+#    #+#             */
-/*   Updated: 2022/10/01 20:48:13 by tpolonen         ###   ########.fr       */
+/*   Created: 2021/11/01 18:53:25 by tpolonen          #+#    #+#             */
+/*   Updated: 2021/12/13 14:17:24 by tpolonen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef FILLER_H
-# define FILLER_H
+#include "libft.h"
 
-/*
- * read, write
- */
-# include <unistd.h>
-
-/*
- * malloc, read
- */
-# include <stdlib.h>
-
-/*
- * perror
- */
-# include <stdio.h>
-
-# include "libft.h"
-
-typedef struct s_gamedata
+char	*ft_strmapi(char const *s, char (*f) (unsigned int, char))
 {
-	char	player;
-	int		width;
-	int		height;
-	void	*oboard_ptr;
-	void	*xboard_ptr;
-}	t_data;
+	char	*s2;
+	size_t	len;
 
-#endif
+	len = ft_strlen(s);
+	s2 = (char *) malloc(sizeof(char) * (len + 1));
+	if (!s2)
+		return (NULL);
+	s2[len] = '\0';
+	while (len-- > 0)
+		s2[len] = f((unsigned int) len, s[len]);
+	return (s2);
+}

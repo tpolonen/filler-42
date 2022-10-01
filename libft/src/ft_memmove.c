@@ -1,42 +1,25 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   filler.h                                           :+:      :+:    :+:   */
+/*   ft_memmove.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: tpolonen <tpolonen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/10/01 19:16:22 by tpolonen          #+#    #+#             */
-/*   Updated: 2022/10/01 20:48:13 by tpolonen         ###   ########.fr       */
+/*   Created: 2021/11/07 18:29:37 by tpolonen          #+#    #+#             */
+/*   Updated: 2021/11/24 17:47:32 by tpolonen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef FILLER_H
-# define FILLER_H
+#include "libft.h"
 
-/*
- * read, write
- */
-# include <unistd.h>
-
-/*
- * malloc, read
- */
-# include <stdlib.h>
-
-/*
- * perror
- */
-# include <stdio.h>
-
-# include "libft.h"
-
-typedef struct s_gamedata
+void	*ft_memmove(void *dst, const void *src, size_t len)
 {
-	char	player;
-	int		width;
-	int		height;
-	void	*oboard_ptr;
-	void	*xboard_ptr;
-}	t_data;
-
-#endif
+	if (!len || dst == src)
+		return (dst);
+	if (src < dst && src + len > dst)
+		while (len--)
+			((unsigned char *)dst)[len] = ((const unsigned char *)src)[len];
+	else
+		ft_memcpy(dst, src, len);
+	return (dst);
+}

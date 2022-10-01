@@ -1,42 +1,18 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   filler.h                                           :+:      :+:    :+:   */
+/*   ft_putnbr.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: tpolonen <tpolonen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/10/01 19:16:22 by tpolonen          #+#    #+#             */
-/*   Updated: 2022/10/01 20:48:13 by tpolonen         ###   ########.fr       */
+/*   Created: 2021/11/03 16:56:00 by tpolonen          #+#    #+#             */
+/*   Updated: 2022/06/20 10:46:21 by teppo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef FILLER_H
-# define FILLER_H
+#include "libft.h"
 
-/*
- * read, write
- */
-# include <unistd.h>
-
-/*
- * malloc, read
- */
-# include <stdlib.h>
-
-/*
- * perror
- */
-# include <stdio.h>
-
-# include "libft.h"
-
-typedef struct s_gamedata
+int	ft_putnbr(int n)
 {
-	char	player;
-	int		width;
-	int		height;
-	void	*oboard_ptr;
-	void	*xboard_ptr;
-}	t_data;
-
-#endif
+	return (ft_putnbr_fd(n, 1));
+}

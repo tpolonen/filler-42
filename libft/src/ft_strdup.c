@@ -1,42 +1,26 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   filler.h                                           :+:      :+:    :+:   */
+/*   ft_strdup.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: tpolonen <tpolonen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/10/01 19:16:22 by tpolonen          #+#    #+#             */
-/*   Updated: 2022/10/01 20:48:13 by tpolonen         ###   ########.fr       */
+/*   Created: 2021/10/28 10:06:42 by tpolonen          #+#    #+#             */
+/*   Updated: 2021/11/23 17:59:59 by tpolonen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef FILLER_H
-# define FILLER_H
+#include "libft.h"
 
-/*
- * read, write
- */
-# include <unistd.h>
-
-/*
- * malloc, read
- */
-# include <stdlib.h>
-
-/*
- * perror
- */
-# include <stdio.h>
-
-# include "libft.h"
-
-typedef struct s_gamedata
+char	*ft_strdup(const char *src)
 {
-	char	player;
-	int		width;
-	int		height;
-	void	*oboard_ptr;
-	void	*xboard_ptr;
-}	t_data;
+	size_t	size;
+	char	*dup;
 
-#endif
+	size = ft_strlen(src) + 1;
+	dup = (char *)ft_memalloc(sizeof(char) * size);
+	if (!dup)
+		return (NULL);
+	ft_memcpy(dup, src, size);
+	return (dup);
+}

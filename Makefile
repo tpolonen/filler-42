@@ -1,25 +1,48 @@
+# **************************************************************************** #
+#                                                                              #
+#                                                         :::      ::::::::    #
+#    Makefile                                           :+:      :+:    :+:    #
+#                                                     +:+ +:+         +:+      #
+#    By: tpolonen <tpolonen@student.hive.fi>        +#+  +:+       +#+         #
+#                                                 +#+#+#+#+#+   +#+            #
+#    Created: 2022/10/01 19:35:15 by tpolonen          #+#    #+#              #
+#    Updated: 2022/10/01 21:10:49 by tpolonen         ###   ########.fr        #
+#                                                                              #
+# **************************************************************************** #
+
 HEADER_DIR		:= ./include/
+LIBHEADER_DIR	:= ./libft/include/
+LIB_DIR			:= ./libft/
 SRC_DIR			:= ./src/
 OBJ_DIR			:= ./obj/
 
 _SRC 	:= main.c
+
+DEP 	:= $(HEADER_DIR)filler.h
 
 SRC		:= $(addprefix $(SRC_DIR), $(_SRC))
 OBJ		:= $(SRC:$(SRC_DIR)%.c=$(OBJ_DIR)%.o)
 
 CC			:= gcc
 CFLAGS		:= -g -c -Wall -Wextra -Werror
-CPPFLAGS	:= -I$(HEADER_DIR)
+CPPFLAGS 	:= -I$(LIBHEADER_DIR) -I$(HEADER_DIR)
+LDFLAGS 	:= -L$(LIB_DIR)
+LDLIBS 		:= -lft
 
-NAME := tpolonen.filler
+BIN := tpolonen.filler
 
 .PHONY: all clean fclean re
 
-all: $(NAME)
+all: lib $(BIN)
 
-$(NAME): $(OBJ_DIR) $(OBJ)
+lib:
+	@make -C $(LIB_DIR)
+	@echo "Compiled library"
+
+$(BIN): $(OBJ_DIR) $(OBJ)
 	@echo "Compiled objs"
-	@$(CC) -o $@ $(OBJ)
+	@$(CC) -o $@ $(OBJ) $(LDFLAGS) $(LDLIBS)
+	@echo "Compiled tpolonen.filler"
 
 $(OBJ_DIR)%.o: $(SRC_DIR)%.c
 	@$(CC) $(CFLAGS) $(CPPFLAGS) $< -o $@
@@ -31,9 +54,11 @@ $(OBJ_DIR):
 clean:
 	@if [ -d "$(OBJ_DIR)" ]; \
 		then /bin/rm -rf $(OBJ_DIR); echo "Removed objs"; fi
+	@make -C $(LIB_DIR) clean
 
 fclean: clean
-	@/bin/rm -f $(NAME)
+	@make -C $(LIB_DIR) fclean
+	@/bin/rm -f $(BIN)
 	@echo "Removed tpolonen.filler"
 
 re: fclean all

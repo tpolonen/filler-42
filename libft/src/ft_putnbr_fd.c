@@ -1,42 +1,30 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   filler.h                                           :+:      :+:    :+:   */
+/*   ft_putnbr_fd.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: tpolonen <tpolonen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/10/01 19:16:22 by tpolonen          #+#    #+#             */
-/*   Updated: 2022/10/01 20:48:13 by tpolonen         ###   ########.fr       */
+/*   Created: 2021/11/04 14:31:37 by tpolonen          #+#    #+#             */
+/*   Updated: 2022/06/20 10:48:34 by teppo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef FILLER_H
-# define FILLER_H
+#include "libft.h"
 
-/*
- * read, write
- */
-# include <unistd.h>
-
-/*
- * malloc, read
- */
-# include <stdlib.h>
-
-/*
- * perror
- */
-# include <stdio.h>
-
-# include "libft.h"
-
-typedef struct s_gamedata
+int	ft_putnbr_fd(int nb, int fd)
 {
-	char	player;
-	int		width;
-	int		height;
-	void	*oboard_ptr;
-	void	*xboard_ptr;
-}	t_data;
+	int	ret;
 
-#endif
+	ret = 0;
+	if (nb < 0)
+	{
+		if (nb == -2147483648)
+			return (ft_putstr_fd("-2147483648", fd));
+		ret += ft_putchar_fd('-', fd);
+		nb = -nb;
+	}
+	if (nb > 9)
+		ret += ft_putnbr_fd(nb / 10, fd);
+	return (ret + ft_putchar_fd((nb % 10) + '0', fd));
+}

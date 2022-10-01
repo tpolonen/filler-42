@@ -1,42 +1,39 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   filler.h                                           :+:      :+:    :+:   */
+/*   ft_putbit.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: tpolonen <tpolonen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/10/01 19:16:22 by tpolonen          #+#    #+#             */
-/*   Updated: 2022/10/01 20:48:13 by tpolonen         ###   ########.fr       */
+/*   Created: 2022/06/02 16:49:56 by tpolonen          #+#    #+#             */
+/*   Updated: 2022/06/20 10:49:35 by teppo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef FILLER_H
-# define FILLER_H
+#include "libft.h"
 
-/*
- * read, write
- */
-# include <unistd.h>
-
-/*
- * malloc, read
- */
-# include <stdlib.h>
-
-/*
- * perror
- */
-# include <stdio.h>
-
-# include "libft.h"
-
-typedef struct s_gamedata
+int	ft_putbit(const void *ptr, size_t count)
 {
-	char	player;
-	int		width;
-	int		height;
-	void	*oboard_ptr;
-	void	*xboard_ptr;
-}	t_data;
+	unsigned char	*b;
+	int				i;
+	int				j;
+	int				ret;
 
-#endif
+	ret = 0;
+	b = (unsigned char *) ptr;
+	i = count - 1;
+	while (i >= 0)
+	{
+		j = 7;
+		while (j >= 0)
+		{
+			if ((b[i] >> j) & 1)
+				ret += ft_putchar('1');
+			else
+				ret += ft_putchar('0');
+			j--;
+		}
+		i--;
+	}
+	return (ret + ft_putchar('\n'));
+}

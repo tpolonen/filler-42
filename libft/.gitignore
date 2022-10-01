@@ -1,0 +1,5 @@
+*.a
+*.swp
+obj/
+*.dsym
+*.orig
