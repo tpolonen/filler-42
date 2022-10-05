@@ -1,3 +1,8 @@
+# Filler specific
+*.last
+*.trace
+*.DS_Store
+
 # Prerequisites
 *.d
 
