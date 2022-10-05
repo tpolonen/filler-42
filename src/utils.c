@@ -1,48 +1,39 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   filler.h                                           :+:      :+:    :+:   */
+/*   utils.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: tpolonen <tpolonen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/10/01 19:16:22 by tpolonen          #+#    #+#             */
+/*   Created: 2022/10/05 18:29:40 by tpolonen          #+#    #+#             */
 /*   Updated: 2022/10/05 19:30:13 by tpolonen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef FILLER_H
-# define FILLER_H
+#include "filler.h"
 
-/*
- * read, write
- */
-# include <unistd.h>
-
-/*
- * malloc, read
- */
-# include <stdlib.h>
-
-/*
- * perror
- */
-# include <stdio.h>
-
-# include "libft.h"
-
-typedef struct s_gamedata
+int	clean_exit(t_data *data, const char *str, int error)
 {
-	char	player;
-	int		width;
-	int		height;
-	void	*oboard_ptr;
-	void	*xboard_ptr;
-}	t_data;
+	if (data->oboard_ptr)
+		free(data->oboard_ptr);
+	if (data->oboard_ptr)
+		free(data->xboard_ptr);
+	if (str)
+		ft_putstr(str);
+	if (error)
+		ft_putnbr(error);
+	ft_putendl("");
+	return (error);
+}
 
-/*
- * utils.c
- */
-int		clean_exit(t_data *data, const char *str, int error);
-void	*xalloc(size_t min_size);
+void	*xalloc(size_t min_size)
+{
+	size_t	size;
+	void	*alloc;
 
-#endif
+	size = 2;
+	while (size < min_size)
+		size *= 2;
+	alloc = malloc(size);
+	return (alloc);
+}
