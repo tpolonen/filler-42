@@ -6,81 +6,96 @@
 /*   By: tpolonen <tpolonen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/01 19:16:16 by tpolonen          #+#    #+#             */
-/*   Updated: 2022/10/05 19:30:44 by tpolonen         ###   ########.fr       */
+/*   Updated: 2022/10/06 17:11:59 by tpolonen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "filler.h"
 
-static int set_player(t_data *data, char *header)
+static int	set_player(t_data *data)
 {
-	if (!header)
+	if (!(data->temp))
 		return (2);
-	if (ft_strncmp(header, "$$$ exec p", 10) != 0)
+	if (ft_strncmp(data->temp, "$$$ exec p", 10) != 0)
 		return (3);
-	if (ft_strstr(header, "tpolonen.filler") == NULL)
+	if (ft_strstr(data->temp, "tpolonen.filler") == NULL)
 		return (4);
-	if (ft_strstr(header, "p1") != NULL)
+	if (ft_strstr(data->temp, "p1") != NULL)
 		data->player = 'o';
 	else
 		data->player = 'x';
-	free(header);
+	free(data->temp);
 	return (data->player == 0);
 }
 
-static int init_data(t_data *data, char *header)
+static int	init_data(t_data *data)
 {
 	char	*seek;
 
-	if (!header)
+	if (!(data->temp))
 		return (2);
-	if (ft_strncmp(header, "Plateau ", 8) != 0)
+	if (ft_strncmp(data->temp, "Plateau ", 8) != 0)
 		return (5);
-	if (ft_strchr(header, ':') == NULL)
+	if (ft_strchr(data->temp, ':') == NULL)
 		return (6);
-	seek = header + 8;
+	seek = data->temp + 8;
 	data->width = (int)ft_strtol(seek, &seek);
 	data->height = (int)ft_strtol(seek, &seek);
+	free(data->temp);
 	data->oboard_ptr = xalloc(data->width * data->height);
 	data->xboard_ptr = xalloc(data->width * data->height);
 	if (data->oboard_ptr == NULL || data->xboard_ptr == NULL)
 		return (7);
-	return ((data->width == 0) || (data->height == 0));
+	return ((data->width <= 0) || (data->height <= 0));
+}
+
+static int	get_turn(t_data *data, int *error, FILE *debug)
+{
+	t_piece	piece;
+
+	(void)debug;
+	ft_getline(0, &(data->temp));
+	while (ft_strncmp(data->temp, "000", 3) != 0)
+	{
+		free(data->temp);
+		ft_getline(0, &(data->temp));
+	}
+	*error = read_board(data);
+	if (*error)
+		return (0);
+	*error = read_piece(data, &piece);
+	if (*error)
+		return (0);
+	//make a move...
+	return (0);
 }
 
 int main(void)
 {
 	static t_data	data;
-	char			*next;
 	FILE			*debug;
 	int				error;
-	int				bytes;
 
 	debug = fopen(".last", "w");
-
-	ft_getline(0, &next);
-	error = set_player(&data, next);
+	ft_getline(0, &(data.temp));
+	error = set_player(&data);
 	if (error)
 		return (clean_exit(&data, "Error in player data: ", error));
-	ft_getline(0, &next);
-	error = init_data(&data, next);
+	ft_getline(0, &(data.temp));
+	error = init_data(&data);
 	if (error)
 		return (clean_exit(&data, "Error in map header: ", error));
-	// game loop until opponent dies or moves run out
-	bytes = ft_getline(0, &next);
-	fprintf(debug, "%d\t", bytes);
-	while (bytes > 0)
+	while (get_turn(&data, &error, debug))
 	{
-		fprintf(debug, "%s\n", next);
-		fflush(debug);
-		if (next)
-			free(next);
-		bytes = ft_getline(0, &next);
-		fprintf(debug, "%d\t", bytes);
+		if (data.temp)
+		{
+			ft_putendl(data.temp);
+			free(data.temp);
+		}
 	}
 	fprintf(debug, "END\n");
-	fflush(debug);
-	// suicide
 	fclose(debug);
+	if (error)
+		return (clean_exit(&data, "Error in processing turn: ", error));
 	return (clean_exit(&data, "-42 -42", 0));
 }

@@ -6,7 +6,7 @@
 /*   By: tpolonen <tpolonen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/05 18:29:40 by tpolonen          #+#    #+#             */
-/*   Updated: 2022/10/05 19:30:13 by tpolonen         ###   ########.fr       */
+/*   Updated: 2022/10/06 16:31:15 by tpolonen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,8 @@ int	clean_exit(t_data *data, const char *str, int error)
 		free(data->oboard_ptr);
 	if (data->oboard_ptr)
 		free(data->xboard_ptr);
+	if (data->temp)
+		free(data->temp);
 	if (str)
 		ft_putstr(str);
 	if (error)

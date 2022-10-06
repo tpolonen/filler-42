@@ -6,7 +6,7 @@
 #    By: tpolonen <tpolonen@student.hive.fi>        +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/10/01 19:35:15 by tpolonen          #+#    #+#              #
-#    Updated: 2022/10/05 18:34:27 by tpolonen         ###   ########.fr        #
+#    Updated: 2022/10/06 17:11:03 by tpolonen         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -18,6 +18,7 @@ OBJ_DIR			:= ./obj/
 
 _SRC 	:= main.c
 _SRC 	+= utils.c
+_SRC 	+= read.c
 
 DEP 	:= $(HEADER_DIR)filler.h
 
