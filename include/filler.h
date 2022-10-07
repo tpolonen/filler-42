@@ -6,7 +6,7 @@
 /*   By: tpolonen <tpolonen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/01 19:16:22 by tpolonen          #+#    #+#             */
-/*   Updated: 2022/10/07 18:31:22 by tpolonen         ###   ########.fr       */
+/*   Updated: 2022/10/07 18:40:11 by tpolonen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,6 +51,7 @@ typedef struct s_gamedata
  * utils.c
  */
 void	*xalloc(size_t min_size);
+int		comp(char *ptr1, char *ptr2, size_t n);
 
 /*
  * read.c
@@ -66,7 +67,6 @@ void	debug_print(char *ptr, int width, int height);
 /*
  * player.c
  */
-
 int		make_move(t_data *data, t_piece *piece);
 
 #endif
