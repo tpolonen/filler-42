@@ -35,8 +35,8 @@ typedef struct s_gamedata
 	char	player;
 	int		width;
 	int		height;
-	void	*oboard_ptr;
-	void	*xboard_ptr;
+	char	*oboard_ptr;
+	char	*xboard_ptr;
 	char	*temp;
 }	t_data;
 
@@ -44,13 +44,12 @@ typedef struct s_piece
 {
 	int		width;
 	int		height;
-	void	*ptr;
+	char	*ptr;
 }	t_piece;
 
 /*
  * utils.c
  */
-int		clean_exit(t_data *data, const char *str, int error);
 void	*xalloc(size_t min_size);
 
 /*
@@ -58,5 +57,10 @@ void	*xalloc(size_t min_size);
  */
 int		read_board(t_data *data);
 int		read_piece(t_data *data, t_piece *piece);
+
+/*
+ * debug.c
+ */
+void 	debug_print(char* ptr, int width, int height);
 
 #endif
