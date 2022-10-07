@@ -6,7 +6,7 @@
 /*   By: tpolonen <tpolonen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/13 14:07:36 by tpolonen          #+#    #+#             */
-/*   Updated: 2022/10/01 20:46:56 by tpolonen         ###   ########.fr       */
+/*   Updated: 2022/10/07 18:33:00 by tpolonen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,10 +35,10 @@ typedef struct s_dstr
 
 typedef struct s_dintarr
 {
-    int     		*arr;
-    size_t  		alloced;
-    size_t  		len;
-}       		t_dintarr;
+	int				*arr;
+	size_t			alloced;
+	size_t			len;
+}				t_dintarr;
 
 typedef struct s_buff
 {
@@ -162,8 +162,8 @@ ssize_t		ft_dstrclose(t_dstr **ds, char **target);
  * Dynamic integer arrays
  */
 
-ssize_t     ft_dintarr_create(t_dintarr **darr, size_t size);
-ssize_t 	ft_dintarr_add(t_dintarr **darr, const int n);
-ssize_t 	ft_dintarr_close(t_dintarr **src, int **dst);
+ssize_t		ft_dintarr_create(t_dintarr **darr, size_t size);
+ssize_t		ft_dintarr_add(t_dintarr **darr, const int n);
+ssize_t		ft_dintarr_close(t_dintarr **src, int **dst);
 
 #endif

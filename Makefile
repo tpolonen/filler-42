@@ -6,7 +6,7 @@
 #    By: tpolonen <tpolonen@student.hive.fi>        +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/10/01 19:35:15 by tpolonen          #+#    #+#              #
-#    Updated: 2022/10/07 15:44:04 by teppo            ###   ########.fr        #
+#    Updated: 2022/10/07 17:56:55 by tpolonen         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -20,6 +20,7 @@ _SRC 	:= main.c
 _SRC 	+= utils.c
 _SRC 	+= read.c
 _SRC 	+= debug.c
+_SRC 	+= player.c
 
 DEP 	:= $(HEADER_DIR)filler.h
 

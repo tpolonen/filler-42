@@ -6,7 +6,7 @@
 /*   By: tpolonen <tpolonen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/01 19:16:16 by tpolonen          #+#    #+#             */
-/*   Updated: 2022/10/06 17:11:59 by tpolonen         ###   ########.fr       */
+/*   Updated: 2022/10/07 18:35:07 by tpolonen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,12 +49,16 @@ static int	init_data(t_data *data)
 	return ((data->width <= 0) || (data->height <= 0));
 }
 
-static int	get_turn(t_data *data, int *error, FILE *debug)
+static int	get_turn(t_data *data, int *error)
 {
 	t_piece	piece;
 
 	(void)debug;
-	ft_getline(0, &(data->temp));
+	if (ft_getline(0, &(data->temp)) <= 0)
+	{
+		data->temp = NULL;
+		return (0);
+	}
 	while (ft_strncmp(data->temp, "000", 3) != 0)
 	{
 		free(data->temp);
@@ -63,21 +67,17 @@ static int	get_turn(t_data *data, int *error, FILE *debug)
 	*error = read_board(data);
 	if (*error)
 		return (0);
-//	debug_print(data->oboard_ptr, data->width, data->height);
-//	debug_print(data->xboard_ptr, data->width, data->height);
 	*error = read_piece(data, &piece);
 	if (*error)
 		return (0);
-//	debug_print(piece.ptr, data->width, piece.height);
-	//make a move...
-	return (0);
+	return (make_move(data, &piece));
 }
 
 static int	clean_exit(t_data *data, const char *str, int error)
 {
 	if (data->oboard_ptr)
 		free(data->oboard_ptr);
-	if (data->oboard_ptr)
+	if (data->xboard_ptr)
 		free(data->xboard_ptr);
 	if (data->temp)
 		free(data->temp);
@@ -89,13 +89,11 @@ static int	clean_exit(t_data *data, const char *str, int error)
 	return (error);
 }
 
-int main(void)
+int	main(void)
 {
 	static t_data	data;
-	FILE			*debug;
 	int				error;
 
-	debug = fopen(".last", "w");
 	ft_getline(0, &(data.temp));
 	error = set_player(&data);
 	if (error)
@@ -112,9 +110,8 @@ int main(void)
 			free(data.temp);
 		}
 	}
-	fprintf(debug, "END\n");
 	fclose(debug);
 	if (error)
 		return (clean_exit(&data, "Error in processing turn: ", error));
-	return (clean_exit(&data, "42 42", 0));
+	return (clean_exit(&data, "All done :)", 0));
 }

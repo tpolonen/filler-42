@@ -1,6 +1,18 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   comp.c                                             :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: tpolonen <tpolonen@student.hive.fi>        +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2022/10/07 18:33:36 by tpolonen          #+#    #+#             */
+/*   Updated: 2022/10/07 18:33:48 by tpolonen         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "filler.h"
 
-int comp1(char *ptr1, char *ptr2, size_t n)
+int	comp1(char *ptr1, char *ptr2, size_t n)
 {
 	while (n-- > 0)
 	{
@@ -10,7 +22,7 @@ int comp1(char *ptr1, char *ptr2, size_t n)
 	return (0);
 }
 
-int comp2(char *ptr1, char *ptr2, size_t n)
+int	comp2(char *ptr1, char *ptr2, size_t n)
 {
 	void	*p1;
 	void	*p2;
@@ -32,7 +44,7 @@ int comp2(char *ptr1, char *ptr2, size_t n)
 	return (comp1((char *)p1, (char *)p2, n));
 }
 
-int comp(char *ptr1, char *ptr2, size_t n)
+int	comp(char *ptr1, char *ptr2, size_t n)
 {
 	if (n > sizeof(long long))
 		return (comp2(ptr1, ptr2, n));

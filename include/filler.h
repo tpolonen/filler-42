@@ -6,7 +6,7 @@
 /*   By: tpolonen <tpolonen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/01 19:16:22 by tpolonen          #+#    #+#             */
-/*   Updated: 2022/10/06 17:11:58 by tpolonen         ###   ########.fr       */
+/*   Updated: 2022/10/07 18:31:22 by tpolonen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,6 +30,13 @@
 
 # include "libft.h"
 
+typedef struct s_piece
+{
+	int		width;
+	int		height;
+	char	*ptr;
+}	t_piece;
+
 typedef struct s_gamedata
 {
 	char	player;
@@ -39,13 +46,6 @@ typedef struct s_gamedata
 	char	*xboard_ptr;
 	char	*temp;
 }	t_data;
-
-typedef struct s_piece
-{
-	int		width;
-	int		height;
-	char	*ptr;
-}	t_piece;
 
 /*
  * utils.c
@@ -61,6 +61,12 @@ int		read_piece(t_data *data, t_piece *piece);
 /*
  * debug.c
  */
-void 	debug_print(char* ptr, int width, int height);
+void	debug_print(char *ptr, int width, int height);
+
+/*
+ * player.c
+ */
+
+int		make_move(t_data *data, t_piece *piece);
 
 #endif

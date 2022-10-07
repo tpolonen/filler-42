@@ -6,13 +6,11 @@
 /*   By: tpolonen <tpolonen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/06 16:43:16 by tpolonen          #+#    #+#             */
-/*   Updated: 2022/10/06 17:12:17 by tpolonen         ###   ########.fr       */
+/*   Updated: 2022/10/07 18:36:31 by tpolonen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "filler.h"
-
-static int const g_len = 4;
 
 int	read_board(t_data *data)
 {
@@ -27,9 +25,9 @@ int	read_board(t_data *data)
 		x = 0;
 		while (x < data->width)
 		{
-			if (data->temp[g_len + x] == 'o' || data->temp[g_len + x] == 'O')
+			if (data->temp[4 + x] == 'o' || data->temp[4 + x] == 'O')
 				*(data->oboard_ptr + (row * data->width) + x) = 1;
-			if (data->temp[g_len + x] == 'x' || data->temp[g_len + x] == 'X')
+			if (data->temp[4 + x] == 'x' || data->temp[4 + x] == 'X')
 				*(data->xboard_ptr + (row * data->width) + x) = 1;
 			x++;
 		}
@@ -53,7 +51,7 @@ int	read_piece(t_data *data, t_piece *piece)
 	piece->width = (int)ft_strtol(seek, &seek);
 	if (piece->width <= 0 || piece->height <= 0)
 		return (9);
-	piece->ptr = (char*)xalloc(data->width * piece->height);
+	piece->ptr = (char *)xalloc(data->width * piece->height);
 	if (piece->ptr == NULL)
 		return (10);
 	row = 0;
