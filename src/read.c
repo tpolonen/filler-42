@@ -6,7 +6,7 @@
 /*   By: tpolonen <tpolonen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/06 16:43:16 by tpolonen          #+#    #+#             */
-/*   Updated: 2022/10/07 18:36:31 by tpolonen         ###   ########.fr       */
+/*   Updated: 2022/10/08 17:48:07 by tpolonen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,7 @@ int	read_board(t_data *data)
 				*(data->xboard_ptr + (row * data->width) + x) = 1;
 			x++;
 		}
-		free(data->temp);
+		ft_memdel((void **)&data->temp);
 		ft_getline(0, &(data->temp));
 		row++;
 	}
@@ -57,7 +57,7 @@ int	read_piece(t_data *data, t_piece *piece)
 	row = 0;
 	while (row < piece->height)
 	{
-		free(data->temp);
+		ft_memdel((void **)&data->temp);
 		ft_getline(0, &(data->temp));
 		x = -1;
 		while (++x < piece->width)

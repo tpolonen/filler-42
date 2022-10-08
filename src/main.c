@@ -6,7 +6,7 @@
 /*   By: tpolonen <tpolonen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/01 19:16:16 by tpolonen          #+#    #+#             */
-/*   Updated: 2022/10/07 18:35:07 by tpolonen         ###   ########.fr       */
+/*   Updated: 2022/10/08 18:11:23 by tpolonen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,6 @@ static int	set_player(t_data *data)
 		data->player = 'o';
 	else
 		data->player = 'x';
-	free(data->temp);
 	return (data->player == 0);
 }
 
@@ -41,11 +40,20 @@ static int	init_data(t_data *data)
 	seek = data->temp + 8;
 	data->height = (int)ft_strtol(seek, &seek);
 	data->width = (int)ft_strtol(seek, &seek);
-	free(data->temp);
 	data->oboard_ptr = (char *)xalloc(data->width * data->height);
 	data->xboard_ptr = (char *)xalloc(data->width * data->height);
 	if (data->oboard_ptr == NULL || data->xboard_ptr == NULL)
 		return (7);
+	if (data->player == 'x')
+	{
+		get_strats()->player = data->xboard_ptr;
+		get_strats()->enemy = data->oboard_ptr;
+	}
+	else
+	{
+		get_strats()->player = data->oboard_ptr;
+		get_strats()->enemy = data->xboard_ptr;
+	}
 	return ((data->width <= 0) || (data->height <= 0));
 }
 
@@ -53,7 +61,6 @@ static int	get_turn(t_data *data, int *error)
 {
 	t_piece	piece;
 
-	(void)debug;
 	if (ft_getline(0, &(data->temp)) <= 0)
 	{
 		data->temp = NULL;
@@ -61,7 +68,7 @@ static int	get_turn(t_data *data, int *error)
 	}
 	while (ft_strncmp(data->temp, "000", 3) != 0)
 	{
-		free(data->temp);
+		ft_memdel((void **)&data->temp);
 		ft_getline(0, &(data->temp));
 	}
 	*error = read_board(data);
@@ -76,11 +83,11 @@ static int	get_turn(t_data *data, int *error)
 static int	clean_exit(t_data *data, const char *str, int error)
 {
 	if (data->oboard_ptr)
-		free(data->oboard_ptr);
+		ft_memdel((void **)&data->oboard_ptr);
 	if (data->xboard_ptr)
-		free(data->xboard_ptr);
+		ft_memdel((void **)&data->xboard_ptr);
 	if (data->temp)
-		free(data->temp);
+		ft_memdel((void **)&data->temp);
 	if (str)
 		ft_putstr(str);
 	if (error)
@@ -98,19 +105,20 @@ int	main(void)
 	error = set_player(&data);
 	if (error)
 		return (clean_exit(&data, "Error in player data: ", error));
+	ft_memdel((void **)&data.temp);
 	ft_getline(0, &(data.temp));
 	error = init_data(&data);
 	if (error)
 		return (clean_exit(&data, "Error in map header: ", error));
-	while (get_turn(&data, &error, debug))
+	ft_memdel((void **)&data.temp);
+	while (get_turn(&data, &error))
 	{
 		if (data.temp)
 		{
 			ft_putendl(data.temp);
-			free(data.temp);
+			ft_memdel((void **)&data.temp);
 		}
 	}
-	fclose(debug);
 	if (error)
 		return (clean_exit(&data, "Error in processing turn: ", error));
 	return (clean_exit(&data, "All done :)", 0));
