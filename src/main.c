@@ -6,7 +6,7 @@
 /*   By: tpolonen <tpolonen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/01 19:16:16 by tpolonen          #+#    #+#             */
-/*   Updated: 2022/10/08 18:11:23 by tpolonen         ###   ########.fr       */
+/*   Updated: 2022/10/12 19:46:21 by tpolonen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,13 +46,13 @@ static int	init_data(t_data *data)
 		return (7);
 	if (data->player == 'x')
 	{
-		get_strats()->player = data->xboard_ptr;
-		get_strats()->enemy = data->oboard_ptr;
+		get_strat()->player = data->xboard_ptr;
+		get_strat()->enemy = data->oboard_ptr;
 	}
 	else
 	{
-		get_strats()->player = data->oboard_ptr;
-		get_strats()->enemy = data->xboard_ptr;
+		get_strat()->player = data->oboard_ptr;
+		get_strat()->enemy = data->xboard_ptr;
 	}
 	return ((data->width <= 0) || (data->height <= 0));
 }
@@ -77,7 +77,7 @@ static int	get_turn(t_data *data, int *error)
 	*error = read_piece(data, &piece);
 	if (*error)
 		return (0);
-	return (make_move(data, &piece));
+	return (plan_move(data, &piece));
 }
 
 static int	clean_exit(t_data *data, const char *str, int error)
@@ -98,28 +98,29 @@ static int	clean_exit(t_data *data, const char *str, int error)
 
 int	main(void)
 {
-	static t_data	data;
+	static t_data	*data;
 	int				error;
 
-	ft_getline(0, &(data.temp));
-	error = set_player(&data);
+	data = get_data();
+	ft_getline(0, &data->temp);
+	error = set_player(data);
 	if (error)
-		return (clean_exit(&data, "Error in player data: ", error));
-	ft_memdel((void **)&data.temp);
-	ft_getline(0, &(data.temp));
-	error = init_data(&data);
+		return (clean_exit(data, "Error in player data: ", error));
+	ft_memdel((void **)&data->temp);
+	ft_getline(0, &(data->temp));
+	error = init_data(data);
 	if (error)
-		return (clean_exit(&data, "Error in map header: ", error));
-	ft_memdel((void **)&data.temp);
-	while (get_turn(&data, &error))
+		return (clean_exit(data, "Error in map header: ", error));
+	ft_memdel((void **)&data->temp);
+	while (get_turn(data, &error))
 	{
-		if (data.temp)
+		if (data->temp)
 		{
-			ft_putendl(data.temp);
-			ft_memdel((void **)&data.temp);
+			ft_putendl(data->temp);
+			ft_memdel((void **)&data->temp);
 		}
 	}
 	if (error)
-		return (clean_exit(&data, "Error in processing turn: ", error));
-	return (clean_exit(&data, "All done :)", 0));
+		return (clean_exit(data, "Error in processing turn: ", error));
+	return (clean_exit(data, "All done :)", 0));
 }

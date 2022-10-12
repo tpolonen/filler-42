@@ -6,18 +6,30 @@
 /*   By: tpolonen <tpolonen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/06 16:43:16 by tpolonen          #+#    #+#             */
-/*   Updated: 2022/10/08 17:48:07 by tpolonen         ###   ########.fr       */
+/*   Updated: 2022/10/12 17:52:40 by tpolonen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "filler.h"
 
+static int	get_offset(t_data *data)
+{
+	int	ret;
+
+	ret = 0;
+	while (*data->temp == '0')
+		ret++;
+	return (ret);
+}
+
 int	read_board(t_data *data)
 {
 	int		row;
 	int		x;
+	int		offset;
 
 	row = 0;
+	offset = get_offset(data);
 	ft_bzero(data->oboard_ptr, data->width * data->height);
 	ft_bzero(data->xboard_ptr, data->width * data->height);
 	while (row < data->height)
@@ -25,9 +37,9 @@ int	read_board(t_data *data)
 		x = 0;
 		while (x < data->width)
 		{
-			if (data->temp[4 + x] == 'o' || data->temp[4 + x] == 'O')
+			if (data->temp[offset + x] == 'o' || data->temp[offset + x] == 'O')
 				*(data->oboard_ptr + (row * data->width) + x) = 1;
-			if (data->temp[4 + x] == 'x' || data->temp[4 + x] == 'X')
+			if (data->temp[offset + x] == 'x' || data->temp[offset + x] == 'X')
 				*(data->xboard_ptr + (row * data->width) + x) = 1;
 			x++;
 		}

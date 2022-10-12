@@ -6,11 +6,26 @@
 /*   By: tpolonen <tpolonen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/05 18:29:40 by tpolonen          #+#    #+#             */
-/*   Updated: 2022/10/08 17:58:47 by tpolonen         ###   ########.fr       */
+/*   Updated: 2022/10/12 17:38:41 by tpolonen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "filler.h"
+
+int	count(char *ptr, size_t n)
+{
+	int	ret;
+
+	if (n == 0)
+		return (0);
+	ret = 0;
+	while (n-- > 0)
+	{
+		if (*(ptr++))
+			ret++;
+	}
+	return (ret);
+}
 
 int	comp1(char *ptr1, char *ptr2, size_t n)
 {

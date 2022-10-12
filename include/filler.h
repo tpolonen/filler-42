@@ -6,7 +6,7 @@
 /*   By: tpolonen <tpolonen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/01 19:16:22 by tpolonen          #+#    #+#             */
-/*   Updated: 2022/10/08 18:11:31 by tpolonen         ###   ########.fr       */
+/*   Updated: 2022/10/12 19:54:27 by tpolonen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,17 +51,19 @@ typedef struct	s_strategy
 {
 	char	*enemy;
 	char	*player;
-	int		*advance;
+	int		*target;
+	size_t	target_count;
 	int		enemy_score;
 	int		victory;
-}	t_strats;
+}	t_strat;
 
 /*
  * utils.c
  */
-void		*xalloc(size_t min_size);
+int			count(char *ptr, size_t n);
 int			comp(char *ptr1, char *ptr2, size_t n);
 int			comp1(char *ptr1, char *ptr2, size_t n);
+void		*xalloc(size_t min_size);
 
 /*
  * read.c
@@ -77,7 +79,18 @@ void		debug_print(char *ptr, int width, int height);
 /*
  * player.c
  */
-t_strats	*get_strats(void);
-int			make_move(t_data *data, t_piece *piece);
+t_strat		*get_strat(void);
+int			plan_move(t_data *data, t_piece *piece);
+
+/*
+ * floodfill.c
+ */
+t_dintarr	*floodfill(char *board, int start, size_t steps, int stop);
+
+/*
+ * storage.c
+ */
+t_strat		*get_strat(void);
+t_data		*get_data(void);
 
 #endif
