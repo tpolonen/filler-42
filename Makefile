@@ -37,6 +37,10 @@ LDLIBS 		:= -lft
 
 BIN := tpolonen.filler
 
+ifeq ($(shell uname), Linux)
+	CPPFLAGS += -DLINUX
+endif
+
 .PHONY: all clean fclean re
 
 all: lib $(BIN)
@@ -51,7 +55,7 @@ $(BIN): $(OBJ_DIR) $(OBJ)
 	@echo "Compiled tpolonen.filler"
 
 $(OBJ_DIR)%.o: $(SRC_DIR)%.c
-	@$(CC) $(CFLAGS) $(CPPFLAGS) $< -o $@
+	$(CC) $(CFLAGS) $(CPPFLAGS) $< -o $@
 
 $(OBJ_DIR):
 	@/bin/mkdir -p $@

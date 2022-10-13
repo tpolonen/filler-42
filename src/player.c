@@ -11,9 +11,18 @@
 /* ************************************************************************** */
 
 #include "filler.h"
+static int open_game(t_data *data, t_piece *piece)
+{
+	(void)data;
+	(void)piece;
+	return (1);
+}
 
 static int	get_values(char *board, t_dintarr *shape, int *values)
 {
+	(void) board;
+	(void) shape;
+	(void) values;
 	return (0);
 }
 
@@ -27,15 +36,19 @@ static int	get_target(t_data *data, t_strat *strat)
 	if (strat->target)
 		ft_memdel((void **)strat->target);
 	i = 0;
-	while (i < data->width * data->height && data->enemy[i] == 0)
+	while (i < data->width * data->height && strat->enemy[i] == 0)
 		i++;
-	shape = floodfill(data->enemy, i, SIZE_MAX, 0); 
+	shape = floodfill(strat->enemy, i, SIZE_MAX, 0);
 	if (!shape)
 	{
 		strat->target_count = INT_MIN;
 		return (1);
 	}
-	values = (int *)xalloc(sizeof(int) * shape->len;
+	values = (int *)xalloc(sizeof(int) * shape->len);
+	get_values(strat->enemy, shape, values);
+	(void)values;
+	(void)target;
+	return (1);
 }
 
 static int make_move(t_data *data, t_piece *piece, t_strat *strat)
@@ -69,6 +82,7 @@ static int make_move(t_data *data, t_piece *piece, t_strat *strat)
 		ft_memdel((void **)&piece->ptr);
 		return (error);
 	}
+	return (0);
 	//when we have a target, find the closest own block to it with floodfill
 	//start blindly placing the piece starting from that position
 	//get like three first locations or something
@@ -88,7 +102,7 @@ int	plan_move(t_data *data, t_piece *piece)
 	{
 		cur_enemy_score = count(strat->enemy, data->width * data->height);
 		if (cur_enemy_score == 0)
-			start_game(data, piece);
+			open_game(data, piece);
 		else if (cur_enemy_score == strat->enemy_score)
 			strat->victory = 1;
 		strat->enemy_score = cur_enemy_score;

@@ -27,6 +27,9 @@
  * perror
  */
 # include <stdio.h>
+# ifdef LINUX
+#  include <stdint.h>
+# endif
 
 # include "libft.h"
 

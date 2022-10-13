@@ -14,6 +14,15 @@
 
 t_dintarr	*floodfill(char *board, int start, size_t steps, int stop)
 {
-	int [4][2] const	dirs = {{0, -1}, {1, 0}, {0, 1}, {-1, 0}};
+	const int 	dirs[4][2]  = {{0, -1}, {1, 0}, {0, 1}, {-1, 0}};
 	t_dintarr			*explored;
+
+	explored = NULL;
+	(void)board;
+	(void)dirs;
+	(void)start;
+	(void)steps;
+	(void)stop;
+
+	return(explored);
 }
