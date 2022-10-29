@@ -87,7 +87,7 @@ void		debug_print(char *ptr, int width, int height);
  * player.c
  */
 t_strat		*get_strat(void);
-int			plan_move(t_data *data, t_piece *piece);
+int			plan_move(t_data *data);
 
 /*
  * floodfill.c
@@ -99,5 +99,6 @@ t_dintarr	*floodfill(char *board, int start, size_t steps, int stop);
  */
 t_strat		*get_strat(void);
 t_data		*get_data(void);
+t_piece		*get_piece(void);
 
 #endif

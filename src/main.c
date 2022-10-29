@@ -77,7 +77,7 @@ static int	get_turn(t_data *data, int *error)
 	*error = read_piece(data, &piece);
 	if (*error)
 		return (0);
-	return (plan_move(data, &piece));
+	return (plan_move(data));
 }
 
 static int	clean_exit(t_data *data, const char *str, int error)
@@ -88,6 +88,8 @@ static int	clean_exit(t_data *data, const char *str, int error)
 		ft_memdel((void **)&data->xboard_ptr);
 	if (data->temp)
 		ft_memdel((void **)&data->temp);
+	if (get_piece()->ptr)
+		ft_memdel((void **)&get_piece()->ptr);
 	if (str)
 		ft_putstr(str);
 	if (error)

@@ -25,3 +25,10 @@ t_data	*get_data(void)
 
 	return (&data);
 }
+
+t_piece	*get_piece(void)
+{
+	static t_piece	piece;
+
+	return (&piece);
+}

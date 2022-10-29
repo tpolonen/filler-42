@@ -11,10 +11,9 @@
 /* ************************************************************************** */
 
 #include "filler.h"
-static int open_game(t_data *data, t_piece *piece)
+static int open_game(t_data *data)
 {
 	(void)data;
-	(void)piece;
 	return (1);
 }
 
@@ -51,7 +50,7 @@ static int	get_target(t_data *data, t_strat *strat)
 	return (1);
 }
 
-static int make_move(t_data *data, t_piece *piece, t_strat *strat)
+static int make_move(t_data *data, t_strat *strat)
 {
 	static int	misses;
 	int			i;
@@ -60,6 +59,7 @@ static int make_move(t_data *data, t_piece *piece, t_strat *strat)
 	//otherwise get new target
 	//if error, get_target sets strat->target_count to arbitrary negative number
 	//and returns !0
+	error = 0;
 	if (!strat->target)
 		error = get_target(data, strat);
 	i = 0;
@@ -78,10 +78,7 @@ static int make_move(t_data *data, t_piece *piece, t_strat *strat)
 		error = get_target(data, strat);
 	}
 	if (error)
-	{
-		ft_memdel((void **)&piece->ptr);
 		return (error);
-	}
 	return (0);
 	//when we have a target, find the closest own block to it with floodfill
 	//start blindly placing the piece starting from that position
@@ -91,7 +88,7 @@ static int make_move(t_data *data, t_piece *piece, t_strat *strat)
 	//maybe take the average of target or something
 }
 
-int	plan_move(t_data *data, t_piece *piece)
+int	plan_move(t_data *data)
 {
 	t_strat	*strat;
 	int		cur_enemy_score;
@@ -102,15 +99,15 @@ int	plan_move(t_data *data, t_piece *piece)
 	{
 		cur_enemy_score = count(strat->enemy, data->width * data->height);
 		if (cur_enemy_score == 0)
-			open_game(data, piece);
+			open_game(data);
 		else if (cur_enemy_score == strat->enemy_score)
 			strat->victory = 1;
 		strat->enemy_score = cur_enemy_score;
-		if (make_move(data, piece, strat))
+		if (make_move(data, strat))
 			return (0);
 	}
 	else
 		data->temp = ft_strdup("0 0\n");
-	ft_memdel((void **)&piece->ptr);
+	ft_memdel((void **)&get_piece()->ptr);
 	return (1);
 }
