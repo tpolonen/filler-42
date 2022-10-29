@@ -37,8 +37,15 @@ LDLIBS 		:= -lft
 
 BIN := tpolonen.filler
 
-ifeq ($(shell uname), Linux)
+UNAME = $(shell uname)
+
+ifeq ($(UNAME), Linux)
 	CPPFLAGS += -DLINUX
+endif
+
+ifeq ($(OS), Windows_NT)
+	CPPFLAGS += -DWIN
+	BIN := tpolonen.exe
 endif
 
 .PHONY: all clean fclean re
@@ -52,7 +59,7 @@ lib:
 $(BIN): $(OBJ_DIR) $(OBJ)
 	@echo "Compiled objs"
 	@$(CC) -o $@ $(OBJ) $(LDFLAGS) $(LDLIBS)
-	@echo "Compiled tpolonen.filler"
+	@echo "Compiled $(BIN)"
 
 $(OBJ_DIR)%.o: $(SRC_DIR)%.c
 	$(CC) $(CFLAGS) $(CPPFLAGS) $< -o $@
@@ -69,6 +76,6 @@ clean:
 fclean: clean
 	@make -C $(LIB_DIR) fclean
 	@/bin/rm -f $(BIN)
-	@echo "Removed tpolonen.filler"
+	@echo "Removed $(BIN)"
 
 re: fclean all

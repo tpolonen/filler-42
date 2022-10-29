@@ -16,7 +16,11 @@
 /*
  * read, write
  */
-# include <unistd.h>
+# ifndef WIN
+#  include <unistd.h>
+# else
+#  include <windows.h>
+# endif
 
 /*
  * malloc, read
@@ -27,7 +31,7 @@
  * perror
  */
 # include <stdio.h>
-# ifdef LINUX
+# if defined (LINUX) || defined (WIN)
 #  include <stdint.h>
 # endif
 
