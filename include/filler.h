@@ -92,7 +92,8 @@ int			plan_move(t_data *data);
 /*
  * floodfill.c
  */
-t_dintarr	*floodfill(char *board, int *start, size_t size, size_t steps);
+t_dintarr	*floodfill(char *board, t_dintarr *source, int filled,
+		size_t max_area);
 
 /*
  * storage.c

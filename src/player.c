@@ -11,10 +11,7 @@
 /* ************************************************************************** */
 
 #include "filler.h"
-<<<<<<< HEAD
-=======
 
->>>>>>> fe1375c (Begin work on floodfill)
 static int open_game(t_data *data)
 {
 	(void)data;
@@ -41,7 +38,8 @@ static int	get_target(t_data *data, t_strat *strat)
 	i = 0;
 	while (i < data->width * data->height && strat->enemy[i] == 0)
 		i++;
-	shape = floodfill(strat->enemy, &i, 1, SIZE_MAX);
+	ft_dintarr_add(&target, i);
+	shape = floodfill(strat->enemy, target, 1, SIZE_MAX);
 	if (!shape)
 	{
 		strat->target_count = INT_MIN;
