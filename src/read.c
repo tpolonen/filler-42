@@ -52,12 +52,14 @@ int	read_board(t_data *data)
 	return (0);
 }
 
-int	read_piece(t_data *data, t_piece *piece)
+int	read_piece(t_data *data)
 {
 	char	*seek;
 	int		row;
 	int		x;
+	t_piece	*piece;
 
+	piece = get_piece();
 	seek = data->temp + 6;
 	piece->height = (int)ft_strtol(seek, &seek);
 	piece->width = (int)ft_strtol(seek, &seek);

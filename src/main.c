@@ -59,8 +59,6 @@ static int	init_data(t_data *data)
 
 static int	get_turn(t_data *data, int *error)
 {
-	t_piece	piece;
-
 	if (ft_getline(0, &(data->temp)) <= 0)
 	{
 		data->temp = NULL;
@@ -74,7 +72,7 @@ static int	get_turn(t_data *data, int *error)
 	*error = read_board(data);
 	if (*error)
 		return (0);
-	*error = read_piece(data, &piece);
+	*error = read_piece(data);
 	if (*error)
 		return (0);
 	return (plan_move(data));

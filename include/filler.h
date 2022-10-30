@@ -76,7 +76,7 @@ void		*xalloc(size_t min_size);
  * read.c
  */
 int			read_board(t_data *data);
-int			read_piece(t_data *data, t_piece *piece);
+int			read_piece(t_data *data);
 
 /*
  * debug.c
@@ -92,7 +92,7 @@ int			plan_move(t_data *data);
 /*
  * floodfill.c
  */
-t_dintarr	*floodfill(char *board, int start, size_t steps, int stop);
+t_dintarr	*floodfill(char *board, int *start, size_t size, size_t steps);
 
 /*
  * storage.c
