@@ -54,7 +54,7 @@ typedef struct s_gamedata
 	char	*temp;
 }	t_data;
 
-typedef struct	s_strategy
+typedef struct s_strategy
 {
 	char	*enemy;
 	char	*player;
@@ -76,7 +76,7 @@ void		*xalloc(size_t min_size);
  * read.c
  */
 int			read_board(t_data *data);
-int			read_piece(t_data *data);
+int			read_piece(t_data *data, t_piece *piece);
 
 /*
  * debug.c
@@ -93,7 +93,7 @@ int			plan_move(t_data *data);
  * floodfill.c
  */
 t_dintarr	*floodfill(char *board, t_dintarr *source, int filled,
-		size_t max_area);
+				size_t max_area);
 
 /*
  * storage.c

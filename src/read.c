@@ -34,14 +34,13 @@ int	read_board(t_data *data)
 	ft_bzero(data->xboard_ptr, data->width * data->height);
 	while (row < data->height)
 	{
-		x = 0;
-		while (x < data->width)
+		x = -1;
+		while (++x < data->width)
 		{
 			if (data->temp[offset + x] == 'o' || data->temp[offset + x] == 'O')
 				*(data->oboard_ptr + (row * data->width) + x) = 1;
 			if (data->temp[offset + x] == 'x' || data->temp[offset + x] == 'X')
 				*(data->xboard_ptr + (row * data->width) + x) = 1;
-			x++;
 		}
 		ft_memdel((void **)&data->temp);
 		ft_getline(0, &(data->temp));
@@ -52,14 +51,12 @@ int	read_board(t_data *data)
 	return (0);
 }
 
-int	read_piece(t_data *data)
+int	read_piece(t_data *data, t_piece *piece)
 {
 	char	*seek;
 	int		row;
 	int		x;
-	t_piece	*piece;
 
-	piece = get_piece();
 	seek = data->temp + 6;
 	piece->height = (int)ft_strtol(seek, &seek);
 	piece->width = (int)ft_strtol(seek, &seek);

@@ -33,9 +33,8 @@ static int	init_data(t_data *data)
 
 	if (!(data->temp))
 		return (2);
-	if (ft_strncmp(data->temp, "Plateau ", 8) != 0)
-		return (5);
-	if (ft_strchr(data->temp, ':') == NULL)
+	if ((ft_strncmp(data->temp, "Plateau ", 8) != 0) || \
+			(ft_strchr(data->temp, ':') == NULL))
 		return (6);
 	seek = data->temp + 8;
 	data->height = (int)ft_strtol(seek, &seek);
@@ -72,7 +71,7 @@ static int	get_turn(t_data *data, int *error)
 	*error = read_board(data);
 	if (*error)
 		return (0);
-	*error = read_piece(data);
+	*error = read_piece(data, get_piece());
 	if (*error)
 		return (0);
 	return (plan_move(data));
