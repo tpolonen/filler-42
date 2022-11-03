@@ -23,6 +23,7 @@ _SRC 	+= debug.c
 _SRC 	+= player.c
 _SRC 	+= floodfill.c
 _SRC 	+= storage.c
+_SRC 	+= tactics.c
 
 DEP 	:= $(HEADER_DIR)filler.h
 

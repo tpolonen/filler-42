@@ -18,38 +18,10 @@ static int open_game(t_data *data)
 	return (1);
 }
 
-static int	get_values(char *board, t_dintarr *shape, int *values)
+static int should_switch_target(int misses, int turncount)
 {
-	(void) board;
-	(void) shape;
-	(void) values;
-	return (0);
-}
-
-static int	get_target(t_data *data, t_strat *strat)
-{
-	t_dintarr	*shape;
-	t_dintarr	*target;
-	int			*values;
-	int			i;
-
-	if (strat->target)
-		ft_memdel((void **)strat->target);
-	i = 0;
-	while (i < data->width * data->height && strat->enemy[i] == 0)
-		i++;
-	ft_dintarr_add(&target, i);
-	shape = floodfill(strat->enemy, target, 1, SIZE_MAX);
-	if (!shape)
-	{
-		strat->target_count = INT_MIN;
-		return (1);
-	}
-	values = (int *)xalloc(sizeof(int) * shape->len);
-	get_values(strat->enemy, shape, values);
-	(void)values;
-	(void)target;
-	return (1);
+	(void) turncount;
+	return ((size_t)misses >= get_strat()->target_count / 2);
 }
 
 static int make_move(t_data *data, t_strat *strat)
@@ -74,7 +46,7 @@ static int make_move(t_data *data, t_strat *strat)
 		}
 		i++;
 	}
-	if ((size_t)misses >= strat->target_count / 2)
+	if (should_switch_target(misses, data->turncount))
 	{
 		misses = 0;
 		error = get_target(data, strat);
@@ -100,7 +72,7 @@ int	plan_move(t_data *data)
 	if (!strat->victory)
 	{
 		cur_enemy_score = count(strat->enemy, data->width * data->height);
-		if (cur_enemy_score == 0)
+		if (cur_enemy_score == 0 && data->turncount == 0)
 			open_game(data);
 		else if (cur_enemy_score == strat->enemy_score)
 			strat->victory = 1;
@@ -110,6 +82,7 @@ int	plan_move(t_data *data)
 	}
 	else
 		data->temp = ft_strdup("0 0\n");
+	data->turncount++;
 	ft_memdel((void **)&get_piece()->ptr);
 	return (1);
 }

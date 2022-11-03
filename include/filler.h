@@ -13,23 +13,17 @@
 #ifndef FILLER_H
 # define FILLER_H
 
-/*
- * read, write
- */
+/* read, write */
 # ifndef WIN
 #  include <unistd.h>
 # else
 #  include <windows.h>
 # endif
 
-/*
- * malloc, read
- */
+/* malloc, read */
 # include <stdlib.h>
 
-/*
- * perror
- */
+/* perror */
 # include <stdio.h>
 # if defined (LINUX) || defined (WIN)
 #  include <stdint.h>
@@ -49,6 +43,7 @@ typedef struct s_gamedata
 	char	player;
 	int		width;
 	int		height;
+	int		turncount;
 	char	*oboard_ptr;
 	char	*xboard_ptr;
 	char	*temp;
@@ -64,40 +59,31 @@ typedef struct s_strategy
 	int		victory;
 }	t_strat;
 
-/*
- * utils.c
- */
+/* utils.c */
 int			count(char *ptr, size_t n);
 int			comp(char *ptr1, char *ptr2, size_t n);
 int			comp1(char *ptr1, char *ptr2, size_t n);
 void		*xalloc(size_t min_size);
 
-/*
- * read.c
- */
+/* read.c */
 int			read_board(t_data *data);
 int			read_piece(t_data *data, t_piece *piece);
 
-/*
- * debug.c
- */
+/* debug.c */
 void		debug_print(char *ptr, int width, int height);
 
-/*
- * player.c
- */
+/* player.c */
 t_strat		*get_strat(void);
 int			plan_move(t_data *data);
 
-/*
- * floodfill.c
- */
+/* tactics.c */
+int			get_target(t_data *data, t_strat *strat);
+
+/* floodfill.c */
 t_dintarr	*floodfill(char *board, t_dintarr *source, int filled,
 				size_t max_area);
 
-/*
- * storage.c
- */
+/* storage.c */
 t_strat		*get_strat(void);
 t_data		*get_data(void);
 t_piece		*get_piece(void);

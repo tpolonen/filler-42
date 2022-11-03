@@ -14,7 +14,12 @@
 # define LIBFT_H
 # include <string.h>
 # include <stdlib.h>
-# include <unistd.h>
+# ifndef WIN
+#  include <unistd.h>
+# else
+#  include <Windows.h>
+#  define ssize_t long long
+# endif
 # include <limits.h>
 # define DINT_DEF_SIZE 10
 # define GETLINE_BUFF_SIZE 128

@@ -106,6 +106,18 @@ ARFLAGS = rcs
 
 NAME = libft.a
 
+UNAME = $(shell uname)
+
+ifeq ($(UNAME), Linux)
+	CPPFLAGS += -DLINUX
+endif
+
+ifeq ($(OS), Windows_NT)
+	CPPFLAGS += -DWIN
+	BIN := tpolonen.exe
+endif
+
+
 .PHONY: all clean fclean re
 
 all: $(NAME)
