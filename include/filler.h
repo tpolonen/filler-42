@@ -51,12 +51,11 @@ typedef struct s_gamedata
 
 typedef struct s_strategy
 {
-	char	*enemy;
-	char	*player;
-	int		*target;
-	size_t	target_count;
-	int		enemy_score;
-	int		victory;
+	char		*enemy;
+	char		*player;
+	t_dintarr	*target;
+	int			enemy_score;
+	int			victory;
 }	t_strat;
 
 /* utils.c */
