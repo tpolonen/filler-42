@@ -17,7 +17,7 @@
 # ifndef WIN
 #  include <unistd.h>
 # else
-#  include <windows.h>
+#  include <Windows.h>
 # endif
 
 /* malloc, read */

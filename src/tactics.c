@@ -12,20 +12,20 @@
 
 #include "filler.h"
 
-static inline int	out_of_bounds(int i, int cell)
+static inline int	out_of_bounds(int dir, int cell)
 {
 	const int	dirs[8][2] = {{0, -1}, {1, 0}, {0, 1}, {-1, 0}, \
 				{1, -1}, {1, 1}, {-1, 1}, {-1, -1}};
 	const int	width = get_data()->width;
 	const int	height = get_data()->height;
 
-	return ((cell % width == 0 && dirs[i][0] < 0) || \
-				(cell % width == width - 1 && dirs[i][0] > 0) || \
-				(cell < width && dirs[i][1] < 0) || \
-				(cell > width * (height - 1) && dirs[i][1] > 0));
+	return ((cell % width == 0 && dirs[dir][0] < 0) || \
+				(cell % width == width - 1 && dirs[dir][0] > 0) || \
+				(cell < width && dirs[dir][1] < 0) || \
+				(cell > width * (height - 1) && dirs[dir][1] > 0));
 }
 
-static inline int	next_cell(int cell, int dir)
+static inline int	next_cell(int dir, int cell)
 {
 	const int	dirs[8][2] = {{0, -1}, {1, 0}, {0, 1}, {-1, 0}, \
 				{1, -1}, {1, 1}, {-1, 1}, {-1, -1}};
@@ -50,12 +50,12 @@ static void	get_values(char *board, t_dintarr *shape, int *values)
 		{
 			if (out_of_bounds(dir, shape->arr[cell_index]))
 				continue ;
-			next = next_cell(shape->arr[cell_index], dir);
-			if (board[next] == 1)
+			next = next_cell(dir, shape->arr[cell_index]);
+			if (board[next] == 0)
 				value++;
-			dir++;
 		}
 		values[cell_index] = value;
+		cell_index++;
 	}
 }
 

@@ -13,33 +13,40 @@
 #include "filler.h"
 #include "libft.h"
 
-static inline int	out_of_bounds(int i, int cell, int width, int height)
+static inline int	out_of_bounds(int dir, int cell)
 {
 	const int	dirs[4][2] = {{0, -1}, {1, 0}, {0, 1}, {-1, 0}};
+	const int	width = get_data()->width;
+	const int	height = get_data()->height;
 
-	return ((cell % width == 0 && dirs[i][0] < 0) || \
-				(cell % width == width - 1 && dirs[i][0] > 0) || \
-				(cell < width && dirs[i][1] < 0) || \
-				(cell > width * (height - 1) && dirs[i][1] > 0));
+	return ((cell % width == 0 && dirs[dir][0] < 0) || \
+				(cell % width == width - 1 && dirs[dir][0] > 0) || \
+				(cell < width && dirs[dir][1] < 0) || \
+				(cell > width * (height - 1) && dirs[dir][1] > 0));
+}
+
+static inline int	next_cell(int dir, int cell)
+{
+	const int	dirs[4][2] = {{0, -1}, {1, 0}, {0, 1}, {-1, 0}};
+	const int	width = get_data()->width;
+
+	return (cell + dirs[dir][0] + (dirs[dir][1] * width));
 }
 
 static int	explore(char *board, int cell, int wall, t_dintarr *area)
 {
-	const int	dirs[4][2] = {{0, -1}, {1, 0}, {0, 1}, {-1, 0}};
-	int			i;
-	int			next_cell;
-	int			width;
+	int			dir;
+	int			next;
 
-	i = -1;
-	width = get_data()->width;
+	dir = -1;
 	board[cell] = wall;
-	while (++i < 4)
+	while (++dir < 4)
 	{
-		if (out_of_bounds(i, cell, width, get_data()->height))
+		if (out_of_bounds(dir, cell))
 			continue ;
-		next_cell = cell + dirs[i][0] + (dirs[i][1] * width);
-		if (board[next_cell] != wall)
-			ft_dintarr_add(&area, next_cell);
+		next = next_cell(dir, cell);
+		if (board[next] != wall)
+			ft_dintarr_add(&area, next);
 	}
 	return (0);
 }
