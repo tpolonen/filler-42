@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   tactics.c                                           :+:      :+:    :+:   */
+/*   tactics.c                                           :+:      :+:    :+:  */
 /*                                                    +:+ +:+         +:+     */
 /*   By: tpolonen <tpolonen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/01 17:48:51 by tpolonen          #+#    #+#             */
-/*   Updated: 2022/10/12 20:00:35 by tpolonen         ###   ########.fr       */
+/*   Updated: 2022/11/04 15:34:20 by tpolonen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,15 +34,17 @@ static inline int	next_cell(int dir, int cell)
 	return (cell + dirs[dir][0] + (dirs[dir][1] * width));
 }
 
-static void	get_values(char *board, t_dintarr *shape, int *values)
+static int	*get_values(char *board, t_dintarr *shape)
 {
 	size_t	cell_index;
+	int		*values;
 	int		dir;
 	int		value;
 	int		next;
 
 	cell_index = 0;
-	while (cell_index < shape->len)
+	values = xalloc(sizeof(int) * shape->len);
+	while (values && cell_index < shape->len)
 	{
 		dir = -1;
 		value = 0;
@@ -51,36 +53,55 @@ static void	get_values(char *board, t_dintarr *shape, int *values)
 			if (out_of_bounds(dir, shape->arr[cell_index]))
 				continue ;
 			next = next_cell(dir, shape->arr[cell_index]);
-			if (board[next] == 0)
+			if (board[next] == 1)
 				value++;
 		}
-		values[cell_index] = value;
-		cell_index++;
+		values[cell_index++] = value;
 	}
+	return (values);
+}
+
+static t_dintarr	*get_source(char *board, t_dintarr *shape)
+{
+	t_dintarr	*source;
+	int			*values;
+	int			max;
+	int			i;
+
+	values = get_values(board, shape);
+	max = -1;
+	i = 0;
+	while ((size_t) i < shape->len)
+	{
+		if (values[i] > max)
+			max = values[i];
+		i++;
+	}
+	while (i > 0)
+	{
+		if (values[i] == max)
+			ft_dintarr_add(&source, shape->arr[i]);
+		i++;
+	}
+	return (source);
 }
 
 int	get_target(t_data *data, t_strat *strat)
 {
 	t_dintarr	*shape;
-	t_dintarr	*target;
-	int			*values;
+	t_dintarr	*source;
 	int			i;
 
 	if (strat->target)
 		ft_memdel((void **)strat->target);
 	i = 0;
-	while (i < data->width * data->height && strat->enemy[i] == 0)
-		i++;
-	ft_dintarr_add(&target, i);
-	shape = floodfill(strat->enemy, target, 0, SIZE_MAX);
+	while (strat->enemy[i++] == 0)
+		;
+	ft_dintarr_add(&source, i);
+	shape = floodfill(strat->enemy, source, 0, SIZE_MAX);
 	if (!shape)
-	{
-		strat->target_count = INT_MIN;
-		return (1);
-	}
-	values = (int *)xalloc(sizeof(int) * shape->len);
-	get_values(strat->enemy, shape, values);
-	(void)values;
-	(void)target;
-	return (1);
+		return (INT_MIN);
+	source = get_source(strat->enemy, shape);
+	strat->target = floodfill(strat->enemy, source, 1, 50);
+	return (strat->target->len);
 }

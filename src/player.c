@@ -21,27 +21,26 @@ static int open_game(t_data *data)
 static int should_switch_target(int misses, int turncount)
 {
 	(void) turncount;
-	return ((size_t)misses >= get_strat()->target_count / 2);
+	return ((size_t)misses >= get_strat()->target->len / 2);
 }
 
 static int make_move(t_data *data, t_strat *strat)
 {
 	static int	misses;
 	int			i;
-	int			error;
 	//do we already have an advance targeted? continue the offense
 	//otherwise get new target
-	//if error, get_target sets strat->target_count to arbitrary negative number
+	//if error, get_target sets strat->target->len to arbitrary negative number
 	//and returns !0
-	error = 0;
 	if (!strat->target)
-		error = get_target(data, strat);
+		strat->target->len = get_target(data, strat);
 	i = 0;
-	while ((size_t)i < strat->target_count)
+	while ((size_t)i < strat->target->len)
 	{
-		if (strat->enemy[strat->target[i]] | strat->player[strat->target[i]])
+		if (strat->enemy[strat->target->arr[i]] || \
+				strat->player[strat->target->arr[i]])
 		{
-			strat->target[i] = -1;
+			strat->target->arr[i] = -1;
 			misses++;
 		}
 		i++;
@@ -49,10 +48,10 @@ static int make_move(t_data *data, t_strat *strat)
 	if (should_switch_target(misses, data->turncount))
 	{
 		misses = 0;
-		error = get_target(data, strat);
+		strat->target->len = get_target(data, strat);
 	}
-	if (error)
-		return (error);
+	if (strat->target->len < 0)
+		return (1);
 	return (0);
 	//when we have a target, find the closest own block to it with floodfill
 	//start blindly placing the piece starting from that position
@@ -85,4 +84,4 @@ int	plan_move(t_data *data)
 	data->turncount++;
 	ft_memdel((void **)&get_piece()->ptr);
 	return (1);
-}
+
