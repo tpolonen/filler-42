@@ -25,6 +25,8 @@
 
 /* perror */
 # include <stdio.h>
+
+/* size_t, ssize_t */
 # if defined (LINUX) || defined (WIN)
 #  include <stdint.h>
 # endif
@@ -58,6 +60,9 @@ typedef struct s_strategy
 	int			victory;
 }	t_strat;
 
+/* main.c */
+int			init_data(t_data *data);
+
 /* utils.c */
 int			count(char *ptr, size_t n);
 int			comp(char *ptr1, char *ptr2, size_t n);
@@ -65,18 +70,19 @@ int			comp1(char *ptr1, char *ptr2, size_t n);
 void		*xalloc(size_t min_size);
 
 /* read.c */
-int			read_board(t_data *data);
-int			read_piece(t_data *data, t_piece *piece);
+int			can_read_board(t_data *data);
+int			can_read_piece(t_data *data, t_piece *piece);
 
 /* debug.c */
 void		debug_print(char *ptr, int width, int height);
 
 /* player.c */
 t_strat		*get_strat(void);
-int			plan_move(t_data *data);
+void		strategize(t_data *data);
+
 
 /* tactics.c */
-int			get_target(t_data *data, t_strat *strat);
+int			get_new_target(t_strat *strat);
 
 /* floodfill.c */
 t_dintarr	*floodfill(char *board, t_dintarr *source, int filled,

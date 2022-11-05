@@ -86,7 +86,7 @@ static t_dintarr	*get_source(char *board, t_dintarr *shape)
 	return (source);
 }
 
-int	get_target(t_data *data, t_strat *strat)
+int	get_new_target(t_strat *strat)
 {
 	t_dintarr	*shape;
 	t_dintarr	*source;

@@ -22,7 +22,7 @@ static int	get_offset(t_data *data)
 	return (ret);
 }
 
-int	read_board(t_data *data)
+int	can_read_board(t_data *data)
 {
 	int		row;
 	int		x;
@@ -47,11 +47,11 @@ int	read_board(t_data *data)
 		row++;
 	}
 	if (ft_strncmp(data->temp, "Piece ", 6) != 0)
-		return (8);
-	return (0);
+		return (0);
+	return (1);
 }
 
-int	read_piece(t_data *data, t_piece *piece)
+int	can_read_piece(t_data *data, t_piece *piece)
 {
 	char	*seek;
 	int		row;
@@ -60,11 +60,9 @@ int	read_piece(t_data *data, t_piece *piece)
 	seek = data->temp + 6;
 	piece->height = (int)ft_strtol(seek, &seek);
 	piece->width = (int)ft_strtol(seek, &seek);
-	if (piece->width <= 0 || piece->height <= 0)
-		return (9);
 	piece->ptr = (char *)xalloc(data->width * piece->height);
 	if (piece->ptr == NULL)
-		return (10);
+		return (0);
 	row = 0;
 	while (row < piece->height)
 	{

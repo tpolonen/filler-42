@@ -27,7 +27,7 @@ static int	set_player(t_data *data)
 	return (data->player == 0);
 }
 
-static int	init_data(t_data *data)
+int	init_data(t_data *data)
 {
 	char	*seek;
 
@@ -56,7 +56,7 @@ static int	init_data(t_data *data)
 	return ((data->width <= 0) || (data->height <= 0));
 }
 
-static int	get_turn(t_data *data, int *error)
+static int	can_make_move(t_data *data, int *error)
 {
 	if (ft_getline(0, &(data->temp)) <= 0)
 	{
@@ -68,13 +68,13 @@ static int	get_turn(t_data *data, int *error)
 		ft_memdel((void **)&data->temp);
 		ft_getline(0, &(data->temp));
 	}
-	*error = read_board(data);
-	if (*error)
+	if (can_read_board(data) == 0 || can_read_piece(data, get_piece()) == 0)
+	{
+		*error = 10;
 		return (0);
-	*error = read_piece(data, get_piece());
-	if (*error)
-		return (0);
-	return (plan_move(data));
+	}
+	strategize(data);
+	return (find_move());
 }
 
 static int	clean_exit(t_data *data, const char *str, int error)
@@ -111,7 +111,7 @@ int	main(void)
 	if (error)
 		return (clean_exit(data, "Error in map header: ", error));
 	ft_memdel((void **)&data->temp);
-	while (get_turn(data, &error))
+	while (can_make_move(data, &error))
 	{
 		if (data->temp)
 		{

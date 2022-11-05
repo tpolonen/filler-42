@@ -12,10 +12,9 @@
 
 #include "filler.h"
 
-static int open_game(t_data *data)
+static void	open_game(t_data *data)
 {
 	(void)data;
-	return (1);
 }
 
 static int should_switch_target(int misses, int turncount)
@@ -24,16 +23,13 @@ static int should_switch_target(int misses, int turncount)
 	return ((size_t)misses >= get_strat()->target->len / 2);
 }
 
-static int make_move(t_data *data, t_strat *strat)
+static void choose_target(t_data *data, t_strat *strat)
 {
 	static int	misses;
 	int			i;
-	//do we already have an advance targeted? continue the offense
-	//otherwise get new target
-	//if error, get_target sets strat->target->len to arbitrary negative number
-	//and returns !0
+
 	if (!strat->target)
-		strat->target->len = get_target(data, strat);
+		strat->target->len = get_new_target(strat);
 	i = 0;
 	while ((size_t)i < strat->target->len)
 	{
@@ -48,40 +44,23 @@ static int make_move(t_data *data, t_strat *strat)
 	if (should_switch_target(misses, data->turncount))
 	{
 		misses = 0;
-		strat->target->len = get_target(data, strat);
+		strat->target->len = get_new_target(strat);
 	}
-	if (strat->target->len < 0)
-		return (1);
-	return (0);
-	//when we have a target, find the closest own block to it with floodfill
-	//start blindly placing the piece starting from that position
-	//get like three first locations or something
-	//choose the one that blocks most of the targeted area (test with floodfill)
-	//if there's no such pos? choose the place that's the nearest to target
-	//maybe take the average of target or something
 }
 
-int	plan_move(t_data *data)
+void	strategize(t_data *data)
 {
 	t_strat	*strat;
 	int		cur_enemy_score;
 
 	ft_memdel((void **)&data->temp);
 	strat = get_strat();
-	if (!strat->victory)
-	{
-		cur_enemy_score = count(strat->enemy, data->width * data->height);
-		if (cur_enemy_score == 0 && data->turncount == 0)
-			open_game(data);
-		else if (cur_enemy_score == strat->enemy_score)
-			strat->victory = 1;
-		strat->enemy_score = cur_enemy_score;
-		if (make_move(data, strat))
-			return (0);
-	}
+	cur_enemy_score = count(strat->enemy, data->width * data->height);
+	if (cur_enemy_score == 0 && data->turncount == 0)
+		open_game(data);
+	else if (cur_enemy_score == strat->enemy_score)
+		strat->victory = 1;
 	else
-		data->temp = ft_strdup("0 0\n");
-	data->turncount++;
-	ft_memdel((void **)&get_piece()->ptr);
-	return (1);
-
+		choose_target(data, strat);
+	strat->enemy_score = cur_enemy_score;
+}

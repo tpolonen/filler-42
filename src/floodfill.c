@@ -33,7 +33,7 @@ static inline int	next_cell(int dir, int cell)
 	return (cell + dirs[dir][0] + (dirs[dir][1] * width));
 }
 
-static int	explore(char *board, int cell, int wall, t_dintarr *area)
+static void	explore(char *board, int cell, int wall, t_dintarr *area)
 {
 	int			dir;
 	int			next;
@@ -48,7 +48,6 @@ static int	explore(char *board, int cell, int wall, t_dintarr *area)
 		if (board[next] != wall)
 			ft_dintarr_add(&area, next);
 	}
-	return (0);
 }
 
 t_dintarr	*floodfill(char *board, t_dintarr *source, int wall,
