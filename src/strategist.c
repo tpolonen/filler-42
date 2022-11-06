@@ -29,7 +29,7 @@ static void choose_target(t_data *data, t_strat *strat)
 	int			i;
 
 	if (!strat->target)
-		strat->target->len = get_new_target(strat);
+		strat->target->len = find_new_target(strat);
 	i = 0;
 	while ((size_t)i < strat->target->len)
 	{
@@ -44,7 +44,7 @@ static void choose_target(t_data *data, t_strat *strat)
 	if (should_switch_target(misses, data->turncount))
 	{
 		misses = 0;
-		strat->target->len = get_new_target(strat);
+		strat->target->len = find_new_target(strat);
 	}
 }
 

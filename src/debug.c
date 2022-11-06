@@ -25,8 +25,10 @@ void	debug_print(char *ptr, int width, int height)
 		ft_putstr("\t");
 		while (col < width)
 		{
-			if (ptr[(row * width) + col])
+			if (ptr[(row * width) + col] == 1)
 				ft_putchar('*');
+			else if (ptr[(row * width) + col])
+				ft_putchar('?');
 			else
 				ft_putchar('.');
 			col++;

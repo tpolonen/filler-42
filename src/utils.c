@@ -12,6 +12,24 @@
 
 #include "filler.h"
 
+int	clean_exit(t_data *data, const char *str, int error)
+{
+	if (data->oboard_ptr)
+		ft_memdel((void **)&data->oboard_ptr);
+	if (data->xboard_ptr)
+		ft_memdel((void **)&data->xboard_ptr);
+	if (data->temp)
+		ft_memdel((void **)&data->temp);
+	if (get_piece()->ptr)
+		ft_memdel((void **)&get_piece()->ptr);
+	if (str)
+		ft_putstr(str);
+	if (error)
+		ft_putnbr(error);
+	ft_putendl("");
+	return (error);
+}
+
 int	count(char *ptr, size_t n)
 {
 	int	ret;

@@ -12,49 +12,7 @@
 
 #include "filler.h"
 
-static int	set_player(t_data *data)
-{
-	if (!(data->temp))
-		return (2);
-	if (ft_strncmp(data->temp, "$$$ exec p", 10) != 0)
-		return (3);
-	if (ft_strstr(data->temp, "tpolonen.filler") == NULL)
-		return (4);
-	if (ft_strstr(data->temp, "p1") != NULL)
-		data->player = 'o';
-	else
-		data->player = 'x';
-	return (data->player == 0);
-}
 
-int	init_data(t_data *data)
-{
-	char	*seek;
-
-	if (!(data->temp))
-		return (2);
-	if ((ft_strncmp(data->temp, "Plateau ", 8) != 0) || \
-			(ft_strchr(data->temp, ':') == NULL))
-		return (6);
-	seek = data->temp + 8;
-	data->height = (int)ft_strtol(seek, &seek);
-	data->width = (int)ft_strtol(seek, &seek);
-	data->oboard_ptr = (char *)xalloc(data->width * data->height);
-	data->xboard_ptr = (char *)xalloc(data->width * data->height);
-	if (data->oboard_ptr == NULL || data->xboard_ptr == NULL)
-		return (7);
-	if (data->player == 'x')
-	{
-		get_strat()->player = data->xboard_ptr;
-		get_strat()->enemy = data->oboard_ptr;
-	}
-	else
-	{
-		get_strat()->player = data->oboard_ptr;
-		get_strat()->enemy = data->xboard_ptr;
-	}
-	return ((data->width <= 0) || (data->height <= 0));
-}
 
 static int	can_make_move(t_data *data, int *error)
 {
@@ -74,25 +32,7 @@ static int	can_make_move(t_data *data, int *error)
 		return (0);
 	}
 	strategize(data);
-	return (find_move());
-}
-
-static int	clean_exit(t_data *data, const char *str, int error)
-{
-	if (data->oboard_ptr)
-		ft_memdel((void **)&data->oboard_ptr);
-	if (data->xboard_ptr)
-		ft_memdel((void **)&data->xboard_ptr);
-	if (data->temp)
-		ft_memdel((void **)&data->temp);
-	if (get_piece()->ptr)
-		ft_memdel((void **)&get_piece()->ptr);
-	if (str)
-		ft_putstr(str);
-	if (error)
-		ft_putnbr(error);
-	ft_putendl("");
-	return (error);
+	return (valid_move_exists());
 }
 
 int	main(void)

@@ -26,9 +26,10 @@
 /* perror */
 # include <stdio.h>
 
-/* size_t, ssize_t */
+/* size_t, ssize_t on non-cluster machines*/
 # if defined (LINUX) || defined (WIN)
 #  include <stdint.h>
+#  include <limits.h>
 # endif
 
 # include "libft.h"
@@ -63,34 +64,37 @@ typedef struct s_strategy
 /* main.c */
 int			init_data(t_data *data);
 
+/* navigator.c */
+int			can_read_board(t_data *data);
+int			can_read_piece(t_data *data, t_piece *piece);
+int			set_player(t_data *data);
+int			init_data(t_data *data);
+
+/* strategist.c */
+void		strategize(t_data *data);
+
+/* tactician.c */
+int			find_new_target(t_strat *strat);
+
+/* captain.c */
+int			valid_move_exists();
+
+/* floodfill.c */
+t_dintarr	*floodfill(char *board, t_dintarr *source, int wall,
+				size_t max_area);
+/* storage.c */
+t_strat		*get_strat(void);
+t_data		*get_data(void);
+t_piece		*get_piece(void);
+
 /* utils.c */
+int			clean_exit(t_data *data, const char *str, int error);
 int			count(char *ptr, size_t n);
 int			comp(char *ptr1, char *ptr2, size_t n);
 int			comp1(char *ptr1, char *ptr2, size_t n);
 void		*xalloc(size_t min_size);
 
-/* read.c */
-int			can_read_board(t_data *data);
-int			can_read_piece(t_data *data, t_piece *piece);
-
 /* debug.c */
 void		debug_print(char *ptr, int width, int height);
-
-/* player.c */
-t_strat		*get_strat(void);
-void		strategize(t_data *data);
-
-
-/* tactics.c */
-int			get_new_target(t_strat *strat);
-
-/* floodfill.c */
-t_dintarr	*floodfill(char *board, t_dintarr *source, int filled,
-				size_t max_area);
-
-/* storage.c */
-t_strat		*get_strat(void);
-t_data		*get_data(void);
-t_piece		*get_piece(void);
 
 #endif

@@ -17,13 +17,15 @@ SRC_DIR			:= ./src/
 OBJ_DIR			:= ./obj/
 
 _SRC 	:= main.c
+_SRC 	+= navifator.c
+_SRC 	+= strategist.c
+_SRC 	+= tactician.c
+_SRC 	+= captain.c
+
 _SRC 	+= utils.c
-_SRC 	+= read.c
 _SRC 	+= debug.c
-_SRC 	+= player.c
 _SRC 	+= floodfill.c
 _SRC 	+= storage.c
-_SRC 	+= tactics.c
 
 DEP 	:= $(HEADER_DIR)filler.h
 
