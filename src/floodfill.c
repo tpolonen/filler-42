@@ -33,19 +33,19 @@ static inline int	next_cell(int dir, int cell)
 	return (cell + dirs[dir][0] + (dirs[dir][1] * width));
 }
 
-static void	explore(char *board, int cell, int wall, t_dintarr *area)
+static void	explore(char **board, int cell, int wall, t_dintarr *area)
 {
 	int			dir;
 	int			next;
 
 	dir = -1;
-	board[cell] = wall;
+	*board[cell] = wall;
 	while (++dir < 4)
 	{
 		if (out_of_bounds(dir, cell))
 			continue ;
 		next = next_cell(dir, cell);
-		if (board[next] != wall)
+		if (*board[next] != wall)
 			ft_dintarr_add(&area, next);
 	}
 }
@@ -55,7 +55,7 @@ t_dintarr	*floodfill(char *board, t_dintarr *source, int wall,
 {
 	t_dintarr	*explored;
 	char		*copy;
-	size_t		i;	
+	size_t		i;
 
 	copy = (char *)xalloc(get_data()->width * get_data()->height);
 	if (!copy || !ft_dintarr_create(&explored, 16))
@@ -66,11 +66,14 @@ t_dintarr	*floodfill(char *board, t_dintarr *source, int wall,
 	ft_memcpy(copy, board, get_data()->width * get_data()->height);
 	i = 0;
 	while (i < source->len)
-		explore(copy, source->arr[i++], wall, explored);
+	{
+		debug_print(copy, get_data()->width, get_data()->height);
+		explore(&copy, source->arr[i++], wall, explored);
+	}
 	ft_dintarr_close(&source, NULL);
 	i = 0;
 	while (i < explored->len && i < max_area)
-		explore(copy, explored->arr[i++], wall, explored);
+		explore(&copy, explored->arr[i++], wall, explored);
 	ft_memdel((void **) &copy);
 	return (explored);
 }

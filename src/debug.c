@@ -18,6 +18,11 @@ void	debug_print(char *ptr, int width, int height)
 	int	col;
 
 	row = 0;
+	col = 0;
+	ft_putstr("\t");
+	while (col < width)
+		ft_putchar('0' + (col++ % 10));
+	ft_putendl("");
 	while (row < height)
 	{
 		col = 0;

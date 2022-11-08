@@ -12,13 +12,12 @@
 
 #include "filler.h"
 
-
-
 static int	can_make_move(t_data *data, int *error)
 {
 	if (ft_getline(0, &(data->temp)) <= 0)
 	{
 		data->temp = NULL;
+		*error = 9;
 		return (0);
 	}
 	while (ft_strncmp(data->temp, "000", 3) != 0)
@@ -26,7 +25,7 @@ static int	can_make_move(t_data *data, int *error)
 		ft_memdel((void **)&data->temp);
 		ft_getline(0, &(data->temp));
 	}
-	if (can_read_board(data) == 0 || can_read_piece(data, get_piece()) == 0)
+	if (!can_read_board(data) || !can_read_piece(data, get_piece()))
 	{
 		*error = 10;
 		return (0);
@@ -45,12 +44,9 @@ int	main(void)
 	error = set_player(data);
 	if (error)
 		return (clean_exit(data, "Error in player data: ", error));
-	ft_memdel((void **)&data->temp);
-	ft_getline(0, &(data->temp));
 	error = init_data(data);
 	if (error)
 		return (clean_exit(data, "Error in map header: ", error));
-	ft_memdel((void **)&data->temp);
 	while (can_make_move(data, &error))
 	{
 		if (data->temp)

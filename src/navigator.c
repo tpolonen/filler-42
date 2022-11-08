@@ -17,9 +17,9 @@ static int	get_offset(t_data *data)
 	int	ret;
 
 	ret = 0;
-	while (*data->temp == '0')
+	while (*(data->temp + ret) != ' ')
 		ret++;
-	return (ret);
+	return (++ret);
 }
 
 int	can_read_board(t_data *data)
@@ -28,23 +28,28 @@ int	can_read_board(t_data *data)
 	int		x;
 	int		offset;
 
-	row = 0;
 	offset = get_offset(data);
+	ft_putstr("offset = ");
+	ft_putnbr(offset);
+	ft_putendl("");
 	ft_bzero(data->oboard_ptr, data->width * data->height);
 	ft_bzero(data->xboard_ptr, data->width * data->height);
-	while (row < data->height)
+	row = -1;
+	while (++row < data->height)
 	{
 		x = -1;
 		while (++x < data->width)
 		{
 			if (data->temp[offset + x] == 'o' || data->temp[offset + x] == 'O')
+			{
 				*(data->oboard_ptr + (row * data->width) + x) = 1;
+				debug_print(data->oboard_ptr, get_data()->width, get_data()->height);
+			}
 			if (data->temp[offset + x] == 'x' || data->temp[offset + x] == 'X')
 				*(data->xboard_ptr + (row * data->width) + x) = 1;
 		}
 		ft_memdel((void **)&data->temp);
 		ft_getline(0, &(data->temp));
-		row++;
 	}
 	if (ft_strncmp(data->temp, "Piece ", 6) != 0)
 		return (0);
@@ -96,8 +101,7 @@ int	init_data(t_data *data)
 {
 	char	*seek;
 
-	if (!(data->temp))
-		return (2);
+	ft_getline(0, &(data->temp));
 	if ((ft_strncmp(data->temp, "Plateau ", 8) != 0) || \
 			(ft_strchr(data->temp, ':') == NULL))
 		return (6);
@@ -118,5 +122,6 @@ int	init_data(t_data *data)
 		get_strat()->player = data->oboard_ptr;
 		get_strat()->enemy = data->xboard_ptr;
 	}
+	ft_memdel((void **)&data->temp);
 	return ((data->width <= 0) || (data->height <= 0));
 }
