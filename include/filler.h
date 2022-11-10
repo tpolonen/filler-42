@@ -65,7 +65,7 @@ typedef struct s_strategy
 int			init_data(t_data *data);
 
 /* navigator.c */
-int			can_read_board(t_data *data);
+int			can_read_board(t_data *data, t_dintarr *enemy_shape);
 int			can_read_piece(t_data *data, t_piece *piece);
 int			set_player(t_data *data);
 int			init_data(t_data *data);
@@ -74,7 +74,7 @@ int			init_data(t_data *data);
 void		strategize(t_data *data);
 
 /* tactician.c */
-int			find_new_target(t_strat *strat);
+void		find_new_target(t_strat *strat);
 
 /* captain.c */
 int			valid_move_exists();
@@ -86,10 +86,10 @@ t_dintarr	*floodfill(char *board, t_dintarr *source, int wall,
 t_strat		*get_strat(void);
 t_data		*get_data(void);
 t_piece		*get_piece(void);
+t_dintarr 	*get_enemy_shape(void);
 
 /* utils.c */
 int			clean_exit(t_data *data, const char *str, int error);
-int			count(char *ptr, size_t n);
 int			comp(char *ptr1, char *ptr2, size_t n);
 int			comp1(char *ptr1, char *ptr2, size_t n);
 void		*xalloc(size_t min_size);

@@ -25,7 +25,8 @@ static int	can_make_move(t_data *data, int *error)
 		ft_memdel((void **)&data->temp);
 		ft_getline(0, &(data->temp));
 	}
-	if (!can_read_board(data) || !can_read_piece(data, get_piece()))
+	if (!can_read_board(data, get_enemy_shape()) || \
+				!can_read_piece(data, get_piece()))
 	{
 		*error = 10;
 		return (0);

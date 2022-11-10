@@ -32,3 +32,10 @@ t_piece	*get_piece(void)
 
 	return (&piece);
 }
+
+t_dintarr	*get_enemy_shape(void)
+{
+	static t_dintarr	shape;
+
+	return (&shape);
+}

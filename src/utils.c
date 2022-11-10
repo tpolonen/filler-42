@@ -30,21 +30,6 @@ int	clean_exit(t_data *data, const char *str, int error)
 	return (error);
 }
 
-int	count(char *ptr, size_t n)
-{
-	int	ret;
-
-	if (n == 0)
-		return (0);
-	ret = 0;
-	while (n-- > 0)
-	{
-		if (*(ptr++))
-			ret++;
-	}
-	return (ret);
-}
-
 int	comp1(char *ptr1, char *ptr2, size_t n)
 {
 	while (n-- > 0)

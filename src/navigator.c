@@ -22,16 +22,12 @@ static int	get_offset(t_data *data)
 	return (++ret);
 }
 
-int	can_read_board(t_data *data)
+int	can_read_board(t_data *data, t_dintarr *enemy_shape)
 {
-	int		row;
-	int		x;
-	int		offset;
+	int			row;
+	int			x;
+	const int	offset = get_offset(data);
 
-	offset = get_offset(data);
-	ft_putstr("offset = ");
-	ft_putnbr(offset);
-	ft_putendl("");
 	ft_bzero(data->oboard_ptr, data->width * data->height);
 	ft_bzero(data->xboard_ptr, data->width * data->height);
 	row = -1;
@@ -42,8 +38,9 @@ int	can_read_board(t_data *data)
 		{
 			if (data->temp[offset + x] == 'o' || data->temp[offset + x] == 'O')
 			{
+				ft_dintarr_add(&enemy_shape,
+					*(data->oboard_ptr + (row * data->width) + x));
 				*(data->oboard_ptr + (row * data->width) + x) = 1;
-				debug_print(data->oboard_ptr, get_data()->width, get_data()->height);
 			}
 			if (data->temp[offset + x] == 'x' || data->temp[offset + x] == 'X')
 				*(data->xboard_ptr + (row * data->width) + x) = 1;
@@ -51,9 +48,7 @@ int	can_read_board(t_data *data)
 		ft_memdel((void **)&data->temp);
 		ft_getline(0, &(data->temp));
 	}
-	if (ft_strncmp(data->temp, "Piece ", 6) != 0)
-		return (0);
-	return (1);
+	return (ft_strncmp(data->temp, "Piece ", 6) == 0);
 }
 
 int	can_read_piece(t_data *data, t_piece *piece)

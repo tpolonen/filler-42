@@ -17,19 +17,19 @@ static void	open_game(t_data *data)
 	(void)data;
 }
 
-static int should_switch_target(int misses, int turncount)
+static int	should_switch_target(int misses, int turncount)
 {
 	(void) turncount;
 	return ((size_t)misses >= get_strat()->target->len / 2);
 }
 
-static void choose_target(t_data *data, t_strat *strat)
+static void	choose_target(t_data *data, t_strat *strat)
 {
 	static int	misses;
 	int			i;
 
 	if (!strat->target)
-		strat->target->len = find_new_target(strat);
+		find_new_target(strat);
 	i = 0;
 	while ((size_t)i < strat->target->len)
 	{
@@ -44,23 +44,22 @@ static void choose_target(t_data *data, t_strat *strat)
 	if (should_switch_target(misses, data->turncount))
 	{
 		misses = 0;
-		strat->target->len = find_new_target(strat);
+		find_new_target(strat);
 	}
 }
 
 void	strategize(t_data *data)
 {
-	t_strat	*strat;
-	int		cur_enemy_score;
+	t_strat		*strat;
+	t_dintarr	*enemy_shape;
 
-	ft_memdel((void **)&data->temp);
 	strat = get_strat();
-	cur_enemy_score = count(strat->enemy, data->width * data->height);
-	if (cur_enemy_score == 0 && data->turncount == 0)
+	enemy_shape = get_enemy_shape();
+	if (enemy_shape->len == 0 && data->turncount == 0)
 		open_game(data);
-	else if (cur_enemy_score == strat->enemy_score)
+	else if ((int)enemy_shape->len == strat->enemy_score)
 		strat->victory = 1;
 	else
 		choose_target(data, strat);
-	strat->enemy_score = cur_enemy_score;
+	strat->enemy_score = enemy_shape->len;
 }

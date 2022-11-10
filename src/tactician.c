@@ -86,7 +86,7 @@ static t_dintarr	*get_source(char *board, t_dintarr *shape)
 	return (source);
 }
 
-int	find_new_target(t_strat *strat)
+void	find_new_target(t_strat *strat)
 {
 	t_dintarr	*shape;
 	t_dintarr	*source;
@@ -97,11 +97,7 @@ int	find_new_target(t_strat *strat)
 	i = 0;
 	while (strat->enemy[i++] == 0)
 		;
-	ft_dintarr_add(&source, i);
-	shape = floodfill(strat->enemy, source, 0, INT_MAX);
-	if (!shape)
-		return (INT_MIN);
+	shape = get_enemy_shape();
 	source = get_source(strat->enemy, shape);
 	strat->target = floodfill(strat->enemy, source, 1, 50);
-	return (strat->target->len);
 }

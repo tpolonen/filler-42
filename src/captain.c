@@ -6,7 +6,7 @@
 /*   By: tpolonen <tpolonen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/01 17:48:51 by tpolonen          #+#    #+#             */
-/*   Updated: 2022/11/04 15:34:20 by tpolonen         ###   ########.fr       */
+/*   Updated: 2022/11/10 19:45:45 by tpolonen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,7 @@
 
 int	valid_move_exists()
 {
-	get_data()->temp = ft_strcpy(get_data()->temp, "0 0");
+	ft_strcpy(get_data()->temp, "0 0");
 	return (0);
 }
+

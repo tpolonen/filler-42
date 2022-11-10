@@ -17,28 +17,26 @@ void	debug_print(char *ptr, int width, int height)
 	int	row;
 	int	col;
 
-	row = 0;
 	col = 0;
 	ft_putstr("\t");
 	while (col < width)
 		ft_putchar('0' + (col++ % 10));
 	ft_putendl("");
-	while (row < height)
+	row = -1;
+	while (++row < height)
 	{
-		col = 0;
+		col = -1;
 		ft_putnbr(row);
 		ft_putstr("\t");
-		while (col < width)
+		while (++col < width)
 		{
 			if (ptr[(row * width) + col] == 1)
 				ft_putchar('*');
 			else if (ptr[(row * width) + col])
-				ft_putchar('?');
+				ft_putchar(ptr[(row * width) + col]);
 			else
 				ft_putchar('.');
-			col++;
 		}
 		ft_putendl("");
-		row++;
 	}
 }
