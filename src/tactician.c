@@ -93,7 +93,7 @@ void	find_new_target(t_strat *strat)
 	int			i;
 
 	if (strat->target)
-		ft_memdel((void **)strat->target);
+		ft_dintarr_close(&(strat->target), NULL);
 	i = 0;
 	while (strat->enemy[i++] == 0)
 		;

@@ -15,12 +15,18 @@ int main(void)
 	test_data->player = 'x';
 	init_data(test_data);
 	ft_getline(0, &test_data->temp);
+	printf("shape len = %zu, alloced = %zu\n", shape->len, shape->alloced);
 	while (ft_strncmp(test_data->temp, "000", 3) != 0)
 	{
 		ft_memdel((void **)&test_data->temp);
 		ft_getline(0, &(test_data->temp));
 	}
 	can_read_board(test_data, shape);
+	printf("shape->len = %zu, shape->arr = %p\n", shape->len, shape->arr);
+	for (size_t i = 0; i < shape->len; i++)
+	{
+		printf("%2zu/%zu = %d\n", i, shape->len, shape->arr[i]);
+	}
 	ft_dintarr_add(&source, shape->arr[0]);
 	filled = floodfill(test_data->oboard_ptr, source, 0, 100);
 	for (size_t i = 0; i < filled->len; i++)
