@@ -61,9 +61,6 @@ typedef struct s_strategy
 	int			victory;
 }	t_strat;
 
-/* main.c */
-int			init_data(t_data *data);
-
 /* navigator.c */
 int			can_read_board(t_data *data, t_dintarr *enemy_shape);
 int			can_read_piece(t_data *data, t_piece *piece);
@@ -75,6 +72,7 @@ void		strategize(t_data *data);
 
 /* tactician.c */
 void		find_new_target(t_strat *strat);
+int			*get_values(char *board, t_dintarr *shape);
 
 /* captain.c */
 int			valid_move_exists();
