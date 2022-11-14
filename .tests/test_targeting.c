@@ -4,9 +4,9 @@
 int main(void)
 {
 	t_data		*test_data;
-	t_dintarr	*source = NULL;
 	t_dintarr	*shape = get_enemy_shape();
-	t_dintarr	*filled;
+	int			*values;
+	t_strat		*strat = get_strat();
 
 	test_data = get_data();
 	printf("Enter when ready...\n");
@@ -27,10 +27,12 @@ int main(void)
 	{
 		printf("%2zu/%zu = %d\n", i, shape->len, shape->arr[i]);
 	}
-	ft_dintarr_add(&source, shape->arr[0]);
-	filled = floodfill(test_data->oboard_ptr, source, 0, 100);
-	for (size_t i = 0; i < filled->len; i++)
-		test_data->oboard_ptr[filled->arr[i]] = '2';
+	values = get_values(test_data->oboard_ptr, shape);
+	for (size_t i = 0; i < shape->len; i++)
+		test_data->oboard_ptr[shape->arr[i]] = '0' + (char)values[i];
+	find_new_target(strat);
+	for (size_t i = 0; i < strat->target->len; i++)
+		test_data->oboard_ptr[strat->target->arr[i]] = 'T';
 	debug_print(test_data->oboard_ptr, test_data->width, test_data->height);
 	clean_exit(test_data, "Done", 0);
 }
