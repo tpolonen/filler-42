@@ -37,8 +37,8 @@ static int	can_make_move(t_data *data, int *error)
 
 int	main(void)
 {
-	static t_data	*data;
-	int				error;
+	t_data	*data;
+	int		error;
 
 	data = get_data();
 	ft_getline(0, &data->temp);

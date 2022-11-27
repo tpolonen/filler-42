@@ -35,7 +35,7 @@ static void	choose_target(t_data *data, t_strat *strat)
 	while ((size_t)i < strat->target->len)
 	{
 		current_cell = strat->target->arr[i];
-		if (strat->enemy[current_cell] || strat->player[current_cell])
+		if (strat->enemy[current_cell] | strat->player[current_cell])
 		{
 			strat->target->arr[i] = -1;
 			misses++;

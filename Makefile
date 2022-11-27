@@ -17,7 +17,7 @@ SRC_DIR			:= ./src/
 OBJ_DIR			:= ./obj/
 
 _SRC 	:= main.c
-_SRC 	+= navigator.c
+_SRC 	+= scout.c
 _SRC 	+= strategist.c
 _SRC 	+= tactician.c
 _SRC 	+= captain.c

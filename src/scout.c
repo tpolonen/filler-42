@@ -1,7 +1,7 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   read.c                                             :+:      :+:    :+:   */
+/*   scout.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: tpolonen <tpolonen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
@@ -61,20 +61,23 @@ int	can_read_piece(t_data *data, t_piece *piece)
 	piece->height = (int)ft_strtol(seek, &seek);
 	piece->width = (int)ft_strtol(seek, &seek);
 	piece->ptr = (char *)xalloc(data->width * piece->height);
-	if (piece->ptr == NULL)
-		return (0);
+	ft_dintarr_clear(&piece->shape);
 	row = 0;
-	while (row < piece->height)
+	while (row < piece->height && piece->ptr)
 	{
 		ft_memdel((void **)&data->temp);
 		ft_getline(0, &(data->temp));
 		x = -1;
 		while (++x < piece->width)
 			if (data->temp[x] == '*')
+			{
 				*(piece->ptr + (row * data->width) + x) = 1;
+				ft_dintarr_add(&piece->shape,
+						*(piece->ptr + (row * data->width) + x));
+			}
 		row++;
 	}
-	return (0);
+	return (piece->ptr != NULL);
 }
 
 int	set_player(t_data *data)
