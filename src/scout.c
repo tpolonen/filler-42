@@ -28,9 +28,6 @@ int	can_read_board(t_data *data, t_dintarr *enemy_shape)
 	int			x;
 	const int	offset = get_offset(data);
 
-	ft_bzero(data->oboard_ptr, data->width * data->height);
-	ft_bzero(data->xboard_ptr, data->width * data->height);
-	ft_dintarr_clear(&enemy_shape);
 	row = -1;
 	while (++row < data->height)
 	{
@@ -40,10 +37,13 @@ int	can_read_board(t_data *data, t_dintarr *enemy_shape)
 			if (data->temp[offset + x] == 'o' || data->temp[offset + x] == 'O')
 			{
 				ft_dintarr_add(&enemy_shape, row * data->width + x);
-				*(data->oboard_ptr + (row * data->width) + x) = 1;
+				data->oboard_ptr[row * data->width + x] = 1;
+				data->xoboard_ptr[row * data->width + x] = 1;
 			}
 			if (data->temp[offset + x] == 'x' || data->temp[offset + x] == 'X')
-				*(data->xboard_ptr + (row * data->width) + x) = 1;
+				data->xboard_ptr[row * data->width + x] = 1;
+			data->xoboard_ptr[row * data->width + x] =
+					data->xoboard_ptr[row * data->width + x] == 1;
 		}
 		ft_memdel((void **)&data->temp);
 		ft_getline(0, &(data->temp));
@@ -71,9 +71,9 @@ int	can_read_piece(t_data *data, t_piece *piece)
 		while (++x < piece->width)
 			if (data->temp[x] == '*')
 			{
-				*(piece->ptr + (row * data->width) + x) = 1;
+				piece->ptr[row * data->width + x] = 1;
 				ft_dintarr_add(&piece->shape,
-						*(piece->ptr + (row * data->width) + x));
+						piece->ptr[row * data->width + x]);
 			}
 		row++;
 	}
@@ -100,14 +100,13 @@ int	init_data(t_data *data)
 	char	*seek;
 
 	ft_getline(0, &(data->temp));
-	if ((ft_strncmp(data->temp, "Plateau ", 8) != 0) || \
+	if ((ft_strncmp(data->temp, "Plateau ", 8)) || \
 			(ft_strchr(data->temp, ':') == NULL))
 		return (6);
 	seek = data->temp + 8;
 	data->height = (int)ft_strtol(seek, &seek);
 	data->width = (int)ft_strtol(seek, &seek);
-	data->oboard_ptr = (char *)xalloc(data->width * data->height);
-	data->xboard_ptr = (char *)xalloc(data->width * data->height);
+	data->oboard_ptr = (char *)xalloc(data->width * data->height * 3);
 	if (data->oboard_ptr == NULL || data->xboard_ptr == NULL)
 		return (7);
 	if (data->player == 'x')

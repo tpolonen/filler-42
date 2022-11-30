@@ -34,12 +34,27 @@
 
 # include "libft.h"
 
+typedef struct	s_coord
+{
+	int	x;
+	int	y;
+}	t_coord;
+
+typedef struct	s_margin
+{
+	int	top;
+	int	right;
+	int	bottom;
+	int	left;
+}	t_margin;
+
 typedef struct s_piece
 {
 	int			width;
 	int			height;
 	char		*ptr;
 	t_dintarr	*shape;
+	t_margin	*margin;
 }	t_piece;
 
 typedef struct s_gamedata
@@ -48,8 +63,9 @@ typedef struct s_gamedata
 	int		width;
 	int		height;
 	int		turncount;
-	char	*oboard_ptr;
 	char	*xboard_ptr;
+	char	*oboard_ptr;
+	char	*xoboard_ptr;
 	char	*temp;
 }	t_data;
 
@@ -92,6 +108,7 @@ int			clean_exit(t_data *data, const char *str, int error);
 int			count(char *ptr, size_t n);
 int			is_cell_filled(int cell);
 void		*xalloc(size_t min_size);
+void		find_margins(void);
 
 /* debug.c */
 void		debug_print(char *ptr, int width, int height);

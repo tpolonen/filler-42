@@ -49,6 +49,26 @@ int	is_cell_filled(int cell)
 	return (get_strat()->enemy[cell] | get_strat()->player[cell]);
 }
 
+void	find_margins(void)
+{
+	const t_piece	*piece = get_piece();
+	const t_dintarr	*shape = piece->shape;
+	size_t	i;
+
+	piece->margin->top = shape->arr[0] / piece->width;
+	piece->margin->bottom = shape->arr[piece->shape->len - 1] / piece->width;
+	piece->margin->left = piece->width - 1;
+	piece->margin->right = 0;
+	i = 0;
+	while (i < shape->len)
+	{
+		if (shape->arr[i] % piece->width < piece->margin->left)
+			piece->margin->left = shape->arr[i] / piece->width;
+		if (shape->arr[i] % piece->width > piece->margin->right)
+			piece->margin->right = piece->width - shape->arr[i] % piece->width;
+	}
+}
+
 void	*xalloc(size_t min_size)
 {
 	size_t	size;

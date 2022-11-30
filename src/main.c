@@ -12,7 +12,7 @@
 
 #include "filler.h"
 
-static int	can_make_move(t_data *data, int *error)
+static int	can_make_move(t_data *data, int *error, t_dintarr *enemy_shape)
 {
 	if (ft_getline(0, &(data->temp)) <= 0)
 	{
@@ -25,8 +25,12 @@ static int	can_make_move(t_data *data, int *error)
 		ft_memdel((void **)&data->temp);
 		ft_getline(0, &(data->temp));
 	}
-	if (!can_read_board(data, get_enemy_shape()) || \
-				!can_read_piece(data, get_piece()))
+	ft_bzero(data->oboard_ptr, data->width * data->height);
+	ft_bzero(data->xboard_ptr, data->width * data->height);
+	ft_bzero(data->xoboard_ptr, data->width * data->height);
+	ft_dintarr_clear(&enemy_shape);
+	if (!can_read_board(data, enemy_shape) ||
+			!can_read_piece(data, get_piece()))
 	{
 		*error = 10;
 		return (0);
@@ -48,7 +52,7 @@ int	main(void)
 	error = init_data(data);
 	if (error)
 		return (clean_exit(data, "Error in map header: ", error));
-	while (can_make_move(data, &error))
+	while (can_make_move(data, &error, get_enemy_shape()))
 	{
 		if (data->temp)
 		{
