@@ -12,7 +12,7 @@
 
 #include "filler.h"
 
-static int	*count_board_matches(char* board, int target)
+static int	*count_board_matches(char *board, int target)
 {
 	int			*ret;
 	int 		i;
@@ -22,7 +22,7 @@ static int	*count_board_matches(char* board, int target)
 	i = 0;
 	while (i < size)
 	{
-		ret[i] = count()
+		ret[i] = count(board, target);
 	}
 	return (ret);
 }

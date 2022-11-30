@@ -14,14 +14,12 @@
 
 int	clean_exit(t_data *data, const char *str, int error)
 {
-	if (data->oboard_ptr)
-		ft_memdel((void **)&data->oboard_ptr);
-	if (data->xboard_ptr)
-		ft_memdel((void **)&data->xboard_ptr);
-	if (data->temp)
-		ft_memdel((void **)&data->temp);
-	if (get_piece()->ptr)
-		ft_memdel((void **)&get_piece()->ptr);
+	ft_memdel((void **)&data->xboard_ptr);
+	ft_memdel((void **)&data->oboard_ptr);
+	ft_memdel((void **)&data->xoboard_ptr);
+	ft_memdel((void **)&data->temp);
+	ft_memdel((void **)&get_piece()->ptr);
+	ft_dintarr_close(get_enemy_shape(), NULL)
 	if (str)
 		ft_putstr(str);
 	if (error)
@@ -78,7 +76,8 @@ void	*xalloc(size_t min_size)
 	while (size < min_size)
 		size *= 2;
 	alloc = malloc(size);
-	if (alloc)
-		ft_bzero(alloc, size);
+	if (!alloc)
+		clean_exit(get_data(), "Allocation failed", 0);
+	ft_bzero(alloc, size);
 	return (alloc);
 }
