@@ -12,6 +12,50 @@
 
 #include "filler.h"
 
+static void	align_piece(void)
+{
+	const t_data	*data = get_data();
+	t_piece			*piece;
+	char			*map;
+	int				i;
+
+	piece = get_piece();
+	map = piece->ptr;
+	i = 0;
+	while (i < data->width * data->height)
+	{
+		map[i] <<= piece->margin.left;
+		map[i] <<= piece->margin.top * data->width;
+		i++;
+	}
+}
+
+int	init_data(t_data *data)
+{
+	char	*seek;
+
+	ft_getline(0, &(data->temp));
+	if ((ft_strncmp(data->temp, "Plateau ", 8)) || \
+			(ft_strchr(data->temp, ':') == NULL))
+		return (6);
+	seek = data->temp + 8;
+	data->height = (int)ft_strtol(seek, &seek);
+	data->width = (int)ft_strtol(seek, &seek);
+	data->oboard_ptr = (char *)xalloc(data->width * data->height * 3);
+	if (data->player == 'x')
+	{
+		get_strat()->player = data->xboard_ptr;
+		get_strat()->enemy = data->oboard_ptr;
+	}
+	else
+	{
+		get_strat()->player = data->oboard_ptr;
+		get_strat()->enemy = data->xboard_ptr;
+	}
+	ft_memdel((void **)&data->temp);
+	return ((data->width <= 0) || (data->height <= 0));
+}
+
 static int	can_make_move(t_data *data, int *error, t_dintarr *enemy_shape)
 {
 	if (ft_getline(0, &(data->temp)) <= 0)
@@ -35,6 +79,7 @@ static int	can_make_move(t_data *data, int *error, t_dintarr *enemy_shape)
 		*error = 10;
 		return (0);
 	}
+	align_piece();
 	strategize(data);
 	return (valid_move_exists());
 }

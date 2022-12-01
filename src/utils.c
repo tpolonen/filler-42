@@ -14,12 +14,22 @@
 
 int	clean_exit(t_data *data, const char *str, int error)
 {
+	t_dintarr	*enemy_shape;
+	t_dintarr	*valid_moves;
+
+	enemy_shape = get_enemy_shape();
+	valid_moves = get_strat()->valid_moves;
 	ft_memdel((void **)&data->xboard_ptr);
 	ft_memdel((void **)&data->oboard_ptr);
 	ft_memdel((void **)&data->xoboard_ptr);
 	ft_memdel((void **)&data->temp);
 	ft_memdel((void **)&get_piece()->ptr);
-	ft_dintarr_close(get_enemy_shape(), NULL)
+	ft_memdel((void **)&get_strat()->enemy_hits);
+	ft_memdel((void **)&get_strat()->player_hits);
+	ft_memdel((void **)&get_strat()->juice_scores);
+	ft_memdel((void **)&get_strat()->distance_scores);
+	ft_dintarr_close(&enemy_shape, NULL);
+	ft_dintarr_close(&valid_moves, NULL);
 	if (str)
 		ft_putstr(str);
 	if (error)
@@ -28,31 +38,20 @@ int	clean_exit(t_data *data, const char *str, int error)
 	return (error);
 }
 
-int	count(char *ptr, size_t n)
-{
-	int ret;
-
-	ret = 0;
-	while (n > 0)
-	{
-		ret += *ptr & 1;
-		ptr++;
-		n--;
-	}
-	return (ret);
-}
-
 int	is_cell_filled(int cell)
 {
-	return (get_strat()->enemy[cell] | get_strat()->player[cell]);
+	const t_strat	*strat = get_strat();
+
+	return (strat->enemy[cell] | strat->player[cell]);
 }
 
 void	find_margins(void)
 {
 	const t_piece	*piece = get_piece();
-	const t_dintarr	*shape = piece->shape;
-	size_t	i;
-
+	t_dintarr		*shape;
+	size_t			i;
+	
+	shape = piece->shape;
 	piece->margin->top = shape->arr[0] / piece->width;
 	piece->margin->bottom = shape->arr[piece->shape->len - 1] / piece->width;
 	piece->margin->left = piece->width - 1;

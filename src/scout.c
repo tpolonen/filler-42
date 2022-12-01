@@ -95,30 +95,4 @@ int	set_player(t_data *data)
 	return (data->player == 0);
 }
 
-int	init_data(t_data *data)
-{
-	char	*seek;
 
-	ft_getline(0, &(data->temp));
-	if ((ft_strncmp(data->temp, "Plateau ", 8)) || \
-			(ft_strchr(data->temp, ':') == NULL))
-		return (6);
-	seek = data->temp + 8;
-	data->height = (int)ft_strtol(seek, &seek);
-	data->width = (int)ft_strtol(seek, &seek);
-	data->oboard_ptr = (char *)xalloc(data->width * data->height * 3);
-	if (data->oboard_ptr == NULL || data->xboard_ptr == NULL)
-		return (7);
-	if (data->player == 'x')
-	{
-		get_strat()->player = data->xboard_ptr;
-		get_strat()->enemy = data->oboard_ptr;
-	}
-	else
-	{
-		get_strat()->player = data->oboard_ptr;
-		get_strat()->enemy = data->xboard_ptr;
-	}
-	ft_memdel((void **)&data->temp);
-	return ((data->width <= 0) || (data->height <= 0));
-}
