@@ -14,14 +14,12 @@
 
 int	clean_exit(t_data *data, const char *str, int error)
 {
-	if (data->oboard_ptr)
-		ft_memdel((void **)&data->oboard_ptr);
-	if (data->xboard_ptr)
-		ft_memdel((void **)&data->xboard_ptr);
-	if (data->temp)
-		ft_memdel((void **)&data->temp);
-	if (get_piece()->ptr)
-		ft_memdel((void **)&get_piece()->ptr);
+	ft_memdel((void **)&data->xboard_ptr);
+	ft_memdel((void **)&data->oboard_ptr);
+	ft_memdel((void **)&data->xoboard_ptr);
+	ft_memdel((void **)&data->temp);
+	ft_memdel((void **)&get_piece()->ptr);
+	ft_dintarr_close(get_enemy_shape(), NULL)
 	if (str)
 		ft_putstr(str);
 	if (error)
@@ -30,45 +28,43 @@ int	clean_exit(t_data *data, const char *str, int error)
 	return (error);
 }
 
-int	comp1(char *ptr1, char *ptr2, size_t n)
+int	count(char *ptr, size_t n)
 {
-	while (n-- > 0)
+	int ret;
+
+	ret = 0;
+	while (n > 0)
 	{
-		if (ptr1[n] & ptr2[n])
-			return (1);
+		ret += *ptr & 1;
+		ptr++;
+		n--;
 	}
-	return (0);
+	return (ret);
 }
 
-static int	comp2(char *ptr1, char *ptr2, size_t n)
+int	is_cell_filled(int cell)
 {
-	void	*p1;
-	void	*p2;
-
-	p1 = ptr1;
-	p2 = ptr2;
-	while (n >= sizeof(long long) && !(*(long long *)p1 & *(long long *)p2))
-	{
-		p1 += sizeof(long long);
-		p2 += sizeof(long long);
-		n -= sizeof(long long);
-	}
-	while (n >= sizeof(int) && !(*(int *)p1 & *(int *)p2))
-	{
-		p1 += sizeof(int);
-		p2 += sizeof(int);
-		n -= sizeof(int);
-	}
-	return (comp1((char *)p1, (char *)p2, n));
+	return (get_strat()->enemy[cell] | get_strat()->player[cell]);
 }
 
-int	comp(char *ptr1, char *ptr2, size_t n)
+void	find_margins(void)
 {
-	if (n == 0)
-		return (0);
-	if (n > sizeof(long long))
-		return (comp2(ptr1, ptr2, n));
-	return (comp1(ptr1, ptr2, n));
+	const t_piece	*piece = get_piece();
+	const t_dintarr	*shape = piece->shape;
+	size_t	i;
+
+	piece->margin->top = shape->arr[0] / piece->width;
+	piece->margin->bottom = shape->arr[piece->shape->len - 1] / piece->width;
+	piece->margin->left = piece->width - 1;
+	piece->margin->right = 0;
+	i = 0;
+	while (i < shape->len)
+	{
+		if (shape->arr[i] % piece->width < piece->margin->left)
+			piece->margin->left = shape->arr[i] / piece->width;
+		if (shape->arr[i] % piece->width > piece->margin->right)
+			piece->margin->right = piece->width - shape->arr[i] % piece->width;
+	}
 }
 
 void	*xalloc(size_t min_size)
@@ -80,7 +76,8 @@ void	*xalloc(size_t min_size)
 	while (size < min_size)
 		size *= 2;
 	alloc = malloc(size);
-	if (alloc)
-		ft_bzero(alloc, size);
+	if (!alloc)
+		clean_exit(get_data(), "Allocation failed", 0);
+	ft_bzero(alloc, size);
 	return (alloc);
 }

@@ -34,7 +34,7 @@ static inline int	next_cell(int dir, int cell)
 	return (cell + dirs[dir][0] + (dirs[dir][1] * width));
 }
 
-static int	*get_values(char *board, t_dintarr *shape)
+int	*get_values(t_dintarr *shape)
 {
 	size_t	cell_index;
 	int		*values;
@@ -53,7 +53,7 @@ static int	*get_values(char *board, t_dintarr *shape)
 			if (out_of_bounds(dir, shape->arr[cell_index]))
 				continue ;
 			next = next_cell(dir, shape->arr[cell_index]);
-			if (board[next] == 1)
+			if (!is_cell_filled(next))
 				value++;
 		}
 		values[cell_index++] = value;
@@ -61,14 +61,13 @@ static int	*get_values(char *board, t_dintarr *shape)
 	return (values);
 }
 
-static t_dintarr	*get_source(char *board, t_dintarr *shape)
+static t_dintarr	*get_source(int *values, t_dintarr *shape)
 {
 	t_dintarr	*source;
-	int			*values;
 	int			max;
 	int			i;
 
-	values = get_values(board, shape);
+	source = NULL;
 	max = -1;
 	i = 0;
 	while ((size_t) i < shape->len)
@@ -77,7 +76,8 @@ static t_dintarr	*get_source(char *board, t_dintarr *shape)
 			max = values[i];
 		i++;
 	}
-	while (i > 0)
+	i = 0;
+	while ((size_t) i < shape->len)
 	{
 		if (values[i] == max)
 			ft_dintarr_add(&source, shape->arr[i]);
@@ -88,16 +88,13 @@ static t_dintarr	*get_source(char *board, t_dintarr *shape)
 
 void	find_new_target(t_strat *strat)
 {
-	t_dintarr	*shape;
 	t_dintarr	*source;
-	int			i;
+	t_dintarr	*shape;
+	int			*values;
 
-	if (strat->target)
-		ft_dintarr_close(&(strat->target), NULL);
-	i = 0;
-	while (strat->enemy[i++] == 0)
-		;
+	ft_dintarr_clear(&strat->target);
 	shape = get_enemy_shape();
-	source = get_source(strat->enemy, shape);
+	values = get_values(shape);
+	source = get_source(values, shape);
 	strat->target = floodfill(strat->enemy, source, 1, 50);
 }

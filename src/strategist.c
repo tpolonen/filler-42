@@ -27,14 +27,15 @@ static void	choose_target(t_data *data, t_strat *strat)
 {
 	static int	misses;
 	int			i;
+	int			current_cell;
 
 	if (!strat->target)
 		find_new_target(strat);
 	i = 0;
 	while ((size_t)i < strat->target->len)
 	{
-		if (strat->enemy[strat->target->arr[i]] || \
-				strat->player[strat->target->arr[i]])
+		current_cell = strat->target->arr[i];
+		if (strat->enemy[current_cell] | strat->player[current_cell])
 		{
 			strat->target->arr[i] = -1;
 			misses++;
