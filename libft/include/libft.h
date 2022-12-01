@@ -91,6 +91,8 @@ double		ft_fabs(double n);
 float		ft_fabsf(float n);
 long double	ft_fabsl(long double n);
 int			ft_max(int a, int b);
+size_t		ft_smax(size_t a, size_t b);
+size_t		ft_smin(size_t a, size_t b);
 int			ft_isalpha(int c);
 int			ft_isdigit(int c);
 int			ft_isalnum(int c);
@@ -170,5 +172,6 @@ ssize_t		ft_dstrclose(t_dstr **ds, char **target);
 ssize_t		ft_dintarr_create(t_dintarr **darr, size_t size);
 ssize_t		ft_dintarr_add(t_dintarr **darr, const int n);
 ssize_t		ft_dintarr_close(t_dintarr **src, int **dst);
+ssize_t		ft_dintarr_clear(t_dintarr **darr);
 
 #endif

@@ -30,6 +30,7 @@ int	can_read_board(t_data *data, t_dintarr *enemy_shape)
 
 	ft_bzero(data->oboard_ptr, data->width * data->height);
 	ft_bzero(data->xboard_ptr, data->width * data->height);
+	ft_dintarr_clear(&enemy_shape);
 	row = -1;
 	while (++row < data->height)
 	{
@@ -38,8 +39,7 @@ int	can_read_board(t_data *data, t_dintarr *enemy_shape)
 		{
 			if (data->temp[offset + x] == 'o' || data->temp[offset + x] == 'O')
 			{
-				ft_dintarr_add(&enemy_shape,
-					*(data->oboard_ptr + (row * data->width) + x));
+				ft_dintarr_add(&enemy_shape, row * data->width + x);
 				*(data->oboard_ptr + (row * data->width) + x) = 1;
 			}
 			if (data->temp[offset + x] == 'x' || data->temp[offset + x] == 'X')

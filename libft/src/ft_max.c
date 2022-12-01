@@ -10,9 +10,32 @@
 /*                                                                            */
 /* ************************************************************************** */
 
+#include "libft.h"
+
 int	ft_max(int a, int b)
 {
 	if (a > b)
 		return (a);
 	return (b);
+}
+
+int	ft_min(int a, int b)
+{
+	if (a > b)
+		return (b);
+	return (a);
+}
+
+size_t	ft_smax(size_t a, size_t b)
+{
+	if (a > b)
+		return (a);
+	return (b);
+}
+
+size_t	ft_smin(size_t a, size_t b)
+{
+	if (a > b)
+		return (b);
+	return (a);
 }
