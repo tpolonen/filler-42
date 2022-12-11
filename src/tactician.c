@@ -36,15 +36,16 @@ static inline int	next_cell(int dir, int cell)
 
 int	*get_values(t_dintarr *shape)
 {
-	size_t	cell_index;
-	int		*values;
-	int		dir;
-	int		value;
-	int		next;
+	const t_data	*data = get_data();
+	size_t			cell_index;
+	int				*values;
+	int				dir;
+	int				value;
+	int				next;
 
 	cell_index = 0;
 	values = xalloc(sizeof(int) * shape->len);
-	while (values && cell_index < shape->len)
+	while (cell_index < shape->len)
 	{
 		dir = -1;
 		value = 0;
@@ -53,7 +54,7 @@ int	*get_values(t_dintarr *shape)
 			if (out_of_bounds(dir, shape->arr[cell_index]))
 				continue ;
 			next = next_cell(dir, shape->arr[cell_index]);
-			if (!is_cell_filled(next))
+			if (!data->xoboard_ptr[next])
 				value++;
 		}
 		values[cell_index++] = value;

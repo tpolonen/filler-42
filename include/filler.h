@@ -113,15 +113,14 @@ int			valid_move_exists(void);
 t_dintarr	*floodfill(char *board, t_dintarr *source, int wall,
 				size_t max_area);
 /* storage.c */
-t_strat		*get_strat(void);
 t_data		*get_data(void);
+t_strat		*get_strat(void);
 t_piece		*get_piece(void);
 t_dintarr 	*get_enemy_shape(void);
 t_tactics	*get_tactics(void);
 
 /* utils.c */
 int			clean_exit(t_data *data, const char *str, int error);
-int			is_cell_filled(int cell);
 void		find_margins(void);
 void		*xalloc(size_t min_size);
 
