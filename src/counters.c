@@ -55,3 +55,46 @@ void	count_board_matches(t_piece *piece, char *board, t_dintarr *out)
 		cell.y++;
 	}
 }
+
+int	find_juiciest_cell(t_tactics *tactics)
+{
+	int		hiscore;
+	int		best_cell;	
+	size_t	i;
+
+	i = 0;
+	hiscore = -1;
+	best_cell = -1;
+	while (i < tactics->juice_scores->len)
+	{
+		if (tactics->juice_scores->arr[i] > 0 &&
+				tactics->juice_scores->arr[i] > hiscore)
+		{
+			best_cell = tactics->valid_moves->arr[i];
+			hiscore = tactics->juice_scores->arr[i];
+		}
+		i++;
+	}
+	return (best_cell);
+}
+
+int	find_closest_cell(t_tactics *tactics)
+{
+	int		shortest_dist;
+	int		closest_cell;
+	size_t	i;
+
+	i = 0;
+	shortest_dist = INT_MAX;
+	closest_cell = tactics->valid_moves->arr[tactics->valid_moves->len - 1];
+	while (i < tactics->distances->len)
+	{
+		if (tactics->distances->arr[i] < shortest_dist)
+		{
+			closest_cell = tactics->valid_moves->arr[i];
+			shortest_dist = tactics->distances->arr[i];
+		}
+		i++;
+	}
+	return (closest_cell);
+}

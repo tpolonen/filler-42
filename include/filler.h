@@ -84,7 +84,7 @@ typedef struct	s_tactics
 	t_dintarr	*enemy_hits;
 	t_dintarr	*player_hits;
 	t_dintarr	*juice_scores;
-	t_dintarr	*distance_scores;
+	t_dintarr	*distances;
 }	t_tactics;
 
 /* main.c */
@@ -102,16 +102,19 @@ void		strategize(t_data *data);
 void		find_new_target(t_strat *strat);
 int			*get_values(t_dintarr *shape);
 
+/* captain.c */
+int			get_next_move(void);
+
 /* counters.c */
 int			count(char *left, char *right, int n);
 void		count_board_matches(t_piece *piece, char *board, t_dintarr *out);
-
-/* captain.c */
-int			valid_move_exists(void);
+int			find_juiciest_cell(t_tactics *tactics);
+int			find_closest_cell(t_tactics *tactics);
 
 /* floodfill.c */
 t_dintarr	*floodfill(char *board, t_dintarr *source, int wall,
 				size_t max_area);
+
 /* storage.c */
 t_data		*get_data(void);
 t_strat		*get_strat(void);

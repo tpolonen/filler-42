@@ -12,25 +12,21 @@
 
 #include "filler.h"
 
-static void	close_dintarrs(void)
+static void	close_dintarrs(t_dintarr *enemy_shape, t_dintarr *valid_moves)
 {
-	t_dintarr	*enemy_shape;
 	t_dintarr	*target;
-	t_dintarr	*valid_moves;
 	t_dintarr	*enemy_hits;
 	t_dintarr	*player_hits;
 	t_dintarr	*juice_scores;
 	t_dintarr	*distance_scores;
 
-	enemy_shape = get_enemy_shape();
-	valid_moves = get_tactics()->valid_moves;
 	target = get_strat()->target;
 	enemy_hits = get_tactics()->enemy_hits;
 	player_hits = get_tactics()->player_hits;
 	juice_scores = get_tactics()->juice_scores;
-	distance_scores = get_tactics()->distance_scores;
-	ft_dintarr_close(&valid_moves, NULL);
+	distance_scores = get_tactics()->distances;
 	ft_dintarr_close(&enemy_shape, NULL);
+	ft_dintarr_close(&valid_moves, NULL);
 	ft_dintarr_close(&target, NULL);
 	ft_dintarr_close(&enemy_hits, NULL);
 	ft_dintarr_close(&player_hits, NULL);
@@ -45,7 +41,7 @@ int	clean_exit(t_data *data, const char *str, int error)
 	ft_memdel((void **)&data->xoboard_ptr);
 	ft_memdel((void **)&data->temp);
 	ft_memdel((void **)&get_piece()->ptr);
-	close_dintarrs();
+	close_dintarrs(get_enemy_shape(), get_tactics()->valid_moves);
 	if (str)
 		ft_putstr(str);
 	if (error)

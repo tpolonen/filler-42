@@ -22,6 +22,7 @@ _SRC 	+= strategist.c
 _SRC 	+= tactician.c
 _SRC 	+= captain.c
 
+_SRC	+= counters.c
 _SRC 	+= utils.c
 _SRC 	+= debug.c
 _SRC 	+= floodfill.c

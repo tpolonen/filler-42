@@ -56,6 +56,24 @@ int	init_data(t_data *data)
 	return ((data->width <= 0) || (data->height <= 0));
 }
 
+static void cell_to_move(int cell)
+{
+	static t_coord	coord;
+	t_data			*data;
+	char			*x_str;
+	char			*y_str;
+	
+	data = get_data();
+	coord = (t_coord){cell % data->width, cell / data->width};
+	ft_memdel((void **)&data->temp);
+	x_str = ft_itoa(coord.x);
+	y_str = ft_itoa(coord.y);
+	if (x_str && y_str)
+		data->temp = ft_strjoin(x_str, y_str);
+	ft_memdel((void **)&x_str);
+	ft_memdel((void **)&y_str);
+}
+
 static int	can_make_move(t_data *data, int *error, t_dintarr *enemy_shape)
 {
 	if (ft_getline(0, &(data->temp)) <= 0)
@@ -81,7 +99,8 @@ static int	can_make_move(t_data *data, int *error, t_dintarr *enemy_shape)
 	}
 	align_piece();
 	strategize(data);
-	return (valid_move_exists());
+	cell_to_move(get_next_move());
+	return (1);
 }
 
 int	main(void)
