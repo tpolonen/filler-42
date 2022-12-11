@@ -41,7 +41,6 @@ int	*get_values(t_dintarr *shape)
 	int				*values;
 	int				dir;
 	int				value;
-	int				next;
 
 	cell_index = 0;
 	values = xalloc(sizeof(int) * shape->len);
@@ -53,8 +52,7 @@ int	*get_values(t_dintarr *shape)
 		{
 			if (out_of_bounds(dir, shape->arr[cell_index]))
 				continue ;
-			next = next_cell(dir, shape->arr[cell_index]);
-			if (!data->xoboard_ptr[next])
+			if (!data->xoboard_ptr[next_cell(dir, shape->arr[cell_index])])
 				value++;
 		}
 		values[cell_index++] = value;

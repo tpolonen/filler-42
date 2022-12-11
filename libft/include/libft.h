@@ -18,7 +18,6 @@
 #  include <unistd.h>
 # else
 #  include <Windows.h>
-#  define ssize_t long long
 # endif
 # include <limits.h>
 # define DINT_DEF_SIZE 10

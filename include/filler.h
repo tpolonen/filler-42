@@ -34,13 +34,13 @@
 
 # include "libft.h"
 
-typedef struct	s_coord
+typedef struct s_coord
 {
 	int	x;
 	int	y;
 }	t_coord;
 
-typedef struct	s_margin
+typedef struct s_margin
 {
 	int	top;
 	int	right;
@@ -78,13 +78,14 @@ typedef struct s_strategy
 	int			victory;
 }	t_strat;
 
-typedef struct	s_tactics
+typedef struct s_tactics
 {
 	t_dintarr	*valid_moves;
 	t_dintarr	*enemy_hits;
 	t_dintarr	*player_hits;
 	t_dintarr	*juice_scores;
 	t_dintarr	*distances;
+	t_dintarr	*enemy_shape;
 }	t_tactics;
 
 /* main.c */
@@ -119,7 +120,7 @@ t_dintarr	*floodfill(char *board, t_dintarr *source, int wall,
 t_data		*get_data(void);
 t_strat		*get_strat(void);
 t_piece		*get_piece(void);
-t_dintarr 	*get_enemy_shape(void);
+t_dintarr	*get_enemy_shape(void);
 t_tactics	*get_tactics(void);
 
 /* utils.c */

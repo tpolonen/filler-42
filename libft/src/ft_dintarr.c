@@ -59,7 +59,7 @@ ssize_t	ft_dintarr_close(t_dintarr **src, int **dst)
 	ssize_t	ret;
 
 	ret = 0;
-	if (*src == NULL)
+	if (src == NULL || *src == NULL)
 		return (ret);
 	if (dst != NULL)
 	{
@@ -77,7 +77,7 @@ ssize_t	ft_dintarr_close(t_dintarr **src, int **dst)
 		}
 	}
 	else
-		free((*src)->arr);
+		ft_memdel((void **)&(*src)->arr);
 	ft_memdel((void **) src);
 	return (ret);
 }

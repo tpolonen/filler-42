@@ -34,7 +34,6 @@ static void	get_juice_scores(t_tactics *tactics,
 						tactics->valid_moves->arr[valid_idx] + \
 						piece_shape->arr[piece_idx]);
 				piece_idx++;
-
 			}
 			target_idx++;
 		}
@@ -64,21 +63,11 @@ static void	get_dist_scores(t_tactics *tactics,
 	}
 }
 
-static int	cell_is_valid_move(t_coord *cell, t_tactics *tactics, t_data *data)
-{
-	int enemy_cell_hits;
-	int player_cell_hits;
-
-	enemy_cell_hits = tactics->enemy_hits->arr[cell->y * \
-					  data->width + cell->x];
-	player_cell_hits = tactics->player_hits->arr[cell->y * \
-					   data->width + cell->x];
-	return (enemy_cell_hits == 0 && player_cell_hits == 1);
-}
-
 static void	check_validity(t_data *data, t_piece *piece, t_tactics *tactics)
 {
 	t_coord	cell;
+	int		enemy_cell_hits;
+	int		player_cell_hits;
 
 	cell.y = 0;
 	while (cell.y < data->height - piece->margin.top - piece->margin.bottom)
@@ -87,9 +76,13 @@ static void	check_validity(t_data *data, t_piece *piece, t_tactics *tactics)
 		while (cell.x < data->width && cell.x < data->width - \
 				piece->margin.left - piece->margin.right)
 		{
-			if (cell_is_valid_move(&cell, tactics, data))
+			enemy_cell_hits = tactics->enemy_hits->arr[cell.y * \
+						data->width + cell.x];
+			player_cell_hits = tactics->player_hits->arr[cell.y * \
+						data->width + cell.x];
+			if (enemy_cell_hits == 0 && player_cell_hits == 1)
 				ft_dintarr_add(&tactics->valid_moves,
-						cell.y * data->width + cell.x);
+					cell.y * data->width + cell.x);
 			cell.x++;
 		}
 		cell.y++;
@@ -137,7 +130,7 @@ int	get_next_move(void)
 	center = (t_coord){0, 0};
 	center.x = strat->target->arr[(strat->target->len / 2) % \
 			get_data()->width];
-	center.y =  strat->target->arr[(strat->target->len / 2) / \
+	center.y = strat->target->arr[(strat->target->len / 2) / \
 			get_data()->width];
 	if (best_move_exists(get_piece(), &center, &nearest, &best))
 		return (best);

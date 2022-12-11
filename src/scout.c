@@ -42,8 +42,8 @@ int	can_read_board(t_data *data, t_dintarr *enemy_shape)
 			}
 			if (data->temp[offset + x] == 'x' || data->temp[offset + x] == 'X')
 				data->xboard_ptr[row * data->width + x] = 1;
-			data->xoboard_ptr[row * data->width + x] =
-					data->xoboard_ptr[row * data->width + x] == 1;
+			data->xoboard_ptr[row * data->width + x] = \
+				data->xoboard_ptr[row * data->width + x] == 1;
 		}
 		ft_memdel((void **)&data->temp);
 		ft_getline(0, &(data->temp));
@@ -51,11 +51,25 @@ int	can_read_board(t_data *data, t_dintarr *enemy_shape)
 	return (ft_strncmp(data->temp, "Piece ", 6) == 0);
 }
 
+static void	check_cell(int row, int col)
+{
+	const t_data	*data = get_data();
+	t_piece			*piece;
+
+	piece = get_piece();
+	if (data->temp[col] == '*')
+	{
+		piece->ptr[row * data->width + col] = 1;
+		ft_dintarr_add(&piece->shape,
+			piece->ptr[row * data->width + col]);
+	}
+}
+
 int	can_read_piece(t_data *data, t_piece *piece)
 {
 	char	*seek;
 	int		row;
-	int		x;
+	int		col;
 
 	seek = data->temp + 6;
 	piece->height = (int)ft_strtol(seek, &seek);
@@ -67,14 +81,9 @@ int	can_read_piece(t_data *data, t_piece *piece)
 	{
 		ft_memdel((void **)&data->temp);
 		ft_getline(0, &(data->temp));
-		x = -1;
-		while (++x < piece->width)
-			if (data->temp[x] == '*')
-			{
-				piece->ptr[row * data->width + x] = 1;
-				ft_dintarr_add(&piece->shape,
-						piece->ptr[row * data->width + x]);
-			}
+		col = 0;
+		while (col < piece->width)
+			check_cell(row, col++);
 		row++;
 	}
 	return (piece->ptr != NULL);
@@ -94,5 +103,3 @@ int	set_player(t_data *data)
 		data->player = 'x';
 	return (data->player == 0);
 }
-
-

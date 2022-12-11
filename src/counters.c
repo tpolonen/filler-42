@@ -14,7 +14,7 @@
 
 int	count(char *left, char *right, int n)
 {
-	int ret;
+	int	ret;
 
 	ret = 0;
 	while (n > 0)
@@ -67,8 +67,8 @@ int	find_juiciest_cell(t_tactics *tactics)
 	best_cell = -1;
 	while (i < tactics->juice_scores->len)
 	{
-		if (tactics->juice_scores->arr[i] > 0 &&
-				tactics->juice_scores->arr[i] > hiscore)
+		if (tactics->juice_scores->arr[i] > 0 && \
+			tactics->juice_scores->arr[i] > hiscore)
 		{
 			best_cell = tactics->valid_moves->arr[i];
 			hiscore = tactics->juice_scores->arr[i];

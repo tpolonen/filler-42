@@ -33,16 +33,16 @@ t_piece	*get_piece(void)
 	return (&piece);
 }
 
-t_dintarr	*get_enemy_shape(void)
-{
-	static t_dintarr	shape;
-
-	return (&shape);
-}
-
 t_tactics	*get_tactics(void)
 {
 	static t_tactics	tactics;
 
 	return (&tactics);
+}
+
+t_dintarr	*get_enemy_shape(void)
+{
+	const t_tactics	*tactics = get_tactics();
+
+	return (tactics->enemy_shape);
 }

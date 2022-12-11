@@ -25,13 +25,20 @@ static void	close_dintarrs(t_dintarr *enemy_shape, t_dintarr *valid_moves)
 	player_hits = get_tactics()->player_hits;
 	juice_scores = get_tactics()->juice_scores;
 	distance_scores = get_tactics()->distances;
-	ft_dintarr_close(&enemy_shape, NULL);
-	ft_dintarr_close(&valid_moves, NULL);
-	ft_dintarr_close(&target, NULL);
-	ft_dintarr_close(&enemy_hits, NULL);
-	ft_dintarr_close(&player_hits, NULL);
-	ft_dintarr_close(&juice_scores, NULL);
-	ft_dintarr_close(&distance_scores, NULL);
+	if (enemy_shape)
+		ft_dintarr_close(&enemy_shape, NULL);
+	if (valid_moves)
+		ft_dintarr_close(&valid_moves, NULL);
+	if (target)
+		ft_dintarr_close(&target, NULL);
+	if (enemy_hits)
+		ft_dintarr_close(&enemy_hits, NULL);
+	if (player_hits)
+		ft_dintarr_close(&player_hits, NULL);
+	if (juice_scores)
+		ft_dintarr_close(&juice_scores, NULL);
+	if (distance_scores)
+		ft_dintarr_close(&distance_scores, NULL);
 }
 
 int	clean_exit(t_data *data, const char *str, int error)
@@ -48,13 +55,6 @@ int	clean_exit(t_data *data, const char *str, int error)
 		ft_putnbr(error);
 	ft_putendl("");
 	return (error);
-}
-
-int	is_cell_filled(int cell)
-{
-	const t_strat	*strat = get_strat();
-
-	return (strat->enemy[cell] | strat->player[cell]);
 }
 
 void	find_margins(void)
