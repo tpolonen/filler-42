@@ -12,24 +12,40 @@
 
 #include "filler.h"
 
-int	clean_exit(t_data *data, const char *str, int error)
+static void	close_dintarrs(void)
 {
 	t_dintarr	*enemy_shape;
+	t_dintarr	*target;
 	t_dintarr	*valid_moves;
+	t_dintarr	*enemy_hits;
+	t_dintarr	*player_hits;
+	t_dintarr	*juice_scores;
+	t_dintarr	*distance_scores;
 
 	enemy_shape = get_enemy_shape();
-	valid_moves = get_strat()->valid_moves;
+	valid_moves = get_tactics()->valid_moves;
+	target = get_strat()->target;
+	enemy_hits = get_tactics()->enemy_hits;
+	player_hits = get_tactics()->player_hits;
+	juice_scores = get_tactics()->juice_scores;
+	distance_scores = get_tactics()->distance_scores;
+	ft_dintarr_close(&valid_moves, NULL);
+	ft_dintarr_close(&enemy_shape, NULL);
+	ft_dintarr_close(&target, NULL);
+	ft_dintarr_close(&enemy_hits, NULL);
+	ft_dintarr_close(&player_hits, NULL);
+	ft_dintarr_close(&juice_scores, NULL);
+	ft_dintarr_close(&distance_scores, NULL);
+}
+
+int	clean_exit(t_data *data, const char *str, int error)
+{
 	ft_memdel((void **)&data->xboard_ptr);
 	ft_memdel((void **)&data->oboard_ptr);
 	ft_memdel((void **)&data->xoboard_ptr);
 	ft_memdel((void **)&data->temp);
 	ft_memdel((void **)&get_piece()->ptr);
-	ft_memdel((void **)&get_strat()->enemy_hits);
-	ft_memdel((void **)&get_strat()->player_hits);
-	ft_memdel((void **)&get_strat()->juice_scores);
-	ft_memdel((void **)&get_strat()->distance_scores);
-	ft_dintarr_close(&enemy_shape, NULL);
-	ft_dintarr_close(&valid_moves, NULL);
+	close_dintarrs();
 	if (str)
 		ft_putstr(str);
 	if (error)
@@ -47,22 +63,23 @@ int	is_cell_filled(int cell)
 
 void	find_margins(void)
 {
-	const t_piece	*piece = get_piece();
+	t_piece			*piece;
 	t_dintarr		*shape;
 	size_t			i;
-	
+
+	piece = get_piece();
 	shape = piece->shape;
-	piece->margin->top = shape->arr[0] / piece->width;
-	piece->margin->bottom = shape->arr[piece->shape->len - 1] / piece->width;
-	piece->margin->left = piece->width - 1;
-	piece->margin->right = 0;
+	piece->margin.top = shape->arr[0] / piece->width;
+	piece->margin.bottom = shape->arr[piece->shape->len - 1] / piece->width;
+	piece->margin.left = piece->width - 1;
+	piece->margin.right = 0;
 	i = 0;
 	while (i < shape->len)
 	{
-		if (shape->arr[i] % piece->width < piece->margin->left)
-			piece->margin->left = shape->arr[i] / piece->width;
-		if (shape->arr[i] % piece->width > piece->margin->right)
-			piece->margin->right = piece->width - shape->arr[i] % piece->width;
+		if (shape->arr[i] % piece->width < piece->margin.left)
+			piece->margin.left = shape->arr[i] / piece->width;
+		if (shape->arr[i] % piece->width < piece->margin.right)
+			piece->margin.right = piece->width - shape->arr[i] % piece->width;
 	}
 }
 

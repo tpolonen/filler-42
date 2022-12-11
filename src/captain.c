@@ -66,7 +66,8 @@ static void	check_validity(t_data *data, t_piece *piece, t_tactics *tactics)
 				piece->margin.left - piece->margin.right)
 		{
 			if (cell_is_valid_move(&cell, tactics, data))
-				ft_dintarr_add(&tactics->valid_moves, cell.y * data->width + cell.x);
+				ft_dintarr_add(&tactics->valid_moves,
+						cell.y * data->width + cell.x);
 			cell.x++;
 		}
 		cell.y++;
@@ -78,17 +79,17 @@ static int	best_move_exists(t_piece *piece, t_coord *center,
 {
 	t_data		*data;
 	t_strat		*strat;
-	t_tactics	tactics;
+	t_tactics	*tactics;
 
 	data = get_data();
 	strat = get_strat();
-	ft_dintarr_clear(&tactics.enemy_hits);
-	count_board_matches(piece, strat->enemy, tactics.enemy_hits);
-	ft_dintarr_clear(&tactics.player_hits);
-	count_board_matches(piece, strat->player, tactics.player_hits);
-	ft_dintarr_clear(&tactics.valid_moves);
-	check_validity(data, piece, &tactics);
-
+	tactics = get_tactics();
+	ft_dintarr_clear(&tactics->enemy_hits);
+	count_board_matches(piece, strat->enemy, tactics->enemy_hits);
+	ft_dintarr_clear(&tactics->player_hits);
+	count_board_matches(piece, strat->player, tactics->player_hits);
+	ft_dintarr_clear(&tactics->valid_moves);
+	check_validity(data, piece, tactics);
 	return (0);
 }
 
