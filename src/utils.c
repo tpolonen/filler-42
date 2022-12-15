@@ -20,7 +20,7 @@ static void	close_dintarrs(t_dintarr *enemy_shape, t_dintarr *valid_moves)
 	t_dintarr	*juice_scores;
 	t_dintarr	*distance_scores;
 
-	target = get_strat()->target;
+	target = get_strat()->target_shape;
 	enemy_hits = get_tactics()->enemy_hits;
 	player_hits = get_tactics()->player_hits;
 	juice_scores = get_tactics()->juice_scores;
@@ -48,6 +48,7 @@ int	clean_exit(t_data *data, const char *str, int error)
 	ft_memdel((void **)&data->xoboard_ptr);
 	ft_memdel((void **)&data->temp);
 	ft_memdel((void **)&get_piece()->ptr);
+	ft_memdel((void **)&get_strat()->target_ptr);
 	close_dintarrs(get_enemy_shape(), get_tactics()->valid_moves);
 	if (str)
 		ft_putstr(str);

@@ -12,6 +12,7 @@
 
 #include "filler.h"
 
+/* I think this might be shit?
 static void	get_juice_scores(t_tactics *tactics,
 		t_dintarr *target, t_dintarr *piece_shape)
 {
@@ -40,6 +41,25 @@ static void	get_juice_scores(t_tactics *tactics,
 		ft_dintarr_add(&tactics->juice_scores, score);
 	}
 }
+*/
+
+static void	get_juice_scores(t_tactics *tactics)
+{
+	const t_strat	*strat = get_strat();
+	const t_piece	*piece = get_piece();
+	int				score;
+	size_t			valid_idx;
+
+	valid_idx = 0;
+	while (valid_idx < tactics->valid_moves->len)
+	{
+		score = count(strat->target_ptr + tactics->valid_moves->arr[valid_idx],
+				piece->ptr, piece->width * piece->height);
+		ft_dintarr_add(&tactics->juice_scores, score);
+		valid_idx++;
+	}
+	ft_memdel((void **)&strat->target_ptr);
+}
 
 static void	get_dist_scores(t_tactics *tactics,
 		t_dintarr *target, t_coord *origin)
@@ -54,7 +74,7 @@ static void	get_dist_scores(t_tactics *tactics,
 	mid_target = target->arr[target->len / 2];
 	board_width = get_data()->width;
 	target_coord = (t_coord){target->arr[mid_target] % board_width,
-		target->arr[mid_target / board_width]};
+		target->arr[mid_target] / board_width};
 	while (valid_idx < tactics->valid_moves->len)
 	{
 		dist = ft_abs(target_coord.x - origin->x) + \
@@ -92,11 +112,9 @@ static void	check_validity(t_data *data, t_piece *piece, t_tactics *tactics)
 static int	best_move_exists(t_piece *piece, t_coord *center,
 		int *nearest, int *best)
 {
-	t_data		*data;
 	t_strat		*strat;
 	t_tactics	*tactics;
 
-	data = get_data();
 	strat = get_strat();
 	tactics = get_tactics();
 	ft_dintarr_clear(&tactics->enemy_hits);
@@ -104,12 +122,12 @@ static int	best_move_exists(t_piece *piece, t_coord *center,
 	ft_dintarr_clear(&tactics->player_hits);
 	count_board_matches(piece, strat->player, tactics->player_hits);
 	ft_dintarr_clear(&tactics->valid_moves);
-	check_validity(data, piece, tactics);
-	get_juice_scores(tactics, strat->target, get_piece()->shape);
+	check_validity(get_data(), piece, tactics);
+	get_juice_scores(tactics);
 	*best = find_juiciest_cell(tactics);
 	if (*best < 0)
 	{
-		get_dist_scores(tactics, strat->target, center);
+		get_dist_scores(tactics, strat->target_shape, center);
 		*nearest = find_closest_cell(tactics);
 		return (0);
 	}
@@ -128,9 +146,9 @@ int	get_next_move(void)
 	nearest = 0;
 	best = -1;
 	center = (t_coord){0, 0};
-	center.x = strat->target->arr[(strat->target->len / 2) % \
+	center.x = strat->target_shape->arr[(strat->target_shape->len / 2) % \
 			get_data()->width];
-	center.y = strat->target->arr[(strat->target->len / 2) / \
+	center.y = strat->target_shape->arr[(strat->target_shape->len / 2) / \
 			get_data()->width];
 	if (best_move_exists(get_piece(), &center, &nearest, &best))
 		return (best);

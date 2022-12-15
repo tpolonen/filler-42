@@ -72,7 +72,8 @@ typedef struct s_strategy
 {
 	char		*enemy;
 	char		*player;
-	t_dintarr	*target;
+	char		*target_ptr;
+	t_dintarr	*target_shape;
 	int			turncount;
 	int			enemy_score;
 	int			victory;

@@ -60,18 +60,18 @@ static void	cell_to_move(int cell)
 {
 	static t_coord	coord;
 	t_data			*data;
-	char			*x_str;
-	char			*y_str;
+	char			buf[100];
+	char			*ptr;
 
 	data = get_data();
+	ft_bzero((void *)buf, 100);
+	ptr = buf;
 	coord = (t_coord){cell % data->width, cell / data->width};
 	ft_memdel((void **)&data->temp);
-	x_str = ft_itoa(coord.x);
-	y_str = ft_itoa(coord.y);
-	if (x_str && y_str)
-		data->temp = ft_strjoin(x_str, y_str);
-	ft_memdel((void **)&x_str);
-	ft_memdel((void **)&y_str);
+	ptr = ft_tobase(coord.x, 10, ptr);
+	*ptr++ = ' ';
+	ptr = ft_tobase(coord.y, 10, ptr);
+	data->temp = ft_strdup(buf);
 }
 
 static int	can_make_move(t_data *data, int *error, t_dintarr *enemy_shape)

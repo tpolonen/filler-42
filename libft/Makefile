@@ -6,7 +6,7 @@
 #    By: tpolonen <tpolonen@student.hive.fi>        +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2021/11/12 19:01:12 by tpolonen          #+#    #+#              #
-#    Updated: 2022/10/01 21:04:12 by tpolonen         ###   ########.fr        #
+#    Updated: 2022/12/15 18:44:27 by tpolonen         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -92,6 +92,7 @@ _SRC += ft_strstr.c
 _SRC += ft_strsub.c
 _SRC += ft_strtol.c
 _SRC += ft_strtrim.c
+_SRC += ft_tobase.c
 _SRC += ft_tolower.c
 _SRC += ft_toupper.c
 

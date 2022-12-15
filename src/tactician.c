@@ -87,13 +87,19 @@ static t_dintarr	*get_source(int *values, t_dintarr *shape)
 
 void	find_new_target(t_strat *strat)
 {
-	t_dintarr	*source;
-	t_dintarr	*shape;
-	int			*values;
+	const t_data	*data = get_data();
+	t_dintarr		*source;
+	t_dintarr		*shape;
+	int				*values;
+	size_t			i;
 
-	ft_dintarr_clear(&strat->target);
+	ft_dintarr_clear(&strat->target_shape);
 	shape = get_enemy_shape();
 	values = get_values(shape);
 	source = get_source(values, shape);
-	strat->target = floodfill(strat->enemy, source, 1, 50);
+	strat->target_shape = floodfill(strat->enemy, source, 1, 50);
+	strat->target_ptr = xalloc(data->width * data->height);
+	i = 0;
+	while (i < strat->target_shape->len)
+		strat->target_ptr[i] = 1;
 }

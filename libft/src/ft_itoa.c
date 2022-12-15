@@ -12,24 +12,15 @@
 
 #include "libft.h"
 
-char	*ft_itoa(int n)
+char	*ft_itoa(int n, int base)
 {
 	size_t	len;
 	char	*str;
 
-	len = ft_intlen(n, 10);
+	len = ft_intlen(n, base);
 	str = (char *) malloc(sizeof(char) * (len + 1));
 	if (!str)
 		return (NULL);
-	str[len--] = '\0';
-	if (n == 0)
-		return (ft_strcpy(str, "0"));
-	while (n != 0)
-	{
-		str[len--] = '0' + (char)(ft_abs(n % 10));
-		n /= 10;
-	}
-	if (len == 0)
-		str[len] = '-';
+	ft_tobase(n, base, str);
 	return (str);
 }
