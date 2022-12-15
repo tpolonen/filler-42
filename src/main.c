@@ -41,7 +41,10 @@ int	init_data(t_data *data)
 	seek = data->temp + 8;
 	data->height = (int)ft_strtol(seek, &seek);
 	data->width = (int)ft_strtol(seek, &seek);
-	data->oboard_ptr = (char *)xalloc(data->width * data->height * 3);
+	data->oboard_ptr = (char *)xalloc(data->width * data->height);
+	data->xboard_ptr = (char *)xalloc(data->width * data->height);
+	data->xoboard_ptr = (char *)xalloc(data->width * data->height);
+	get_strat()->target_ptr = (char *)xalloc(data->width * data->height);
 	if (data->player == 'x')
 	{
 		get_strat()->player = data->xboard_ptr;
@@ -78,7 +81,6 @@ static int	can_make_move(t_data *data, int *error, t_dintarr *enemy_shape)
 {
 	if (ft_getline(0, &(data->temp)) <= 0)
 	{
-		data->temp = NULL;
 		*error = 9;
 		return (0);
 	}
@@ -90,7 +92,8 @@ static int	can_make_move(t_data *data, int *error, t_dintarr *enemy_shape)
 	ft_bzero(data->oboard_ptr, data->width * data->height);
 	ft_bzero(data->xboard_ptr, data->width * data->height);
 	ft_bzero(data->xoboard_ptr, data->width * data->height);
-	ft_dintarr_clear(&enemy_shape);
+	if (!ft_dintarr_clear(&enemy_shape))
+		ft_dintarr_create(&enemy_shape, 8);
 	if (!can_read_board(data, enemy_shape) || \
 		!can_read_piece(data, get_piece()))
 	{

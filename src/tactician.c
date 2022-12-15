@@ -60,13 +60,11 @@ int	*get_values(t_dintarr *shape)
 	return (values);
 }
 
-static t_dintarr	*get_source(int *values, t_dintarr *shape)
+static void	find_source(int *values, t_dintarr *shape, t_dintarr *source)
 {
-	t_dintarr	*source;
 	int			max;
 	int			i;
 
-	source = NULL;
 	max = -1;
 	i = 0;
 	while ((size_t) i < shape->len)
@@ -82,7 +80,6 @@ static t_dintarr	*get_source(int *values, t_dintarr *shape)
 			ft_dintarr_add(&source, shape->arr[i]);
 		i++;
 	}
-	return (source);
 }
 
 void	find_new_target(t_strat *strat)
@@ -93,13 +90,18 @@ void	find_new_target(t_strat *strat)
 	int				*values;
 	size_t			i;
 
-	ft_dintarr_clear(&strat->target_shape);
+	if (!ft_dintarr_clear(&strat->target_shape))
+		ft_dintarr_create(&strat->target_shape, 8);
 	shape = get_enemy_shape();
 	values = get_values(shape);
-	source = get_source(values, shape);
+	source = get_tactics()->source;
+	if (!ft_dintarr_clear(&source))
+		ft_dintarr_create(&source, 8);
+	find_source(values, shape, source);
 	strat->target_shape = floodfill(strat->enemy, source, 1, 50);
 	strat->target_ptr = xalloc(data->width * data->height);
 	i = 0;
+	ft_bzero(strat->target_ptr, data->width * data->height);
 	while (i < strat->target_shape->len)
 		strat->target_ptr[i] = 1;
 }

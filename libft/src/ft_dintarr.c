@@ -14,6 +14,8 @@
 
 ssize_t	ft_dintarr_create(t_dintarr **darr, size_t size)
 {
+	if (!darr)
+		darr = (t_dintarr **)ft_memalloc(sizeof(t_dintarr *));
 	*darr = (t_dintarr *)ft_memalloc(sizeof(t_dintarr));
 	if (!(*darr))
 		return (0);
@@ -32,7 +34,7 @@ ssize_t	ft_dintarr_add(t_dintarr **darr, const int n)
 	int		*n_arr;
 	size_t	n_size;
 
-	if (*darr == NULL)
+	if (darr == NULL || *darr == NULL)
 	{
 		if (!ft_dintarr_create(darr, DINT_DEF_SIZE))
 			return (-1);
@@ -84,6 +86,8 @@ ssize_t	ft_dintarr_close(t_dintarr **src, int **dst)
 
 ssize_t	ft_dintarr_clear(t_dintarr **darr)
 {
+	if (!*darr)
+		return (0);
 	ft_bzero((void *)(*darr)->arr, (*darr)->alloced * sizeof(int));
 	return ((*darr)->alloced);
 }

@@ -81,12 +81,12 @@ typedef struct s_strategy
 
 typedef struct s_tactics
 {
+	t_dintarr	*source;
 	t_dintarr	*valid_moves;
 	t_dintarr	*enemy_hits;
 	t_dintarr	*player_hits;
 	t_dintarr	*juice_scores;
 	t_dintarr	*distances;
-	t_dintarr	*enemy_shape;
 }	t_tactics;
 
 /* main.c */

@@ -51,6 +51,7 @@ void	count_board_matches(t_piece *piece, char *board, t_dintarr *out)
 				piece->margin.left - piece->margin.right)
 		{
 			ft_dintarr_add(&out, matches_for_coord(cell, piece, board));
+			cell.x++;
 		}
 		cell.y++;
 	}

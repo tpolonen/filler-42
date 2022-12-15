@@ -42,7 +42,7 @@ t_tactics	*get_tactics(void)
 
 t_dintarr	*get_enemy_shape(void)
 {
-	const t_tactics	*tactics = get_tactics();
-
-	return (tactics->enemy_shape);
+	static t_dintarr	enemy_shape;
+	
+	return (&enemy_shape);
 }

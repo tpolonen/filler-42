@@ -12,15 +12,10 @@
 
 #include "filler.h"
 
-static void	open_game(t_data *data)
-{
-	(void)data;
-}
-
 static int	should_switch_target(int misses, int turncount)
 {
 	(void) turncount;
-	return ((size_t)misses >= get_strat()->target->len / 2);
+	return ((size_t)misses >= get_strat()->target_shape->len / 2);
 }
 
 static void	choose_target(t_strat *strat)
@@ -29,15 +24,15 @@ static void	choose_target(t_strat *strat)
 	int			i;
 	int			current_cell;
 
-	if (!strat->target)
+	if (!strat->target_shape)
 		find_new_target(strat);
 	i = 0;
-	while ((size_t)i < strat->target->len)
+	while ((size_t)i < strat->target_shape->len)
 	{
-		current_cell = strat->target->arr[i];
+		current_cell = strat->target_shape->arr[i];
 		if (strat->enemy[current_cell] | strat->player[current_cell])
 		{
-			strat->target->arr[i] = -1;
+			strat->target_shape->arr[i] = -1;
 			misses++;
 		}
 		i++;
@@ -47,6 +42,16 @@ static void	choose_target(t_strat *strat)
 		misses = 0;
 		find_new_target(strat);
 	}
+}
+
+//TODO write some logic to open the game
+static void	open_game(t_data *data)
+{
+	t_strat	*strat;
+
+	(void)data;
+	strat = get_strat();
+	choose_target(strat);
 }
 
 void	strategize(t_data *data)

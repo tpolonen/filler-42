@@ -1,0 +1,7 @@
+settings set target.input-path /Users/tpolonen/hive/projects/filler/testinput1
+b can_read_board
+b can_read_piece
+b get_next_move
+b strategize
+b choose_target
+b find_new_target

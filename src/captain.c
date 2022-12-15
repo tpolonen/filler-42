@@ -50,6 +50,8 @@ static void	get_juice_scores(t_tactics *tactics)
 	int				score;
 	size_t			valid_idx;
 
+	if (!ft_dintarr_clear(&tactics->juice_scores))
+		ft_dintarr_create(&tactics->juice_scores, 8);
 	valid_idx = 0;
 	while (valid_idx < tactics->valid_moves->len)
 	{
@@ -58,7 +60,6 @@ static void	get_juice_scores(t_tactics *tactics)
 		ft_dintarr_add(&tactics->juice_scores, score);
 		valid_idx++;
 	}
-	ft_memdel((void **)&strat->target_ptr);
 }
 
 static void	get_dist_scores(t_tactics *tactics,
@@ -70,6 +71,8 @@ static void	get_dist_scores(t_tactics *tactics,
 	int		mid_target;
 	int		board_width;
 
+	if (!ft_dintarr_clear(&tactics->distances))
+		ft_dintarr_create(&tactics->distances, 8);
 	valid_idx = 0;
 	mid_target = target->arr[target->len / 2];
 	board_width = get_data()->width;
@@ -117,11 +120,14 @@ static int	best_move_exists(t_piece *piece, t_coord *center,
 
 	strat = get_strat();
 	tactics = get_tactics();
-	ft_dintarr_clear(&tactics->enemy_hits);
+	if (!ft_dintarr_clear(&tactics->enemy_hits))
+		ft_dintarr_create(&tactics->enemy_hits, 8);
 	count_board_matches(piece, strat->enemy, tactics->enemy_hits);
-	ft_dintarr_clear(&tactics->player_hits);
+	if (!ft_dintarr_clear(&tactics->player_hits))
+		ft_dintarr_create(&tactics->player_hits, 8);
 	count_board_matches(piece, strat->player, tactics->player_hits);
-	ft_dintarr_clear(&tactics->valid_moves);
+	if (!ft_dintarr_clear(&tactics->valid_moves))
+		ft_dintarr_create(&tactics->valid_moves, 8);
 	check_validity(get_data(), piece, tactics);
 	get_juice_scores(tactics);
 	*best = find_juiciest_cell(tactics);

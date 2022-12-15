@@ -75,7 +75,8 @@ int	can_read_piece(t_data *data, t_piece *piece)
 	piece->height = (int)ft_strtol(seek, &seek);
 	piece->width = (int)ft_strtol(seek, &seek);
 	piece->ptr = (char *)xalloc(data->width * piece->height);
-	ft_dintarr_clear(&piece->shape);
+	if (!ft_dintarr_clear(&piece->shape))
+		ft_dintarr_create(&piece->shape, 8);
 	row = 0;
 	while (row < piece->height && piece->ptr)
 	{
