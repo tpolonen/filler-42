@@ -25,8 +25,11 @@ static void	choose_target(t_strat *strat)
 	int			current_cell;
 
 	if (!strat->target_shape)
+	{
 		find_new_target(strat);
-	i = 0;
+		return ;
+	}
+	i = -1;
 	while ((size_t)i < strat->target_shape->len)
 	{
 		current_cell = strat->target_shape->arr[i];
