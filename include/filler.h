@@ -73,6 +73,7 @@ typedef struct s_strategy
 	char		*enemy;
 	char		*player;
 	char		*target_ptr;
+	int			*values_ptr;
 	t_dintarr	*target_shape;
 	int			turncount;
 	int			enemy_score;
@@ -114,8 +115,8 @@ int			find_juiciest_cell(t_tactics *tactics);
 int			find_closest_cell(t_tactics *tactics);
 
 /* floodfill.c */
-t_dintarr	*floodfill(char *board, t_dintarr *source, int wall,
-				size_t max_area);
+t_dintarr	*floodfill(t_dintarr **root, char *board,
+		int wall, size_t max_area);
 
 /* storage.c */
 t_data		*get_data(void);

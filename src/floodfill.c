@@ -52,29 +52,32 @@ static void	explore(char *board, int cell, int wall, t_dintarr *area)
 	}
 }
 
-t_dintarr	*floodfill(char *board, t_dintarr *source, int wall,
+t_dintarr	*floodfill(t_dintarr **root, char *board, int wall,
 		size_t max_area)
 {
-	t_dintarr	*explored;
 	char		*copy;
+	t_dintarr	**old;
+	t_dintarr	**new;
 	size_t		i;
 
 	copy = (char *)xalloc(get_data()->width * get_data()->height);
-	if (!copy || !ft_dintarr_create(&explored, 16))
+	new = NULL;
+	if (!copy || ft_dintarr_create(new, 8))
 	{
 		ft_memdel((void **) &copy);
-		ft_dintarr_close(&source, NULL);
+		ft_dintarr_close(new, NULL);
 		return (NULL);
 	}
+	old = root;
 	ft_memcpy(copy, board, get_data()->width * get_data()->height);
 	i = 0;
-	while (i < source->len)
-		explore(copy, source->arr[i++], wall, explored);
-	ft_dintarr_close(&source, NULL);
+	while (i < (*root)->len)
+		explore(copy, (*root)->arr[i++], wall, *new);
+	ft_dintarr_close(root, NULL);
 	i = 0;
-	copy[explored->arr[i]] = wall;
-	while (i < explored->len && explored->len < max_area)
-		explore(copy, explored->arr[i++], wall, explored);
+	copy[(*new)->arr[i]] = wall;
+	while (i < (*new)->len && (*new)->len < max_area)
+		explore(copy, (*new)->arr[i++], wall, (*new));
 	ft_memdel((void **) &copy);
-	return (explored);
+	return (*old);
 }

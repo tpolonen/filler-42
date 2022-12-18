@@ -34,31 +34,7 @@ static inline int	next_cell(int dir, int cell)
 	return (cell + dirs[dir][0] + (dirs[dir][1] * width));
 }
 
-int	*get_values(t_dintarr *shape)
-{
-	const t_data	*data = get_data();
-	size_t			cell_index;
-	int				*values;
-	int				dir;
-	int				value;
 
-	cell_index = 0;
-	values = xalloc(sizeof(int) * shape->len);
-	while (cell_index < shape->len)
-	{
-		dir = -1;
-		value = 0;
-		while (++dir < 8)
-		{
-			if (out_of_bounds(dir, shape->arr[cell_index]))
-				continue ;
-			if (!data->xoboard_ptr[next_cell(dir, shape->arr[cell_index])])
-				value++;
-		}
-		values[cell_index++] = value;
-	}
-	return (values);
-}
 
 static void	find_source(int *values, t_dintarr *shape, t_dintarr *source)
 {
@@ -82,23 +58,50 @@ static void	find_source(int *values, t_dintarr *shape, t_dintarr *source)
 	}
 }
 
+void	find_values(t_dintarr *shape)
+{
+	const t_data	*data = get_data();
+	size_t			cell_index;
+	int				*values;
+	int				dir;
+	int				value;
+
+	cell_index = 0;
+	values = get_strat()->values_ptr;
+	while (cell_index < shape->len)
+	{
+		dir = -1;
+		value = 0;
+		while (++dir < 8)
+		{
+			if (out_of_bounds(dir, shape->arr[cell_index]))
+				continue ;
+			if (!data->xoboard_ptr[next_cell(dir, shape->arr[cell_index])])
+				value++;
+		}
+		values[cell_index++] = value;
+	}
+}
+
 void	find_new_target(t_strat *strat)
 {
 	const t_data	*data = get_data();
 	t_dintarr		*source;
 	t_dintarr		*shape;
-	int				*values;
 	size_t			i;
 
 	if (!ft_dintarr_clear(&strat->target_shape))
 		ft_dintarr_create(&strat->target_shape, 8);
 	shape = get_enemy_shape();
-	values = get_values(shape);
+	ft_memdel((void **)&strat->values_ptr);
+	strat->values_ptr = (int *)xalloc(sizeof(int) * shape->len);
+	find_values(shape);
 	source = get_tactics()->source;
 	if (!ft_dintarr_clear(&source))
 		ft_dintarr_create(&source, 8);
-	find_source(values, shape, source);
-	strat->target_shape = floodfill(strat->enemy, source, 1, 50);
+	find_source(strat->values_ptr, shape, source);
+	floodfill(&source, strat->enemy, 1, 50);
+	ft_memdel((void **)strat->target_ptr);
 	strat->target_ptr = xalloc(data->width * data->height);
 	i = 0;
 	ft_bzero(strat->target_ptr, data->width * data->height);

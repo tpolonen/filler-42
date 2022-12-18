@@ -33,7 +33,7 @@ static int	matches_for_coord(t_coord coord, t_piece *piece, char *board)
 	int				ret;
 
 	ret = count(board + coord.y * data->width + coord.x, piece->ptr,
-			piece->width * piece->height);
+			data->width * piece->height);
 	return (ret);
 }
 

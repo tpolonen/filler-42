@@ -1,3 +1,4 @@
+target create "tpolonen.filler"
 settings set target.load-cwd-lldbinit true
 settings set target.input-path ./testinput1
 b can_read_board
