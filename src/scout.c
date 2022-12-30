@@ -11,17 +11,34 @@
 /* ************************************************************************** */
 
 #include "filler.h"
-/*
-static int	get_offset(t_data *data)
-{
-	int	ret;
 
-	ret = 0;
-	while (*(data->temp + ret) != ' ')
-		ret++;
-	return (++ret);
+int	init_data(t_data *data)
+{
+	char		*seek;
+	t_strat		*strat;
+
+	ft_getline(0, &(data->temp));
+	if ((ft_strncmp(data->temp, "Plateau ", 8)) || \
+			(ft_strchr(data->temp, ':') == NULL))
+		return (6);
+	seek = data->temp + 8;
+	data->height = (int)ft_strtol(seek, &seek);
+	data->width = (int)ft_strtol(seek, &seek);
+	data->oboard_ptr = (char *)xalloc(data->width * data->height);
+	data->xboard_ptr = (char *)xalloc(data->width * data->height);
+	data->xoboard_ptr = (char *)xalloc(data->width * data->height);
+	strat = get_strat();
+	strat->target_ptr = (char *)xalloc(data->width * data->height);
+	strat->player = data->oboard_ptr;
+	strat->enemy = data->oboard_ptr;
+	if (data->player == 'x')
+		strat->player = data->xboard_ptr;
+	else
+		strat->enemy = data->xboard_ptr;
+	ft_memdel((void **)&data->temp);
+	return ((data->width <= 0) || (data->height <= 0));
 }
-*/
+
 int	can_read_board(t_data *data, t_dintarr *enemy_shape)
 {
 	const t_strat	*strat = get_strat();
@@ -51,12 +68,10 @@ int	can_read_board(t_data *data, t_dintarr *enemy_shape)
 	return (ft_strncmp(data->temp, "Piece ", 6) == 0);
 }
 
-static void	check_cell(int row, int col)
+static void	check_cell(t_piece *piece, int row, int col)
 {
 	const t_data	*data = get_data();
-	t_piece			*piece;
 
-	piece = get_piece();
 	if (data->temp[col] == '*')
 	{
 		piece->ptr[row * data->width + col] = 1;
@@ -84,7 +99,7 @@ int	can_read_piece(t_data *data, t_piece *piece)
 		ft_getline(0, &(data->temp));
 		col = 0;
 		while (col < piece->width)
-			check_cell(row, col++);
+			check_cell(piece, row, col++);
 		row++;
 	}
 	return (piece->ptr != NULL);

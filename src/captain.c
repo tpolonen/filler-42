@@ -47,6 +47,7 @@ static void	get_juice_scores(t_tactics *tactics)
 {
 	const t_strat	*strat = get_strat();
 	const t_piece	*piece = get_piece();
+	const t_data	*data = get_data();
 	int				score;
 	size_t			valid_idx;
 
@@ -56,7 +57,7 @@ static void	get_juice_scores(t_tactics *tactics)
 	while (valid_idx < tactics->valid_moves->len)
 	{
 		score = count(strat->target_ptr + tactics->valid_moves->arr[valid_idx],
-				piece->ptr, piece->width * piece->height);
+				piece->ptr, data->width * piece->height);
 		ft_dintarr_add(&tactics->juice_scores, score);
 		valid_idx++;
 	}

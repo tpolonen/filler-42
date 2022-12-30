@@ -90,10 +90,8 @@ typedef struct s_tactics
 	t_dintarr	*distances;
 }	t_tactics;
 
-/* main.c */
-int			init_data(t_data *data);
-
 /* scout.c */
+int			init_data(t_data *data);
 int			can_read_board(t_data *data, t_dintarr *enemy_shape);
 int			can_read_piece(t_data *data, t_piece *piece);
 int			set_player(t_data *data);

@@ -30,33 +30,6 @@ static void	align_piece(void)
 	}
 }
 
-int	init_data(t_data *data)
-{
-	char		*seek;
-	t_strat		*strat;
-
-	ft_getline(0, &(data->temp));
-	if ((ft_strncmp(data->temp, "Plateau ", 8)) || \
-			(ft_strchr(data->temp, ':') == NULL))
-		return (6);
-	seek = data->temp + 8;
-	data->height = (int)ft_strtol(seek, &seek);
-	data->width = (int)ft_strtol(seek, &seek);
-	data->oboard_ptr = (char *)xalloc(data->width * data->height);
-	data->xboard_ptr = (char *)xalloc(data->width * data->height);
-	data->xoboard_ptr = (char *)xalloc(data->width * data->height);
-	strat = get_strat();
-	strat->target_ptr = (char *)xalloc(data->width * data->height);
-	strat->player = data->oboard_ptr;
-	strat->enemy = data->oboard_ptr;
-	if (data->player == 'x')
-		strat->player = data->xboard_ptr;
-	else
-		strat->enemy = data->xboard_ptr;
-	ft_memdel((void **)&data->temp);
-	return ((data->width <= 0) || (data->height <= 0));
-}
-
 static void	cell_to_move(int cell)
 {
 	static t_coord	coord;

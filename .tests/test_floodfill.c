@@ -28,7 +28,7 @@ int main(void)
 		printf("%2zu/%zu = %d\n", i, shape->len, shape->arr[i]);
 	}
 	ft_dintarr_add(&source, shape->arr[0]);
-	filled = floodfill(test_data->oboard_ptr, source, 0, 100);
+	filled = floodfill(&source, test_data->oboard_ptr, 0, 10);
 	for (size_t i = 0; i < filled->len; i++)
 		test_data->oboard_ptr[filled->arr[i]] = '2';
 	debug_print(test_data->oboard_ptr, test_data->width, test_data->height);

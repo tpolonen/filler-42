@@ -34,8 +34,6 @@ static inline int	next_cell(int dir, int cell)
 	return (cell + dirs[dir][0] + (dirs[dir][1] * width));
 }
 
-
-
 static void	find_source(int *values, t_dintarr *shape, t_dintarr *source)
 {
 	int			max;

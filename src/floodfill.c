@@ -62,7 +62,7 @@ t_dintarr	*floodfill(t_dintarr **root, char *board, int wall,
 
 	copy = (char *)xalloc(get_data()->width * get_data()->height);
 	new = NULL;
-	if (!copy || ft_dintarr_create(new, 8))
+	if (!copy || !ft_dintarr_create(new, 8))
 	{
 		ft_memdel((void **) &copy);
 		ft_dintarr_close(new, NULL);
