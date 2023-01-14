@@ -12,12 +12,10 @@
 
 #include "filler.h"
 
-static inline int	out_of_bounds(int dir, int cell)
+static inline int	out_of_bounds(int dir, int cell, int width, int height)
 {
 	const int	dirs[8][2] = {{0, -1}, {1, 0}, {0, 1}, {-1, 0}, \
 				{1, -1}, {1, 1}, {-1, 1}, {-1, -1}};
-	const int	width = get_data()->width;
-	const int	height = get_data()->height;
 
 	return ((cell % width == 0 && dirs[dir][0] < 0) || \
 				(cell % width == width - 1 && dirs[dir][0] > 0) || \
@@ -25,11 +23,10 @@ static inline int	out_of_bounds(int dir, int cell)
 				(cell > width * (height - 1) && dirs[dir][1] > 0));
 }
 
-static inline int	next_cell(int dir, int cell)
+static inline int	next_cell(int dir, int cell, int width)
 {
 	const int	dirs[8][2] = {{0, -1}, {1, 0}, {0, 1}, {-1, 0}, \
 				{1, -1}, {1, 1}, {-1, 1}, {-1, -1}};
-	const int	width = get_data()->width;
 
 	return (cell + dirs[dir][0] + (dirs[dir][1] * width));
 }
@@ -72,9 +69,11 @@ void	find_values(t_dintarr *shape)
 		value = 0;
 		while (++dir < 8)
 		{
-			if (out_of_bounds(dir, shape->arr[cell_index]))
+			if (out_of_bounds(dir, \
+						shape->arr[cell_index], data->width, data->height))
 				continue ;
-			if (!data->xoboard_ptr[next_cell(dir, shape->arr[cell_index])])
+			if (!data->xoboard_ptr[ \
+					next_cell(dir, shape->arr[cell_index], data->width)])
 				value++;
 		}
 		values[cell_index++] = value;
@@ -98,11 +97,10 @@ void	find_new_target(t_strat *strat)
 	if (!ft_dintarr_clear(&source))
 		ft_dintarr_create(&source, 8);
 	find_source(strat->values_ptr, shape, source);
-	floodfill(&source, strat->enemy, 1, 50);
+	strat->target_shape = floodfill(&source, strat->enemy, 1, 50);
 	ft_memdel((void **)strat->target_ptr);
 	strat->target_ptr = xalloc(data->width * data->height);
 	i = 0;
-	ft_bzero(strat->target_ptr, data->width * data->height);
 	while (i < strat->target_shape->len)
-		strat->target_ptr[i] = 1;
+		strat->target_ptr[strat->target_shape->arr[i++]] = 1;
 }
