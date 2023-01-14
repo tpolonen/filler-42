@@ -59,8 +59,8 @@ int	can_read_board(t_data *data, t_dintarr *enemy_shape)
 			if (strat->enemy[x + row * data->width])
 				ft_dintarr_add(&enemy_shape, x + row * data->width);
 			data->xoboard_ptr[row * data->width + x] = \
-				data->oboard_ptr[row * data->width + x] || 
-				data->xboard_ptr[row * data->width + x];
+					data->oboard_ptr[row * data->width + x] ||\
+					data->xboard_ptr[row * data->width + x];
 		}
 		ft_memdel((void **)&data->temp);
 		ft_getline(0, &(data->temp));
@@ -68,10 +68,8 @@ int	can_read_board(t_data *data, t_dintarr *enemy_shape)
 	return (ft_strncmp(data->temp, "Piece ", 6) == 0);
 }
 
-static void	check_cell(t_piece *piece, int row, int col)
+static void	check_cell(t_data *data, t_piece *piece, int row, int col)
 {
-	const t_data	*data = get_data();
-
 	if (data->temp[col] == '*')
 	{
 		piece->ptr[row * data->width + col] = 1;
@@ -99,7 +97,7 @@ int	can_read_piece(t_data *data, t_piece *piece)
 		ft_getline(0, &(data->temp));
 		col = 0;
 		while (col < piece->width)
-			check_cell(piece, row, col++);
+			check_cell(data, piece, row, col++);
 		row++;
 	}
 	return (piece->ptr != NULL);

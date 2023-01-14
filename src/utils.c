@@ -84,7 +84,7 @@ void	*xalloc(size_t min_size)
 		size *= 2;
 	alloc = malloc(size);
 	if (!alloc)
-		clean_exit(get_data(), "Allocation failed", 0);
+		clean_exit(get_data(), "Allocation failed ", -1);
 	ft_bzero(alloc, size);
 	return (alloc);
 }

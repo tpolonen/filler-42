@@ -43,6 +43,6 @@ t_tactics	*get_tactics(void)
 t_dintarr	*get_enemy_shape(void)
 {
 	static t_dintarr	enemy_shape;
-	
+
 	return (&enemy_shape);
 }
