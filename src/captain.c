@@ -84,6 +84,34 @@ static void	get_dist_scores(t_tactics *tactics,
 		dist = ft_abs(target_coord.x - origin->x) + \
 				ft_abs(target_coord.y - origin->y);
 		ft_dintarr_add(&tactics->distances, dist);
+		valid_idx++;	
+	}
+}
+
+void print_valid_moves(t_data *data, t_dintarr *valid_moves)
+{
+	const int size = data->width * data->height;
+	const int width = data->width;
+
+	int i = 0;
+	int valid_idx = 0;
+	ft_putchar('\n');
+	while (i < size)
+	{
+		if (i == valid_moves->arr[valid_idx])
+		{
+			ft_putchar('0' + valid_idx);
+			valid_idx++;
+		}
+		else if (data->oboard_ptr[i])
+			ft_putchar('O');
+		else if (data->xboard_ptr[i])
+			ft_putchar('X');
+		else
+			ft_putchar('.');
+		i++;
+		if (i % width == 0)
+			ft_putchar('\n');
 	}
 }
 
@@ -111,6 +139,7 @@ static void	check_validity(t_data *data, t_piece *piece, t_tactics *tactics)
 		}
 		cell.y++;
 	}
+	print_valid_moves(data, tactics->valid_moves);
 }
 
 static int	best_move_exists(t_piece *piece, t_coord *center,
@@ -122,10 +151,10 @@ static int	best_move_exists(t_piece *piece, t_coord *center,
 	strat = get_strat();
 	tactics = get_tactics();
 	if (!ft_dintarr_clear(&tactics->enemy_hits))
-		ft_dintarr_create(&tactics->enemy_hits, 8);
+		ft_dintarr_create(&tactics->enemy_hits, 256);
 	count_board_matches(piece, strat->enemy, tactics->enemy_hits);
 	if (!ft_dintarr_clear(&tactics->player_hits))
-		ft_dintarr_create(&tactics->player_hits, 8);
+		ft_dintarr_create(&tactics->player_hits, 256);
 	count_board_matches(piece, strat->player, tactics->player_hits);
 	if (!ft_dintarr_clear(&tactics->valid_moves))
 		ft_dintarr_create(&tactics->valid_moves, 8);
@@ -153,10 +182,10 @@ int	get_next_move(void)
 	nearest = 0;
 	best = -1;
 	center = (t_coord){0, 0};
-	center.x = strat->target_shape->arr[(strat->target_shape->len / 2) % \
-			get_data()->width];
-	center.y = strat->target_shape->arr[(strat->target_shape->len / 2) / \
-			get_data()->width];
+	center.x = strat->target_shape->arr[(strat->target_shape->len / 2)] % \
+			get_data()->width;
+	center.y = strat->target_shape->arr[(strat->target_shape->len / 2)] / \
+			get_data()->width;
 	if (best_move_exists(get_piece(), &center, &nearest, &best))
 		return (best);
 	else

@@ -70,11 +70,12 @@ int	can_read_board(t_data *data, t_dintarr *enemy_shape)
 
 static void	check_cell(t_data *data, t_piece *piece, int row, int col)
 {
+	const int	cell_idx = row * data->width + col; 
+
 	if (data->temp[col] == '*')
 	{
-		piece->ptr[row * data->width + col] = 1;
-		ft_dintarr_add(&piece->shape,
-			piece->ptr[row * data->width + col]);
+		piece->ptr[cell_idx] = 1;
+		ft_dintarr_add(&piece->shape, cell_idx);
 	}
 }
 
@@ -105,26 +106,14 @@ int	can_read_piece(t_data *data, t_piece *piece)
 
 int	set_player(t_data *data)
 {
-	t_strat	*strat;
-
-	strat = get_strat();
 	if (!(data->temp))
 		return (2);
 	if (ft_strncmp(data->temp, "$$$ exec p", 10) != 0)
 		return (3);
 	if (ft_strstr(data->temp, "tpolonen.filler") == NULL)
 		return (4);
-	strat->player = data->oboard_ptr;
-	strat->enemy = data->oboard_ptr;
+	data->player = 'x';
 	if (ft_strstr(data->temp, "p1") != NULL)
-	{
-		strat->enemy = data->xboard_ptr;
 		data->player = 'o';
-	}
-	else
-	{
-		strat->player = data->xboard_ptr;
-		data->player = 'x';
-	}
 	return (data->player == 0);
 }

@@ -99,7 +99,7 @@ void	find_new_target(t_strat *strat)
 	find_source(strat->values_ptr, shape, source);
 	strat->target_shape = floodfill(&source, strat->enemy, 1, 50);
 	ft_memdel((void **)strat->target_ptr);
-	strat->target_ptr = xalloc(data->width * data->height);
+	strat->target_ptr = (char *)xalloc(data->width * data->height);
 	i = 0;
 	while (i < strat->target_shape->len)
 		strat->target_ptr[strat->target_shape->arr[i++]] = 1;

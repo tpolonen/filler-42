@@ -43,12 +43,10 @@ void	count_board_matches(t_piece *piece, char *board, t_dintarr *out)
 	t_coord			cell;	
 
 	cell.y = 0;
-	ft_bzero((void *)board, data->width * data->height);
 	while (cell.y < data->height - piece->margin.top - piece->margin.bottom)
 	{
 		cell.x = 0;
-		while (cell.x < data->width && cell.x < data->width - \
-				piece->margin.left - piece->margin.right)
+		while (cell.x < data->width - piece->margin.left - piece->margin.right)
 		{
 			ft_dintarr_add(&out, matches_for_coord(cell, piece, board));
 			cell.x++;

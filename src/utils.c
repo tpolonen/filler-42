@@ -51,25 +51,68 @@ int	clean_exit(t_data *data, const char *str, int error)
 	return (error);
 }
 
+void print_piece(const t_piece *piece, const t_data *data)
+{
+	char	buf[1000];
+	const int	size = data->width * piece->height;
+	const int	width = data->width;
+	int i = 0;
+
+	ft_bzero((void *)buf, size);
+	ft_putendl("\nby bitmap:");
+	while (i < size)
+	{
+		if (i % width == 0) {
+			ft_putchar('\n');
+		}
+		if (*(piece->ptr + i) == 1) {
+			ft_putchar('1');
+		}
+		else {
+			ft_putchar('0');
+		}
+		i++;
+	}
+	ft_putendl("\nby shape:");
+	i = 0;
+	while (i < (int)piece->shape->len)
+		buf[i++] = 1;
+	i = 0;
+	while (i < size)
+	{
+		if (i % width == 0)
+			ft_putchar('\n');
+		if (*(piece->ptr + i) == 1)
+			ft_putchar('1');
+		else
+			ft_putchar('0');
+		i++;
+	}
+}
+
 void	find_margins(void)
 {
 	t_piece			*piece;
 	t_dintarr		*shape;
+	const t_data	*data = get_data();
 	size_t			i;
+	int col;
 
 	piece = get_piece();
+	print_piece(piece, data);
 	shape = piece->shape;
-	piece->margin.top = shape->arr[0] / piece->width;
-	piece->margin.bottom = shape->arr[piece->shape->len - 1] / piece->width;
+	piece->margin.top = shape->arr[0] / data->width;
+	piece->margin.bottom = shape->arr[shape->len - 1] / data->width;
 	piece->margin.left = piece->width - 1;
 	piece->margin.right = 0;
 	i = 0;
 	while (i < shape->len)
 	{
-		if (shape->arr[i] % piece->width < piece->margin.left)
-			piece->margin.left = shape->arr[i] / piece->width;
-		if (shape->arr[i] % piece->width < piece->margin.right)
-			piece->margin.right = piece->width - shape->arr[i] % piece->width;
+		col = shape->arr[i] % data->width;
+		if (col < piece->margin.left)
+			piece->margin.left = col;
+		if (col > piece->margin.right)
+			piece->margin.right = col;
 		i++;
 	}
 }
