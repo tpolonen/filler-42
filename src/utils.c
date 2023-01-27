@@ -102,17 +102,18 @@ void	find_margins(void)
 	print_piece(piece, data);
 	shape = piece->shape;
 	piece->margin.top = shape->arr[0] / data->width;
-	piece->margin.bottom = shape->arr[shape->len - 1] / data->width;
+	piece->margin.bottom = piece->height - (shape->arr[shape->len - 1] / \
+			data->width + 1);
 	piece->margin.left = piece->width - 1;
-	piece->margin.right = 0;
+	piece->margin.right = piece->width;
 	i = 0;
 	while (i < shape->len)
 	{
 		col = shape->arr[i] % data->width;
 		if (col < piece->margin.left)
 			piece->margin.left = col;
-		if (col > piece->margin.right)
-			piece->margin.right = col;
+		if (piece->width - col - 1 < piece->margin.right)
+			piece->margin.right = piece->width - col - 1;
 		i++;
 	}
 }

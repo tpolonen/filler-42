@@ -12,24 +12,6 @@
 
 #include "filler.h"
 
-static void	align_piece(void)
-{
-	const t_data	*data = get_data();
-	t_piece			*piece;
-	char			*map;
-	int				i;
-
-	piece = get_piece();
-	map = piece->ptr;
-	i = 0;
-	while (i < data->width * data->height)
-	{
-		map[i] <<= piece->margin.left;
-		map[i] <<= piece->margin.top * data->width;
-		i++;
-	}
-}
-
 static void	cell_to_move(int cell)
 {
 	static t_coord	coord;
@@ -71,7 +53,6 @@ static int	can_make_move(t_data *data, int *error, t_dintarr *enemy_shape)
 		*error = 10;
 		return (0);
 	}
-	align_piece();
 	strategize(data);
 	cell_to_move(get_next_move());
 	return (1);

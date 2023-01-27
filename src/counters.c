@@ -27,32 +27,52 @@ int	count(char *left, char *right, int n)
 	return (ret);
 }
 
-static int	matches_for_coord(t_coord coord, t_piece *piece, char *board)
+static int	matches_for_coord(t_coord *coord, t_piece *piece, char *board)
 {
 	const t_data	*data = get_data();
+	int				cell_to_start;
+	int				check_size;
 	int				ret;
 
-	ret = count(board + coord.y * data->width + coord.x, piece->ptr,
-			data->width * piece->height);
+	ft_putnbr(coord->x);
+	ft_putstr(",");
+	ft_putnbr(coord->y);
+	ft_putstr(" to cell ");
+	cell_to_start = ft_max(0, coord->x) + ft_max(0, coord->y) * data->width;
+	ft_putnbr(cell_to_start);
+	ft_putstr(" len ");
+	check_size = (data->width * piece->height) - ft_min(0, coord->x);
+	ft_putnbr(check_size);
+	ft_putendl("");
+	ret = count(board + cell_to_start, piece->ptr, check_size);
 	return (ret);
 }
 
 void	count_board_matches(t_piece *piece, char *board, t_dintarr *out)
 {
 	const t_data	*data = get_data();
-	t_coord			cell;	
+	t_coord			coord;	
 
-	cell.y = 0;
-	while (cell.y < data->height - piece->margin.top - piece->margin.bottom)
+	coord.y = -piece->margin.top;
+	while (coord.y <= data->height - (piece->height - piece->margin.bottom))
 	{
-		cell.x = 0;
-		while (cell.x < data->width - piece->margin.left - piece->margin.right)
+		coord.x = -piece->margin.left;
+		while (coord.x <= data->width - (piece->width - piece->margin.right))
 		{
-			ft_dintarr_add(&out, matches_for_coord(cell, piece, board));
-			cell.x++;
+			ft_dintarr_add(&out, matches_for_coord(&coord, piece, board));
+			coord.x++;
 		}
-		cell.y++;
+		coord.y++;
 	}
+	ft_putstr("tested matches from ");
+	ft_putnbr(-piece->margin.left);
+	ft_putstr(",");
+	ft_putnbr(-piece->margin.top);
+	ft_putstr(" to ");
+	ft_putnbr(data->width - (piece->width - piece->margin.right));
+	ft_putstr(",");
+	ft_putnbr(data->height - (piece->height - piece->margin.bottom));
+	ft_putendl("");
 }
 
 int	find_juiciest_cell(t_tactics *tactics)

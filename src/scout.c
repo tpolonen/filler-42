@@ -70,13 +70,42 @@ int	can_read_board(t_data *data, t_dintarr *enemy_shape)
 
 static void	check_cell(t_data *data, t_piece *piece, int row, int col)
 {
-	const int	cell_idx = row * data->width + col; 
+	const int	cell_idx = row * piece->width + col; 
 
 	if (data->temp[col] == '*')
 	{
-		piece->ptr[cell_idx] = 1;
+		if (col > piece->rect.x2)
+			piece->rect.x2 = col;
+		if (col < piece->rect.x1)
+			piece->rect.x1 = col;
+		if (row > piece->rect.y2)
+			piece->rect.y2 = row;
+		if (row < piece->rect.y1)
+			piece->rect.y1 = row;
 		ft_dintarr_add(&piece->shape, cell_idx);
 	}
+}
+
+static char	*make_piece_bitmap(t_piece *piece, int board_width)
+{
+	char	*ptr;
+	int		shape_idx;
+	int		piece_idx;
+	int		board_idx;
+	t_coord coord;
+
+	ptr = (char *)xalloc(piece->height * board_width);
+	shape_idx = 0;
+	while (ptr && shape_idx < (int)piece->shape->len)
+	{
+		piece_idx = piece->shape->arr[shape_idx];
+		coord = (t_coord){(piece_idx % piece->width) - piece->rect.x1, \
+			(piece_idx / piece->width) - piece->rect.y1};
+		board_idx = coord.x + coord.y * board_width;
+		ptr[board_idx] = 1;
+		shape_idx++;
+	}
+	return (ptr);
 }
 
 int	can_read_piece(t_data *data, t_piece *piece)
@@ -88,11 +117,12 @@ int	can_read_piece(t_data *data, t_piece *piece)
 	seek = data->temp + 6;
 	piece->height = (int)ft_strtol(seek, &seek);
 	piece->width = (int)ft_strtol(seek, &seek);
-	piece->ptr = (char *)xalloc(data->width * piece->height);
+	piece->rect = (t_rect){piece->width, piece->height, 0, 0};
+	ft_memdel((void **)&(piece->ptr));
 	if (!ft_dintarr_clear(&piece->shape))
 		ft_dintarr_create(&piece->shape, 8);
 	row = 0;
-	while (row < piece->height && piece->ptr)
+	while (row < piece->height)
 	{
 		ft_memdel((void **)&data->temp);
 		ft_getline(0, &(data->temp));
@@ -101,6 +131,9 @@ int	can_read_piece(t_data *data, t_piece *piece)
 			check_cell(data, piece, row, col++);
 		row++;
 	}
+	if ((piece->rect.x2 - piece->rect.x1 <= data->width) && \
+			(piece->rect.y2 - piece->rect.y2 <= data->height))
+		piece->ptr = make_piece_bitmap(piece, data->width);
 	return (piece->ptr != NULL);
 }
 

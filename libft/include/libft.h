@@ -90,6 +90,7 @@ double		ft_fabs(double n);
 float		ft_fabsf(float n);
 long double	ft_fabsl(long double n);
 int			ft_max(int a, int b);
+int			ft_min(int a, int b);
 size_t		ft_smax(size_t a, size_t b);
 size_t		ft_smin(size_t a, size_t b);
 int			ft_isalpha(int c);

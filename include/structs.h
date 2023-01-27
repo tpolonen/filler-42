@@ -28,6 +28,14 @@ typedef struct s_margin
 	int	left;
 }	t_margin;
 
+typedef struct s_rect
+{
+	int	x1;
+	int	y1;
+	int	x2;
+	int	y2;
+}	t_rect;
+
 typedef struct s_gamedata
 {
 	char	player;
@@ -44,6 +52,7 @@ typedef struct s_piece
 	int			width;
 	int			height;
 	t_margin	margin;
+	t_rect		rect;
 	char		*ptr;
 	t_dintarr	*shape;
 }	t_piece;

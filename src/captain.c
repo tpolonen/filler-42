@@ -12,37 +12,6 @@
 
 #include "filler.h"
 
-/* I think this might be shit?
-static void	get_juice_scores(t_tactics *tactics,
-		t_dintarr *target, t_dintarr *piece_shape)
-{
-	int			score;
-	size_t		valid_idx;
-	size_t		target_idx;
-	size_t		piece_idx;
-
-	valid_idx = 0;
-	while (valid_idx < tactics->valid_moves->len)
-	{
-		score = 0;
-		target_idx = 0;
-		while (target_idx < target->len)
-		{
-			piece_idx = 0;
-			while (piece_idx < piece_shape->len)
-			{
-				score += (target->arr[target_idx] == \
-						tactics->valid_moves->arr[valid_idx] + \
-						piece_shape->arr[piece_idx]);
-				piece_idx++;
-			}
-			target_idx++;
-		}
-		ft_dintarr_add(&tactics->juice_scores, score);
-	}
-}
-*/
-
 static void	get_juice_scores(t_tactics *tactics)
 {
 	const t_strat	*strat = get_strat();
@@ -92,27 +61,40 @@ void print_valid_moves(t_data *data, t_dintarr *valid_moves)
 {
 	const int size = data->width * data->height;
 	const int width = data->width;
+	const t_dintarr *target_shape = get_strat()->target_shape;
+	char *output;
 
-	int i = 0;
-	int valid_idx = 0;
+	ft_putstr("\nvalid moves len:");
+	ft_putnbr(valid_moves->len);
+	ft_putstr("\ntarget arr len:");
+	ft_putnbr(target_shape->len);
 	ft_putchar('\n');
-	while (i < size)
+	output = xalloc(size);
+	for (int i = 0; i < size; i++)
 	{
-		if (i == valid_moves->arr[valid_idx])
+		if (data->oboard_ptr[i])
 		{
-			ft_putchar('0' + valid_idx);
-			valid_idx++;
+			output[i] = 'o';
 		}
-		else if (data->oboard_ptr[i])
-			ft_putchar('O');
 		else if (data->xboard_ptr[i])
-			ft_putchar('X');
+		{
+			output[i] = 'x';
+		}
 		else
-			ft_putchar('.');
-		i++;
-		if (i % width == 0)
-			ft_putchar('\n');
+		{
+			output[i] = '.';
+		}
 	}
+	for (int i = 0; i < (int)target_shape->len; i++)
+		output[target_shape->arr[i]] = 'T';
+	for (int i = 0; i < (int)valid_moves->len; i++)
+		output[valid_moves->arr[i]] = 'A' + i;
+	for (int col = 0; col < data->height; col++)
+	{
+		write(1, output + col * width, width);
+		write(1, "\n", 1);
+	}
+	free(output);
 }
 
 static void	check_validity(t_data *data, t_piece *piece, t_tactics *tactics)
@@ -121,12 +103,11 @@ static void	check_validity(t_data *data, t_piece *piece, t_tactics *tactics)
 	int		enemy_cell_hits;
 	int		player_cell_hits;
 
-	cell.y = 0;
-	while (cell.y < data->height - piece->margin.top - piece->margin.bottom)
+	cell.y = -piece->margin.top;
+	while (cell.y < data->height - (piece->height - piece->margin.bottom))
 	{
-		cell.x = 0;
-		while (cell.x < data->width && cell.x < data->width - \
-				piece->margin.left - piece->margin.right)
+		cell.x = -piece->margin.left;
+		while (cell.x < data->width - (piece->width - piece->margin.right))
 		{
 			enemy_cell_hits = tactics->enemy_hits->arr[cell.y * \
 						data->width + cell.x];
