@@ -24,15 +24,14 @@ char	*ft_tobase(int n, int base, char *ptr)
 	size_t	len;
 	size_t	i;
 
-	len = ft_intlen(n, base);
-	i = len;
-	ptr[i--] = '\0';
 	if (n == 0)
-		return (ft_strcpy(ptr, "0"));
+		return (ft_strcpy(ptr, "0") + 1);
+	len = ft_intlen(n, base);
+	i = len - 1;
 	while (n != 0)
 	{
 		ptr[i--] = '0' + (char)(ft_abs(n % base));
-		n /= 10;
+		n /= base;
 	}
 	if (i == 0)
 		ptr[i] = '-';

@@ -24,9 +24,9 @@ static void	cell_to_move(int cell)
 	ptr = buf;
 	coord = (t_coord){cell % data->width, cell / data->width};
 	ft_memdel((void **)&data->temp);
-	ptr = ft_tobase(coord.x, 10, ptr);
-	*ptr++ = ' ';
 	ptr = ft_tobase(coord.y, 10, ptr);
+	*ptr++ = ' ';
+	ptr = ft_tobase(coord.x, 10, ptr);
 	data->temp = ft_strdup(buf);
 }
 

@@ -29,6 +29,7 @@ _SRC 	+= floodfill.c
 _SRC 	+= storage.c
 
 DEP 	:= $(HEADER_DIR)filler.h
+DEP 	+= $(HEADER_DIR)structs.h
 
 SRC		:= $(addprefix $(SRC_DIR), $(_SRC))
 OBJ		:= $(SRC:$(SRC_DIR)%.c=$(OBJ_DIR)%.o)

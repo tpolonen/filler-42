@@ -86,28 +86,6 @@ static void	check_cell(t_data *data, t_piece *piece, int row, int col)
 	}
 }
 
-static char	*make_piece_bitmap(t_piece *piece, int board_width)
-{
-	char	*ptr;
-	int		shape_idx;
-	int		piece_idx;
-	int		board_idx;
-	t_coord coord;
-
-	ptr = (char *)xalloc(piece->height * board_width);
-	shape_idx = 0;
-	while (ptr && shape_idx < (int)piece->shape->len)
-	{
-		piece_idx = piece->shape->arr[shape_idx];
-		coord = (t_coord){(piece_idx % piece->width) - piece->rect.x1, \
-			(piece_idx / piece->width) - piece->rect.y1};
-		board_idx = coord.x + coord.y * board_width;
-		ptr[board_idx] = 1;
-		shape_idx++;
-	}
-	return (ptr);
-}
-
 int	can_read_piece(t_data *data, t_piece *piece)
 {
 	char	*seek;

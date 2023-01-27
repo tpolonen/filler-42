@@ -70,7 +70,8 @@ t_tactics	*get_tactics(void);
 
 /* utils.c */
 int			clean_exit(t_data *data, const char *str, int error);
-void		find_margins(void);
+t_coord		cell_to_coord(int cell, int board_width);
+char		*make_piece_bitmap(t_piece *piece, int board_width);
 void		*xalloc(size_t min_size);
 
 /* debug.c */

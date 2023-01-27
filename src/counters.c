@@ -38,10 +38,10 @@ static int	matches_for_coord(t_coord *coord, t_piece *piece, char *board)
 	ft_putstr(",");
 	ft_putnbr(coord->y);
 	ft_putstr(" to cell ");
-	cell_to_start = ft_max(0, coord->x) + ft_max(0, coord->y) * data->width;
+	cell_to_start = coord->x + (coord->y * data->width);
 	ft_putnbr(cell_to_start);
 	ft_putstr(" len ");
-	check_size = (data->width * piece->height) - ft_min(0, coord->x);
+	check_size = data->width * (piece->rect.y2 - piece->rect.y1 + 1);
 	ft_putnbr(check_size);
 	ft_putendl("");
 	ret = count(board + cell_to_start, piece->ptr, check_size);
@@ -51,28 +51,32 @@ static int	matches_for_coord(t_coord *coord, t_piece *piece, char *board)
 void	count_board_matches(t_piece *piece, char *board, t_dintarr *out)
 {
 	const t_data	*data = get_data();
-	t_coord			coord;	
+	t_coord			cell;	
 
-	coord.y = -piece->margin.top;
-	while (coord.y <= data->height - (piece->height - piece->margin.bottom))
+	cell.y = 0;
+	while (cell.y < data->height - (piece->rect.y2 - piece->rect.y1))
 	{
-		coord.x = -piece->margin.left;
-		while (coord.x <= data->width - (piece->width - piece->margin.right))
+		cell.x = 0;
+		while (cell.x < data->width - (piece->rect.x2 - piece->rect.x1))
 		{
-			ft_dintarr_add(&out, matches_for_coord(&coord, piece, board));
-			coord.x++;
+			ft_dintarr_add(&out, matches_for_coord(&cell, piece, board));
+			cell.x++;
 		}
-		coord.y++;
+		while (cell.x < data->width)
+		{
+			ft_dintarr_add(&out, 0);
+			cell.x++;
+		}
+		cell.y++;
 	}
-	ft_putstr("tested matches from ");
-	ft_putnbr(-piece->margin.left);
-	ft_putstr(",");
-	ft_putnbr(-piece->margin.top);
-	ft_putstr(" to ");
-	ft_putnbr(data->width - (piece->width - piece->margin.right));
-	ft_putstr(",");
-	ft_putnbr(data->height - (piece->height - piece->margin.bottom));
-	ft_putendl("");
+	for (int i = 0; i < (int)out->len; i++)
+	{
+		if (i % data->width == 0)
+			ft_putchar('\n');
+		ft_putchar('0' + (out->arr[i] % 10));
+	}
+	ft_putchar('\n');
+
 }
 
 int	find_juiciest_cell(t_tactics *tactics)
@@ -93,6 +97,14 @@ int	find_juiciest_cell(t_tactics *tactics)
 			hiscore = tactics->juice_scores->arr[i];
 		}
 		i++;
+	}
+	if (best_cell > 0)
+	{
+		ft_putstr("juiciest cell found, was ");
+		ft_putnbr(best_cell);
+		ft_putstr(" with score of ");
+		ft_putnbr(hiscore);
+		ft_putendl("");
 	}
 	return (best_cell);
 }
@@ -115,5 +127,10 @@ int	find_closest_cell(t_tactics *tactics)
 		}
 		i++;
 	}
+	ft_putstr("no juicy cell, closest one is ");
+	ft_putnbr(closest_cell);
+	ft_putstr(" with dist of ");
+	ft_putnbr(shortest_dist);
+	ft_putendl("");
 	return (closest_cell);
 }

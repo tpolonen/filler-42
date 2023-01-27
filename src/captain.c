@@ -32,26 +32,24 @@ static void	get_juice_scores(t_tactics *tactics)
 	}
 }
 
-static void	get_dist_scores(t_tactics *tactics,
-		t_dintarr *target, t_coord *origin)
+static void	get_dist_scores(t_tactics *tactics, t_dintarr *target)
 {
-	int		dist;
-	size_t	valid_idx;
-	t_coord	target_coord;
-	int		mid_target;
-	int		board_width;
+	int				dist;
+	size_t			valid_idx;
+	t_coord			current;
+	const int		board_width = get_data()->width;
+	const t_coord	center = cell_to_coord( \
+			target->arr[target->len / 2], board_width);
 
 	if (!ft_dintarr_clear(&tactics->distances))
 		ft_dintarr_create(&tactics->distances, 8);
 	valid_idx = 0;
-	mid_target = target->arr[target->len / 2];
-	board_width = get_data()->width;
-	target_coord = (t_coord){target->arr[mid_target] % board_width,
-		target->arr[mid_target] / board_width};
 	while (valid_idx < tactics->valid_moves->len)
 	{
-		dist = ft_abs(target_coord.x - origin->x) + \
-				ft_abs(target_coord.y - origin->y);
+		current = cell_to_coord(tactics->valid_moves->arr[valid_idx], \
+				board_width);
+		dist = ft_abs(center.x - current.x) + \
+				ft_abs(center.y - current.y);
 		ft_dintarr_add(&tactics->distances, dist);
 		valid_idx++;	
 	}
@@ -103,11 +101,11 @@ static void	check_validity(t_data *data, t_piece *piece, t_tactics *tactics)
 	int		enemy_cell_hits;
 	int		player_cell_hits;
 
-	cell.y = -piece->margin.top;
-	while (cell.y < data->height - (piece->height - piece->margin.bottom))
+	cell.y = 0;
+	while (cell.y <= data->height - (piece->rect.y2 - piece->rect.y1))
 	{
-		cell.x = -piece->margin.left;
-		while (cell.x < data->width - (piece->width - piece->margin.right))
+		cell.x = 0;
+		while (cell.x <= data->width - (piece->rect.x2 - piece->rect.x1))
 		{
 			enemy_cell_hits = tactics->enemy_hits->arr[cell.y * \
 						data->width + cell.x];
@@ -123,8 +121,7 @@ static void	check_validity(t_data *data, t_piece *piece, t_tactics *tactics)
 	print_valid_moves(data, tactics->valid_moves);
 }
 
-static int	best_move_exists(t_piece *piece, t_coord *center,
-		int *nearest, int *best)
+static int	best_move_exists(t_piece *piece, int *nearest, int *best)
 {
 	t_strat		*strat;
 	t_tactics	*tactics;
@@ -144,7 +141,7 @@ static int	best_move_exists(t_piece *piece, t_coord *center,
 	*best = find_juiciest_cell(tactics);
 	if (*best < 0)
 	{
-		get_dist_scores(tactics, strat->target_shape, center);
+		get_dist_scores(tactics, get_strat()->target_shape);
 		*nearest = find_closest_cell(tactics);
 		return (0);
 	}
@@ -155,19 +152,10 @@ int	get_next_move(void)
 {
 	int		nearest;
 	int		best;
-	t_coord	center;
-	t_strat	*strat;
 
-	find_margins();
-	strat = get_strat();
 	nearest = 0;
 	best = -1;
-	center = (t_coord){0, 0};
-	center.x = strat->target_shape->arr[(strat->target_shape->len / 2)] % \
-			get_data()->width;
-	center.y = strat->target_shape->arr[(strat->target_shape->len / 2)] / \
-			get_data()->width;
-	if (best_move_exists(get_piece(), &center, &nearest, &best))
+	if (best_move_exists(get_piece(), &nearest, &best))
 		return (best);
 	else
 		return (nearest);

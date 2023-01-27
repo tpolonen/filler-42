@@ -90,32 +90,31 @@ void print_piece(const t_piece *piece, const t_data *data)
 	}
 }
 
-void	find_margins(void)
+t_coord	cell_to_coord(int cell, int board_width)
 {
-	t_piece			*piece;
-	t_dintarr		*shape;
-	const t_data	*data = get_data();
-	size_t			i;
-	int col;
+	return ((t_coord){cell % board_width, cell / board_width});
+}
 
-	piece = get_piece();
-	print_piece(piece, data);
-	shape = piece->shape;
-	piece->margin.top = shape->arr[0] / data->width;
-	piece->margin.bottom = piece->height - (shape->arr[shape->len - 1] / \
-			data->width + 1);
-	piece->margin.left = piece->width - 1;
-	piece->margin.right = piece->width;
-	i = 0;
-	while (i < shape->len)
+char	*make_piece_bitmap(t_piece *piece, int board_width)
+{
+	char	*ptr;
+	int		shape_idx;
+	int		cell_idx;
+	t_coord coord;
+
+	ptr = (char *)xalloc(piece->height * board_width);
+	shape_idx = 0;
+	while (ptr && shape_idx < (int)piece->shape->len)
 	{
-		col = shape->arr[i] % data->width;
-		if (col < piece->margin.left)
-			piece->margin.left = col;
-		if (piece->width - col - 1 < piece->margin.right)
-			piece->margin.right = piece->width - col - 1;
-		i++;
+		cell_idx = piece->shape->arr[shape_idx];
+		coord = (t_coord){(cell_idx % piece->width) - piece->rect.x1, \
+			(cell_idx / piece->width) - piece->rect.y1};
+		cell_idx = coord.x + coord.y * board_width;
+		ptr[cell_idx] = 1;
+		piece->shape->arr[shape_idx] = cell_idx;
+		shape_idx++;
 	}
+	return (ptr);
 }
 
 void	*xalloc(size_t min_size)
