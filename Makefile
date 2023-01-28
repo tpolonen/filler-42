@@ -6,7 +6,7 @@
 #    By: tpolonen <tpolonen@student.hive.fi>        +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/10/01 19:35:15 by tpolonen          #+#    #+#              #
-#    Updated: 2022/10/12 19:40:43 by tpolonen         ###   ########.fr        #
+#    Updated: 2023/01/28 18:03:47 by tpolonen         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -35,9 +35,10 @@ SRC		:= $(addprefix $(SRC_DIR), $(_SRC))
 OBJ		:= $(SRC:$(SRC_DIR)%.c=$(OBJ_DIR)%.o)
 
 CC			:= gcc
-CFLAGS		:= -g -c -Wall -Wextra -Werror
-CPPFLAGS 	:= -I$(LIBHEADER_DIR) -I$(HEADER_DIR)
+CFLAGS		:= -g -c -Wall -Wextra -Werror 
+CPPFLAGS 	:= -I$(LIBHEADER_DIR) -I$(HEADER_DIR) 
 LDFLAGS 	:= -L$(LIB_DIR)
+ LDFLAGS		+= -fsanitize=address -fsanitize=undefined -fno-sanitize-recover=all -fsanitize=float-divide-by-zero -fsanitize=float-cast-overflow -fno-sanitize=null -fno-sanitize=alignment 
 LDLIBS 		:= -lft
 
 BIN := tpolonen.filler

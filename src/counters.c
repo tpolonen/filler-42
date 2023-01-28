@@ -90,31 +90,28 @@ int	find_juiciest_cell(t_tactics *tactics)
 {
 	int		hiscore;
 	int		best_cell;	
-	size_t	i;
+	int		i;
+	int		hit;
 
 	i = 0;
+	hit = 0;
 	hiscore = -1;
 	best_cell = -1;
-	while (i < tactics->juice_scores->len)
+	while (i < (int)tactics->juice_scores->len)
 	{
 		if (tactics->juice_scores->arr[i] > 0 && \
 			tactics->juice_scores->arr[i] > hiscore)
 		{
 			best_cell = tactics->valid_moves->arr[i];
 			hiscore = tactics->juice_scores->arr[i];
+			hit = i;
 		}
 		i++;
 	}
-/*	
 	if (best_cell > 0)
 	{
-		ft_putstr("juiciest cell found, was ");
-		ft_putnbr(best_cell);
-		ft_putstr(" with score of ");
-		ft_putnbr(hiscore);
-		ft_putendl("");
+		dprintf(2, "juiciest cell found, was valid_idx %c cell %d with score of %d\n\n", 'A' + hit, best_cell, hiscore);
 	}
-	*/
 	return (best_cell);
 }
 
@@ -122,26 +119,22 @@ int	find_closest_cell(t_tactics *tactics)
 {
 	int		shortest_dist;
 	int		closest_cell;
-	size_t	i;
+	int		i;
+	int		hit;
 
 	i = 0;
 	shortest_dist = INT_MAX;
 	closest_cell = tactics->valid_moves->arr[tactics->valid_moves->len - 1];
-	while (i < tactics->distances->len)
+	while (i < (int)tactics->distances->len)
 	{
 		if (tactics->distances->arr[i] < shortest_dist)
 		{
 			closest_cell = tactics->valid_moves->arr[i];
 			shortest_dist = tactics->distances->arr[i];
+			hit = i;
 		}
 		i++;
 	}
-	/*
-	ft_putstr("no juicy cell, closest one is ");
-	ft_putnbr(closest_cell);
-	ft_putstr(" with dist of ");
-	ft_putnbr(shortest_dist);
-	ft_putendl("");
-	*/
+	dprintf(2, "no juicy cell, closest one is valid_idx %c cell %d with dist of %d\n\n", 'A' + hit, closest_cell, shortest_dist);
 	return (closest_cell);
 }

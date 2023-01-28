@@ -51,30 +51,24 @@ static void	explore(char *board, int cell, int wall, t_dintarr *area)
 	}
 }
 
-t_dintarr	*floodfill(t_dintarr **root, char *board, int wall,
+void	floodfill(t_tactics *tactics, t_strat *strat, char *board,
 		size_t max_area)
 {
 	char		*copy;
-	t_dintarr	*new;
+	int			wall;
 	size_t		i;
 
 	copy = (char *)xalloc(get_data()->width * get_data()->height);
-	new = NULL;
-	if (!copy || !ft_dintarr_create(&new, 8))
-	{
-		ft_memdel((void **) &copy);
-		ft_dintarr_close(&new, NULL);
-		return (NULL);
-	}
+	if (!copy)
+		return ;
+	wall = board[tactics->source->arr[0]];
 	ft_memcpy(copy, board, get_data()->width * get_data()->height);
 	i = 0;
-	while (i < (*root)->len)
-		explore(copy, (*root)->arr[i++], wall, new);
-	ft_dintarr_close(root, NULL);
+	while (i < tactics->source->len)
+		explore(copy, tactics->source->arr[i++], wall, strat->target_shape);
 	i = 0;
-	copy[new->arr[i]] = wall;
-	while (i < new->len && new->len < max_area)
-		explore(copy, new->arr[i++], wall, new);
+	copy[strat->target_shape->arr[i]] = wall;
+	while (i < strat->target_shape->len && strat->target_shape->len < max_area)
+		explore(copy, strat->target_shape->arr[i++], wall, strat->target_shape);
 	ft_memdel((void **) &copy);
-	return (new);
 }

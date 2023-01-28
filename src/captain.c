@@ -21,7 +21,7 @@ static void	get_juice_scores(t_tactics *tactics)
 	size_t			valid_idx;
 
 	if (!ft_dintarr_clear(&tactics->juice_scores))
-		ft_dintarr_create(&tactics->juice_scores, 8);
+		ft_dintarr_create(&tactics->juice_scores, data->width * data->height, "Juice scores :)");
 	valid_idx = 0;
 	while (valid_idx < tactics->valid_moves->len)
 	{
@@ -32,17 +32,17 @@ static void	get_juice_scores(t_tactics *tactics)
 	}
 }
 
-static void	get_dist_scores(t_tactics *tactics, t_dintarr *target)
+static void	get_dist_scores(t_tactics *tactics, t_strat *strat)
 {
 	int				dist;
 	size_t			valid_idx;
 	t_coord			current;
 	const int		board_width = get_data()->width;
 	const t_coord	center = cell_to_coord( \
-			target->arr[target->len / 2], board_width);
+			strat->target_shape->arr[0], board_width);
 
 	if (!ft_dintarr_clear(&tactics->distances))
-		ft_dintarr_create(&tactics->distances, 8);
+		ft_dintarr_create(&tactics->distances, board_width * get_data()->height, "Dist scores :(");
 	valid_idx = 0;
 	while (valid_idx < tactics->valid_moves->len)
 	{
@@ -59,14 +59,17 @@ void print_valid_moves(t_data *data, t_dintarr *valid_moves)
 {
 	const int size = data->width * data->height;
 	const int width = data->width;
-	const t_dintarr *target_shape = get_strat()->target_shape;
+	const t_strat *strat = get_strat();
+	const t_dintarr *target_shape = strat->target_shape;
 	char *output;
 
-	ft_putstr("\nvalid moves len:");
-	ft_putnbr(valid_moves->len);
-	ft_putstr("\ntarget arr len:");
-	ft_putnbr(target_shape->len);
-	ft_putchar('\n');
+	if (strat->victory)
+		ft_putstr_fd("\nVICTORY", 2);
+	ft_putstr_fd("\nvalid moves len:", 2);
+	ft_putnbr_fd(valid_moves->len, 2);
+	ft_putstr_fd("\ntarget arr len:", 2);
+	ft_putnbr_fd(target_shape->len, 2);
+	ft_putchar_fd('\n', 2);
 	output = xalloc(size);
 	for (int i = 0; i < size; i++)
 	{
@@ -78,19 +81,26 @@ void print_valid_moves(t_data *data, t_dintarr *valid_moves)
 		{
 			output[i] = 'x';
 		}
+		else if (strat->target_ptr[i])
+		{
+			output[i] = 't';
+		}
 		else
 		{
 			output[i] = '.';
 		}
 	}
 	for (int i = 0; i < (int)target_shape->len; i++)
-		output[target_shape->arr[i]] = 'T';
+	{
+		if (output[target_shape->arr[i]] != 't')
+			output[target_shape->arr[i]] = '0' + (i % 10);
+	}
 	for (int i = 0; i < (int)valid_moves->len; i++)
 		output[valid_moves->arr[i]] = 'A' + i;
 	for (int col = 0; col < data->height; col++)
 	{
-		write(1, output + col * width, width);
-		write(1, "\n", 1);
+		write(2, output + col * width, width);
+		write(2, "\n", 1);
 	}
 	free(output);
 }
@@ -118,7 +128,7 @@ static void	check_validity(t_data *data, t_piece *piece, t_tactics *tactics)
 		}
 		cell.y++;
 	}
-//	print_valid_moves(data, tactics->valid_moves);
+	print_valid_moves(data, tactics->valid_moves);
 }
 
 static int	best_move_exists(t_piece *piece, int *nearest, int *best)
@@ -129,19 +139,24 @@ static int	best_move_exists(t_piece *piece, int *nearest, int *best)
 	strat = get_strat();
 	tactics = get_tactics();
 	if (!ft_dintarr_clear(&tactics->enemy_hits))
-		ft_dintarr_create(&tactics->enemy_hits, 256);
+		ft_dintarr_create(&tactics->enemy_hits, 256, "Enemy hits");
 	count_board_matches(piece, strat->enemy, tactics->enemy_hits);
 	if (!ft_dintarr_clear(&tactics->player_hits))
-		ft_dintarr_create(&tactics->player_hits, 256);
+		ft_dintarr_create(&tactics->player_hits, 256, "Player hits");
+	/*
+	ft_putstr_fd("player_hits->alloced:", 2);
+	ft_putnbr_fd(tactics->player_hits->alloced, 2);
+	ft_putstr_fd("\n", 2);
+	*/
 	count_board_matches(piece, strat->player, tactics->player_hits);
 	if (!ft_dintarr_clear(&tactics->valid_moves))
-		ft_dintarr_create(&tactics->valid_moves, 8);
+		ft_dintarr_create(&tactics->valid_moves, 64, "Valid moves");
 	check_validity(get_data(), piece, tactics);
 	get_juice_scores(tactics);
 	*best = find_juiciest_cell(tactics);
 	if (*best < 0)
 	{
-		get_dist_scores(tactics, get_strat()->target_shape);
+		get_dist_scores(tactics, strat);
 		*nearest = find_closest_cell(tactics);
 		return (0);
 	}
@@ -155,6 +170,8 @@ int	get_next_move(void)
 
 	nearest = 0;
 	best = -1;
+	if (get_strat()->victory > 1)
+		return (0);
 	if (best_move_exists(get_piece(), &nearest, &best))
 		return (best);
 	else

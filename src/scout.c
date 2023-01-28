@@ -57,7 +57,10 @@ int	can_read_board(t_data *data, t_dintarr *enemy_shape)
 			if (data->temp[pad + x] == 'x' || data->temp[pad + x] == 'X')
 				data->xboard_ptr[row * data->width + x] = 1;
 			if (strat->enemy[x + row * data->width])
+			{
+//				ft_putstr_fd("add to enemy_shape\n", 2);
 				ft_dintarr_add(&enemy_shape, x + row * data->width);
+			}
 			data->xoboard_ptr[row * data->width + x] = \
 					data->oboard_ptr[row * data->width + x] ||\
 					data->xboard_ptr[row * data->width + x];
@@ -98,7 +101,7 @@ int	can_read_piece(t_data *data, t_piece *piece)
 	piece->rect = (t_rect){piece->width, piece->height, 0, 0};
 	ft_memdel((void **)&(piece->ptr));
 	if (!ft_dintarr_clear(&piece->shape))
-		ft_dintarr_create(&piece->shape, 8);
+		ft_dintarr_create(&piece->shape, 32, "Piece");
 	row = 0;
 	while (row < piece->height)
 	{

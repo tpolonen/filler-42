@@ -12,11 +12,11 @@
 
 #include "filler.h"
 
-static void	close_dintarrs(t_dintarr *enemy_shape, t_tactics *tactics,
+static void	close_dintarrs(t_tactics *tactics,
 		t_strat *strat)
 {
-	if (enemy_shape)
-		ft_memdel((void **)&enemy_shape->arr);
+	if (strat->enemy_shape)
+		ft_dintarr_close(&strat->enemy_shape, NULL);
 	if (strat->target_shape)
 		ft_dintarr_close(&strat->target_shape, NULL);
 	if (tactics->source)
@@ -42,7 +42,7 @@ int	clean_exit(t_data *data, const char *str, int error)
 	ft_memdel((void **)&get_piece()->ptr);
 	ft_memdel((void **)&get_strat()->target_ptr);
 	ft_memdel((void **)&get_strat()->values_arr);
-	close_dintarrs(get_enemy_shape(), get_tactics(), get_strat());
+	close_dintarrs(get_tactics(), get_strat());
 	if (str)
 		ft_putstr(str);
 	if (error)

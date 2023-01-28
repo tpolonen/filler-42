@@ -83,24 +83,27 @@ void	find_values(t_dintarr *shape)
 void	find_new_target(t_strat *strat)
 {
 	const t_data	*data = get_data();
-	t_dintarr		*source;
-	t_dintarr		*enemy_shape;
+	t_tactics		*tactics;
 	size_t			i;
 
 	if (!ft_dintarr_clear(&strat->target_shape))
-		ft_dintarr_create(&strat->target_shape, 8);
-	enemy_shape = get_enemy_shape();
-	ft_memdel((void **)&strat->values_arr);
-	strat->values_arr = (int *)xalloc(sizeof(int) * enemy_shape->len);
-	find_values(enemy_shape);
-	source = get_tactics()->source;
-	if (!ft_dintarr_clear(&source))
-		ft_dintarr_create(&source, 8);
-	find_source(strat->values_arr, enemy_shape, source);
-	strat->target_shape = floodfill(&source, data->xoboard_ptr, 1, \
-			ft_max(50, strat->free_space / 3));
-	ft_memdel((void **)strat->target_ptr);
-	strat->target_ptr = (char *)xalloc(data->width * data->height);
+		ft_dintarr_create(&strat->target_shape, 128, "Target shape");
+	/*
+	ft_putstr_fd("target_shape->alloced:", 2);
+	ft_putnbr_fd((int)strat->target_shape->alloced, 2);
+	ft_putstr_fd(" len:", 2);
+	ft_putnbr_fd((int)strat->target_shape->len, 2);
+	ft_putstr_fd("\n", 2);
+	*/
+	strat->values_arr = (int *)xalloc(sizeof(int) * strat->enemy_shape->len);
+	find_values(strat->enemy_shape);
+	tactics = get_tactics();
+	if (!ft_dintarr_clear(&tactics->source))
+		ft_dintarr_create(&tactics->source, 64, "Source");
+	find_source(strat->values_arr, strat->enemy_shape, tactics->source);
+	floodfill(tactics, strat, data->xoboard_ptr, \
+			ft_min(15, strat->free_space / 3));
+	ft_bzero((void *)strat->target_ptr, data->width * data->height);
 	i = 0;
 	while (i < strat->target_shape->len)
 		strat->target_ptr[strat->target_shape->arr[i++]] = 1;

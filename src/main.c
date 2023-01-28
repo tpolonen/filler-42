@@ -15,6 +15,7 @@
 static void	cell_to_move(int cell)
 {
 	static t_coord	coord;
+	const t_rect	rect = get_piece()->rect;
 	t_data			*data;
 	char			buf[100];
 	char			*ptr;
@@ -22,7 +23,7 @@ static void	cell_to_move(int cell)
 	data = get_data();
 	ft_bzero((void *)buf, 100);
 	ptr = buf;
-	coord = (t_coord){cell % data->width, cell / data->width};
+	coord = (t_coord){cell % data->width - rect.x1, cell / data->width - rect.y1};
 	ft_memdel((void **)&data->temp);
 	ptr = ft_tobase(coord.y, 10, ptr);
 	*ptr++ = ' ';
@@ -30,7 +31,7 @@ static void	cell_to_move(int cell)
 	data->temp = ft_strdup(buf);
 }
 
-static int	can_make_move(t_data *data, int *error, t_dintarr *enemy_shape)
+static int	can_make_move(t_data *data, int *error, t_strat *strat)
 {
 	if (ft_getline(0, &(data->temp)) <= 0)
 	{
@@ -45,9 +46,9 @@ static int	can_make_move(t_data *data, int *error, t_dintarr *enemy_shape)
 	ft_bzero(data->oboard_ptr, data->width * data->height);
 	ft_bzero(data->xboard_ptr, data->width * data->height);
 	ft_bzero(data->xoboard_ptr, data->width * data->height);
-	if (!ft_dintarr_clear(&enemy_shape))
-		ft_dintarr_create(&enemy_shape, 8);
-	if (!can_read_board(data, enemy_shape) || \
+	if (!ft_dintarr_clear(&strat->enemy_shape))
+		ft_dintarr_create(&strat->enemy_shape, 128, "Enemy shape");
+	if (!can_read_board(data, strat->enemy_shape) || \
 		!can_read_piece(data, get_piece()))
 	{
 		*error = 10;
@@ -71,7 +72,7 @@ int	main(void)
 	error = init_data(data);
 	if (error)
 		return (clean_exit(data, "Error in map header: ", error));
-	while (can_make_move(data, &error, get_enemy_shape()))
+	while (can_make_move(data, &error, get_strat()))
 	{
 		if (data->temp)
 		{

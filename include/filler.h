@@ -58,14 +58,12 @@ int			find_juiciest_cell(t_tactics *tactics);
 int			find_closest_cell(t_tactics *tactics);
 
 /* floodfill.c */
-t_dintarr	*floodfill(t_dintarr **root, char *board,
-		int wall, size_t max_area);
+void		floodfill(t_tactics *tactics, t_strat *strat, char *board, size_t max_area);
 
 /* storage.c */
 t_data		*get_data(void);
 t_strat		*get_strat(void);
 t_piece		*get_piece(void);
-t_dintarr	*get_enemy_shape(void);
 t_tactics	*get_tactics(void);
 
 /* utils.c */
