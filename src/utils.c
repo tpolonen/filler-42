@@ -41,7 +41,7 @@ int	clean_exit(t_data *data, const char *str, int error)
 	ft_memdel((void **)&data->temp);
 	ft_memdel((void **)&get_piece()->ptr);
 	ft_memdel((void **)&get_strat()->target_ptr);
-	ft_memdel((void **)&get_strat()->values_ptr);
+	ft_memdel((void **)&get_strat()->values_arr);
 	close_dintarrs(get_enemy_shape(), get_tactics(), get_strat());
 	if (str)
 		ft_putstr(str);

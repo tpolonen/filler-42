@@ -118,7 +118,7 @@ static void	check_validity(t_data *data, t_piece *piece, t_tactics *tactics)
 		}
 		cell.y++;
 	}
-	print_valid_moves(data, tactics->valid_moves);
+//	print_valid_moves(data, tactics->valid_moves);
 }
 
 static int	best_move_exists(t_piece *piece, int *nearest, int *best)

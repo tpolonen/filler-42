@@ -34,16 +34,22 @@ static int	matches_for_coord(t_coord *coord, t_piece *piece, char *board)
 	int				check_size;
 	int				ret;
 
+	/*
 	ft_putnbr(coord->x);
 	ft_putstr(",");
 	ft_putnbr(coord->y);
 	ft_putstr(" to cell ");
+	*/
 	cell_to_start = coord->x + (coord->y * data->width);
+	/*
 	ft_putnbr(cell_to_start);
 	ft_putstr(" len ");
+	*/
 	check_size = data->width * (piece->rect.y2 - piece->rect.y1 + 1);
+	/*
 	ft_putnbr(check_size);
 	ft_putendl("");
+	*/
 	ret = count(board + cell_to_start, piece->ptr, check_size);
 	return (ret);
 }
@@ -69,6 +75,7 @@ void	count_board_matches(t_piece *piece, char *board, t_dintarr *out)
 		}
 		cell.y++;
 	}
+	/*
 	for (int i = 0; i < (int)out->len; i++)
 	{
 		if (i % data->width == 0)
@@ -76,7 +83,7 @@ void	count_board_matches(t_piece *piece, char *board, t_dintarr *out)
 		ft_putchar('0' + (out->arr[i] % 10));
 	}
 	ft_putchar('\n');
-
+*/
 }
 
 int	find_juiciest_cell(t_tactics *tactics)
@@ -98,6 +105,7 @@ int	find_juiciest_cell(t_tactics *tactics)
 		}
 		i++;
 	}
+/*	
 	if (best_cell > 0)
 	{
 		ft_putstr("juiciest cell found, was ");
@@ -106,6 +114,7 @@ int	find_juiciest_cell(t_tactics *tactics)
 		ft_putnbr(hiscore);
 		ft_putendl("");
 	}
+	*/
 	return (best_cell);
 }
 
@@ -127,10 +136,12 @@ int	find_closest_cell(t_tactics *tactics)
 		}
 		i++;
 	}
+	/*
 	ft_putstr("no juicy cell, closest one is ");
 	ft_putnbr(closest_cell);
 	ft_putstr(" with dist of ");
 	ft_putnbr(shortest_dist);
 	ft_putendl("");
+	*/
 	return (closest_cell);
 }
