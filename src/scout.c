@@ -12,68 +12,47 @@
 
 #include "filler.h"
 
-int	init_data(t_data *data)
+static void	check_board_cell(t_data *data, int pad, t_coord coord,
+		t_strat *strat)
 {
-	char		*seek;
-	t_strat		*strat;
-
-	ft_getline(0, &(data->temp));
-	if ((ft_strncmp(data->temp, "Plateau ", 8)) || \
-			(ft_strchr(data->temp, ':') == NULL))
-		return (6);
-	seek = data->temp + 8;
-	data->height = (int)ft_strtol(seek, &seek);
-	data->width = (int)ft_strtol(seek, &seek);
-	data->oboard_ptr = (char *)xalloc(data->width * data->height);
-	data->xboard_ptr = (char *)xalloc(data->width * data->height);
-	data->xoboard_ptr = (char *)xalloc(data->width * data->height);
-	strat = get_strat();
-	strat->target_ptr = (char *)xalloc(data->width * data->height);
-	strat->player = data->oboard_ptr;
-	strat->enemy = data->oboard_ptr;
-	if (data->player == 'x')
-		strat->player = data->xboard_ptr;
-	else
-		strat->enemy = data->xboard_ptr;
-	ft_memdel((void **)&data->temp);
-	return ((data->width <= 0) || (data->height <= 0));
+	if (data->temp[pad + coord.x] == 'o' || data->temp[pad + coord.x] == 'O')
+	{
+		data->oboard_ptr[coord.y * data->width + coord.x] = 1;
+		data->xoboard_ptr[coord.y * data->width + coord.x] = 1;
+	}
+	if (data->temp[pad + coord.x] == 'x' || data->temp[pad + coord.x] == 'X')
+	{
+		data->xboard_ptr[coord.y * data->width + coord.x] = 1;
+		data->xoboard_ptr[coord.y * data->width + coord.x] = 1;
+	}
+	if (strat->enemy[coord.x + coord.y * data->width])
+		ft_dintarr_add(&strat->enemy_shape, coord.x + coord.y * data->width);
 }
 
-int	can_read_board(t_data *data, t_dintarr *enemy_shape)
+int	can_read_board(t_data *data, t_strat *strat)
 {
-	const t_strat	*strat = get_strat();
 	const int		pad = (int)(ft_strchr(data->temp, ' ') - data->temp) + 1;
-	int				row;
-	int				x;
+	t_coord			coord;
 
-	row = -1;
-	while (++row < data->height)
+	coord.y = 0;
+	while (coord.y < data->height)
 	{
-		x = -1;
-		while (++x < data->width)
+		coord.x = 0;
+		while (coord.x < data->width)
 		{
-			if (data->temp[pad + x] == 'o' || data->temp[pad + x] == 'O')
-				data->oboard_ptr[row * data->width + x] = 1;
-			if (data->temp[pad + x] == 'x' || data->temp[pad + x] == 'X')
-				data->xboard_ptr[row * data->width + x] = 1;
-			if (strat->enemy[x + row * data->width])
-			{
-//				ft_putstr_fd("add to enemy_shape\n", 2);
-				ft_dintarr_add(&enemy_shape, x + row * data->width);
-			}
-			data->xoboard_ptr[row * data->width + x] = \
-					data->oboard_ptr[row * data->width + x] ||\
-					data->xboard_ptr[row * data->width + x];
+			check_board_cell(data, pad, coord, strat);
+			coord.x++;
 		}
+		coord.y++;
 		ft_memdel((void **)&data->temp);
 		ft_getline(0, &(data->temp));
 	}
 	return (ft_strncmp(data->temp, "Piece ", 6) == 0);
 }
 
-static void	check_cell(t_data *data, t_piece *piece, int row, int col)
+static void	check_piece_cell(t_data *data, t_piece *piece, int row, int col)
 {
-	const int	cell_idx = row * piece->width + col; 
+	const int	cell_idx = row * piece->width + col;
 
 	if (data->temp[col] == '*')
 	{
@@ -109,7 +88,7 @@ int	can_read_piece(t_data *data, t_piece *piece)
 		ft_getline(0, &(data->temp));
 		col = 0;
 		while (col < piece->width)
-			check_cell(data, piece, row, col++);
+			check_piece_cell(data, piece, row, col++);
 		row++;
 	}
 	if ((piece->rect.x2 - piece->rect.x1 <= data->width) && \

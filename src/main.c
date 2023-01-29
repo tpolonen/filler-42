@@ -12,6 +12,33 @@
 
 #include "filler.h"
 
+static int	init_data(t_data *data)
+{
+	char		*seek;
+	t_strat		*strat;
+
+	ft_getline(0, &(data->temp));
+	if ((ft_strncmp(data->temp, "Plateau ", 8)) || \
+			(ft_strchr(data->temp, ':') == NULL))
+		return (6);
+	seek = data->temp + 8;
+	data->height = (int)ft_strtol(seek, &seek);
+	data->width = (int)ft_strtol(seek, &seek);
+	data->oboard_ptr = (char *)xalloc(data->width * data->height);
+	data->xboard_ptr = (char *)xalloc(data->width * data->height);
+	data->xoboard_ptr = (char *)xalloc(data->width * data->height);
+	strat = get_strat();
+	strat->target_ptr = (char *)xalloc(data->width * data->height);
+	strat->player = data->oboard_ptr;
+	strat->enemy = data->oboard_ptr;
+	if (data->player == 'x')
+		strat->player = data->xboard_ptr;
+	else
+		strat->enemy = data->xboard_ptr;
+	ft_memdel((void **)&data->temp);
+	return ((data->width <= 0) || (data->height <= 0));
+}
+
 static void	cell_to_move(int cell)
 {
 	static t_coord	coord;
@@ -23,7 +50,8 @@ static void	cell_to_move(int cell)
 	data = get_data();
 	ft_bzero((void *)buf, 100);
 	ptr = buf;
-	coord = (t_coord){cell % data->width - rect.x1, cell / data->width - rect.y1};
+	coord = (t_coord){cell % data->width - rect.x1, \
+		cell / data->width - rect.y1};
 	ft_memdel((void **)&data->temp);
 	ptr = ft_tobase(coord.y, 10, ptr);
 	*ptr++ = ' ';
@@ -48,7 +76,7 @@ static int	can_make_move(t_data *data, int *error, t_strat *strat)
 	ft_bzero(data->xoboard_ptr, data->width * data->height);
 	if (!ft_dintarr_clear(&strat->enemy_shape))
 		ft_dintarr_create(&strat->enemy_shape, 128, "Enemy shape");
-	if (!can_read_board(data, strat->enemy_shape) || \
+	if (!can_read_board(data, strat) || \
 		!can_read_piece(data, get_piece()))
 	{
 		*error = 10;

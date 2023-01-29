@@ -88,13 +88,6 @@ void	find_new_target(t_strat *strat)
 
 	if (!ft_dintarr_clear(&strat->target_shape))
 		ft_dintarr_create(&strat->target_shape, 128, "Target shape");
-	/*
-	ft_putstr_fd("target_shape->alloced:", 2);
-	ft_putnbr_fd((int)strat->target_shape->alloced, 2);
-	ft_putstr_fd(" len:", 2);
-	ft_putnbr_fd((int)strat->target_shape->len, 2);
-	ft_putstr_fd("\n", 2);
-	*/
 	strat->values_arr = (int *)xalloc(sizeof(int) * strat->enemy_shape->len);
 	find_values(strat->enemy_shape);
 	tactics = get_tactics();

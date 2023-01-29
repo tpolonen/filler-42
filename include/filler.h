@@ -36,8 +36,7 @@
 # include "structs.h"
 
 /* scout.c */
-int			init_data(t_data *data);
-int			can_read_board(t_data *data, t_dintarr *enemy_shape);
+int			can_read_board(t_data *data, t_strat *strat);
 int			can_read_piece(t_data *data, t_piece *piece);
 int			set_player(t_data *data);
 
@@ -74,5 +73,6 @@ void		*xalloc(size_t min_size);
 
 /* debug.c */
 void		debug_print(char *ptr, int width, int height);
+void 		print_valid_moves(t_data *data, t_dintarr *valid_moves);
 
 #endif

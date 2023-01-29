@@ -51,45 +51,6 @@ int	clean_exit(t_data *data, const char *str, int error)
 	return (error);
 }
 
-void print_piece(const t_piece *piece, const t_data *data)
-{
-	char	buf[1000];
-	const int	size = data->width * piece->height;
-	const int	width = data->width;
-	int i = 0;
-
-	ft_bzero((void *)buf, size);
-	ft_putendl("\nby bitmap:");
-	while (i < size)
-	{
-		if (i % width == 0) {
-			ft_putchar('\n');
-		}
-		if (*(piece->ptr + i) == 1) {
-			ft_putchar('1');
-		}
-		else {
-			ft_putchar('0');
-		}
-		i++;
-	}
-	ft_putendl("\nby shape:");
-	i = 0;
-	while (i < (int)piece->shape->len)
-		buf[i++] = 1;
-	i = 0;
-	while (i < size)
-	{
-		if (i % width == 0)
-			ft_putchar('\n');
-		if (*(piece->ptr + i) == 1)
-			ft_putchar('1');
-		else
-			ft_putchar('0');
-		i++;
-	}
-}
-
 t_coord	cell_to_coord(int cell, int board_width)
 {
 	return ((t_coord){cell % board_width, cell / board_width});
@@ -100,7 +61,7 @@ char	*make_piece_bitmap(t_piece *piece, int board_width)
 	char	*ptr;
 	int		shape_idx;
 	int		cell_idx;
-	t_coord coord;
+	t_coord	coord;
 
 	ptr = (char *)xalloc(piece->height * board_width);
 	shape_idx = 0;
