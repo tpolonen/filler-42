@@ -95,7 +95,7 @@ void	find_new_target(t_strat *strat)
 		ft_dintarr_create(&tactics->source, 64, "Source");
 	find_source(strat->values_arr, strat->enemy_shape, tactics->source);
 	floodfill(tactics, strat, data->xoboard_ptr, \
-			ft_min(15, strat->free_space / 3));
+			ft_min(25, strat->free_space / 3));
 	ft_bzero((void *)strat->target_ptr, data->width * data->height);
 	i = 0;
 	while (i < strat->target_shape->len)

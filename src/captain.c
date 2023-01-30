@@ -57,7 +57,7 @@ static void	get_dist_scores(t_tactics *tactics, t_strat *strat)
 	}
 }
 
-static void	check_validity(t_data *data, t_piece *piece, t_tactics *tactics)
+static int	valid_moves_exist(t_data *data, t_piece *piece, t_tactics *tactics)
 {
 	t_coord	cell;
 	int		enemy_cell_hits;
@@ -80,6 +80,9 @@ static void	check_validity(t_data *data, t_piece *piece, t_tactics *tactics)
 		}
 		cell.y++;
 	}
+	if (DEBUG)
+		print_valid_moves(data, tactics->valid_moves);
+	return (tactics->valid_moves->len != 0);
 }
 
 static int	best_move_exists(t_piece *piece, int *nearest, int *best)
@@ -97,7 +100,8 @@ static int	best_move_exists(t_piece *piece, int *nearest, int *best)
 	count_board_matches(piece, strat->player, tactics->player_hits);
 	if (!ft_dintarr_clear(&tactics->valid_moves))
 		ft_dintarr_create(&tactics->valid_moves, 64, "Valid moves");
-	check_validity(get_data(), piece, tactics);
+	if (!valid_moves_exist(get_data(), piece, tactics))
+		return (0);
 	get_juice_scores(tactics);
 	*best = find_juiciest_cell(tactics);
 	if (*best < 0)

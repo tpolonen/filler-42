@@ -54,9 +54,13 @@ ifeq ($(OS), Windows_NT)
 	BIN := tpolonen.exe
 endif
 
-.PHONY: all clean fclean re
+.PHONY: all clean fclean re debug
 
 all: lib $(BIN)
+
+debug: CPPFLAGS += -DDEBUG_ON
+debug: CFLAGS += -DDEBUG_ON
+debug: lib $(BIN)
 
 lib:
 	@make -C $(LIB_DIR)

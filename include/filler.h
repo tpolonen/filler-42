@@ -32,6 +32,12 @@
 #  include <limits.h>
 # endif
 
+# ifdef DEBUG_ON
+#  define DEBUG 1
+# else
+#  define DEBUG 0
+# endif
+
 # include "libft.h"
 # include "structs.h"
 
