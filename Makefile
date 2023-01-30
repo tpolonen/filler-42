@@ -38,7 +38,7 @@ CC			:= gcc
 CFLAGS		:= -g -c -Wall -Wextra -Werror 
 CPPFLAGS 	:= -I$(LIBHEADER_DIR) -I$(HEADER_DIR) 
 LDFLAGS 	:= -L$(LIB_DIR)
- LDFLAGS		+= -fsanitize=address -fsanitize=undefined -fno-sanitize-recover=all -fsanitize=float-divide-by-zero -fsanitize=float-cast-overflow -fno-sanitize=null -fno-sanitize=alignment 
+#LDFLAGS		+= -fsanitize=address -fsanitize=undefined -fno-sanitize-recover=all -fsanitize=float-divide-by-zero -fsanitize=float-cast-overflow -fno-sanitize=null -fno-sanitize=alignment 
 LDLIBS 		:= -lft
 
 BIN := tpolonen.filler

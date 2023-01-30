@@ -64,10 +64,10 @@ static void	check_validity(t_data *data, t_piece *piece, t_tactics *tactics)
 	int		player_cell_hits;
 
 	cell.y = 0;
-	while (cell.y <= data->height - (piece->rect.y2 - piece->rect.y1))
+	while (cell.y < data->height - (piece->rect.y2 - piece->rect.y1))
 	{
 		cell.x = 0;
-		while (cell.x <= data->width - (piece->rect.x2 - piece->rect.x1))
+		while (cell.x < data->width - (piece->rect.x2 - piece->rect.x1))
 		{
 			enemy_cell_hits = tactics->enemy_hits->arr[cell.y * \
 						data->width + cell.x];

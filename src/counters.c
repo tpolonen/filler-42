@@ -17,12 +17,11 @@ int	count(char *left, char *right, int n)
 	int	ret;
 
 	ret = 0;
-	while (n > 0)
+	while (n-- > 0)
 	{
 		ret += *left & *right;
 		left++;
 		right++;
-		n--;
 	}
 	return (ret);
 }
@@ -35,7 +34,8 @@ static int	matches_for_coord(t_coord *coord, t_piece *piece, char *board)
 	int				ret;
 
 	cell_to_start = coord->x + (coord->y * data->width);
-	check_size = data->width * (piece->rect.y2 - piece->rect.y1 + 1);
+	check_size = ft_min(data->width * (piece->rect.y2 - piece->rect.y1 + 1),
+			(data->width * data->height) - cell_to_start);
 	ret = count(board + cell_to_start, piece->ptr, check_size);
 	return (ret);
 }
@@ -93,7 +93,7 @@ int	find_closest_cell(t_tactics *tactics)
 
 	i = 0;
 	shortest_dist = INT_MAX;
-	closest_cell = tactics->valid_moves->arr[tactics->valid_moves->len - 1];
+	closest_cell = tactics->valid_moves->arr[0];
 	while (i < (int)tactics->distances->len)
 	{
 		if (tactics->distances->arr[i] < shortest_dist)

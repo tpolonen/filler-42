@@ -97,6 +97,7 @@ int	main(void)
 	error = set_player(data);
 	if (error)
 		return (clean_exit(data, "Error in player data: ", error));
+	ft_memdel((void **)&data->temp);
 	error = init_data(data);
 	if (error)
 		return (clean_exit(data, "Error in map header: ", error));
