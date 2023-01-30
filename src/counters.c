@@ -61,6 +61,11 @@ void	count_board_matches(t_piece *piece, char *board, t_dintarr *out)
 		}
 		cell.y++;
 	}
+	while (cell.y < data->height)
+	{
+		ft_dintarr_add(&out, 0);
+		cell.y++;
+	}
 }
 
 int	find_juiciest_cell(t_tactics *tactics)
@@ -68,8 +73,10 @@ int	find_juiciest_cell(t_tactics *tactics)
 	int		hiscore;
 	int		best_cell;	
 	int		i;
+	int		hit;
 
 	i = 0;
+	hit = 0;
 	hiscore = -1;
 	best_cell = -1;
 	while (i < (int)tactics->juice_scores->len)
@@ -79,9 +86,12 @@ int	find_juiciest_cell(t_tactics *tactics)
 		{
 			best_cell = tactics->valid_moves->arr[i];
 			hiscore = tactics->juice_scores->arr[i];
+			hit = i;
 		}
 		i++;
 	}
+	if (DEBUG && best_cell >= 0)
+		print_debug_choice(hit, hiscore, "juiciness");
 	return (best_cell);
 }
 
@@ -90,8 +100,10 @@ int	find_closest_cell(t_tactics *tactics)
 	int		shortest_dist;
 	int		closest_cell;
 	int		i;
+	int		hit;
 
 	i = 0;
+	hit = 0;
 	shortest_dist = INT_MAX;
 	closest_cell = tactics->valid_moves->arr[0];
 	while (i < (int)tactics->distances->len)
@@ -100,8 +112,11 @@ int	find_closest_cell(t_tactics *tactics)
 		{
 			closest_cell = tactics->valid_moves->arr[i];
 			shortest_dist = tactics->distances->arr[i];
+			hit = i;
 		}
 		i++;
 	}
+	if (DEBUG && shortest_dist < INT_MAX)
+		print_debug_choice(hit, shortest_dist, "distance");
 	return (closest_cell);
 }

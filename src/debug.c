@@ -12,35 +12,6 @@
 
 #include "filler.h"
 
-void	debug_print(char *ptr, int width, int height)
-{
-	int	row;
-	int	col;
-
-	col = 0;
-	ft_putstr("\t");
-	while (col < width)
-		ft_putchar('0' + (col++ % 10));
-	ft_putendl("");
-	row = -1;
-	while (++row < height)
-	{
-		col = -1;
-		ft_putnbr(row);
-		ft_putstr("\t");
-		while (++col < width)
-		{
-			if (ptr[(row * width) + col] == 1)
-				ft_putchar('*');
-			else if (ptr[(row * width) + col])
-				ft_putchar(ptr[(row * width) + col]);
-			else
-				ft_putchar('.');
-		}
-		ft_putendl("");
-	}
-}
-
 static void	fill_debug_board(char *output, t_data *data, t_strat *strat,
 		t_dintarr *valid_moves)
 {
@@ -91,6 +62,7 @@ void	print_valid_moves(t_data *data, t_dintarr *valid_moves)
 
 	if (strat->victory)
 		ft_putstr_fd("\nVICTORY", 2);
+	print_debug_piece(get_piece());
 	ft_putstr_fd("\nvalid moves len:", 2);
 	ft_putnbr_fd(valid_moves->len, 2);
 	ft_putstr_fd("\ntarget arr len:", 2);
@@ -100,4 +72,35 @@ void	print_valid_moves(t_data *data, t_dintarr *valid_moves)
 	fill_debug_board(output, data, (t_strat *)strat, valid_moves);
 	print_debug_board(data, output, width);
 	free(output);
+}
+
+void	print_debug_choice(int hit, int score, const char *type)
+{
+	ft_putchar_fd('A' + hit, 2);
+	ft_putstr_fd(" was chosen for it's ", 2);
+	ft_putstr_fd(type, 2);
+	ft_putstr_fd(" with score of ", 2);
+	ft_putnbr_fd(score, 2);
+	ft_putendl_fd("", 2);
+}
+
+void	print_debug_piece(t_piece *piece)
+{
+	const int	width = get_data()->width;
+	const int	height = piece->rect.y2 - piece->rect.y1 + 1;
+	char		output[1024];
+	int			i;	
+
+	ft_memset((void *)output, '.', sizeof(output));
+	i = 0;
+	while (i < (int)piece->shape->len)
+		output[piece->shape->arr[i++]] = '*';
+	ft_putendl_fd("\nPiece:", 2);
+	i = 0;
+	while (i < height)
+	{
+		write(2, output + i * width, piece->rect.x2 - piece->rect.x1 + 1);
+		write(2, "\n", 1);
+		i++;
+	}
 }

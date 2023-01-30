@@ -19,6 +19,8 @@ static void	close_dintarrs(t_tactics *tactics,
 		ft_dintarr_close(&strat->enemy_shape, NULL);
 	if (strat->target_shape)
 		ft_dintarr_close(&strat->target_shape, NULL);
+	if (strat->values_darr)
+		ft_dintarr_close(&strat->values_darr, NULL);
 	if (tactics->source)
 		ft_dintarr_close(&tactics->source, NULL);
 	if (tactics->valid_moves)
@@ -41,7 +43,6 @@ int	clean_exit(t_data *data, const char *str, int error)
 	ft_memdel((void **)&data->temp);
 	ft_memdel((void **)&get_piece()->ptr);
 	ft_memdel((void **)&get_strat()->target_ptr);
-	ft_memdel((void **)&get_strat()->values_arr);
 	close_dintarrs(get_tactics(), get_strat());
 	if (str)
 		ft_putstr(str);
@@ -63,7 +64,7 @@ char	*make_piece_bitmap(t_piece *piece, int board_width)
 	int		cell_idx;
 	t_coord	coord;
 
-	ptr = (char *)xalloc(piece->height * board_width);
+	ptr = (char *)xalloc((piece->rect.y2 - piece->rect.y1 + 1) * board_width);
 	shape_idx = 0;
 	while (ptr && shape_idx < (int)piece->shape->len)
 	{

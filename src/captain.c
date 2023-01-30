@@ -74,7 +74,7 @@ static int	valid_moves_exist(t_data *data, t_piece *piece, t_tactics *tactics)
 			player_cell_hits = tactics->player_hits->arr[cell.y * \
 						data->width + cell.x];
 			if (enemy_cell_hits == 0 && player_cell_hits == 1)
-				ft_dintarr_add(&tactics->valid_moves,
+				ft_dintarr_add(&tactics->valid_moves, \
 					cell.y * data->width + cell.x);
 			cell.x++;
 		}

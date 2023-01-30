@@ -12,6 +12,7 @@
 
 #include "filler.h"
 #include "libft.h"
+#include <stdio.h>
 
 static inline int	out_of_bounds(int dir, int cell, int width, int height)
 {
@@ -40,9 +41,9 @@ static void	explore(char *board, int cell, int wall, t_dintarr *area)
 	dir = -1;
 	while (++dir < 4)
 	{
-		if (out_of_bounds(dir, cell, width, height))
-			continue ;
 		next = next_cell(dir, cell, width);
+		if (next >= width * height || out_of_bounds(dir, cell, width, height))
+			continue ;
 		if (board[next] != wall)
 		{
 			board[next] = wall;
@@ -54,20 +55,20 @@ static void	explore(char *board, int cell, int wall, t_dintarr *area)
 void	floodfill(t_tactics *tactics, t_strat *strat, char *board,
 		size_t max_area)
 {
-	char		*copy;
-	int			wall;
-	size_t		i;
+	const t_data	*data = get_data();
+	char			*copy;
+	int				wall;
+	size_t			i;
 
-	copy = (char *)xalloc(get_data()->width * get_data()->height);
+	copy = (char *)xalloc(data->width * data->height);
 	if (!copy)
 		return ;
 	wall = board[tactics->source->arr[0]];
-	ft_memcpy(copy, board, get_data()->width * get_data()->height);
+	ft_memcpy(copy, board, data->width * data->height);
 	i = 0;
 	while (i < tactics->source->len)
 		explore(copy, tactics->source->arr[i++], wall, strat->target_shape);
 	i = 0;
-	copy[strat->target_shape->arr[i]] = wall;
 	while (i < strat->target_shape->len && strat->target_shape->len < max_area)
 		explore(copy, strat->target_shape->arr[i++], wall, strat->target_shape);
 	ft_memdel((void **) &copy);

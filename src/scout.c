@@ -47,24 +47,35 @@ int	can_read_board(t_data *data, t_strat *strat)
 		ft_memdel((void **)&data->temp);
 		ft_getline(0, &(data->temp));
 	}
+	if (DEBUG)
+		ft_putendl_fd("Board read ok", 2);
 	return (ft_strncmp(data->temp, "Piece ", 6) == 0);
 }
 
-static void	check_piece_cell(t_data *data, t_piece *piece, int row, int col)
+static void	check_piece_row(t_data *data, t_piece *piece, int row)
 {
-	const int	cell_idx = row * piece->width + col;
+	int	cell_idx;
+	int	col;
 
-	if (data->temp[col] == '*')
+	ft_memdel((void **)&data->temp);
+	ft_getline(0, &(data->temp));
+	col = 0;
+	while (col < piece->width)
 	{
-		if (col > piece->rect.x2)
-			piece->rect.x2 = col;
-		if (col < piece->rect.x1)
-			piece->rect.x1 = col;
-		if (row > piece->rect.y2)
-			piece->rect.y2 = row;
-		if (row < piece->rect.y1)
-			piece->rect.y1 = row;
-		ft_dintarr_add(&piece->shape, cell_idx);
+		cell_idx = row * piece->width + col;
+		if (data->temp[col] == '*')
+		{
+			if (col > piece->rect.x2)
+				piece->rect.x2 = col;
+			if (col < piece->rect.x1)
+				piece->rect.x1 = col;
+			if (row > piece->rect.y2)
+				piece->rect.y2 = row;
+			if (row < piece->rect.y1)
+				piece->rect.y1 = row;
+			ft_dintarr_add(&piece->shape, cell_idx);
+		}
+		col++;
 	}
 }
 
@@ -72,7 +83,6 @@ int	can_read_piece(t_data *data, t_piece *piece)
 {
 	char	*seek;
 	int		row;
-	int		col;
 
 	seek = data->temp + 6;
 	piece->height = (int)ft_strtol(seek, &seek);
@@ -83,17 +93,12 @@ int	can_read_piece(t_data *data, t_piece *piece)
 		ft_dintarr_create(&piece->shape, 32, "Piece");
 	row = 0;
 	while (row < piece->height)
-	{
-		ft_memdel((void **)&data->temp);
-		ft_getline(0, &(data->temp));
-		col = 0;
-		while (col < piece->width)
-			check_piece_cell(data, piece, row, col++);
-		row++;
-	}
+		check_piece_row(data, piece, row++);
 	if ((piece->rect.x2 - piece->rect.x1 <= data->width) && \
 			(piece->rect.y2 - piece->rect.y2 <= data->height))
 		piece->ptr = make_piece_bitmap(piece, data->width);
+	if (DEBUG)
+		ft_putendl_fd("Piece read ok", 2);
 	return (piece->ptr != NULL);
 }
 

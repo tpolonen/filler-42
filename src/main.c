@@ -12,7 +12,7 @@
 
 #include "filler.h"
 
-static int	init_data(t_data *data)
+int	init_data(t_data *data)
 {
 	char		*seek;
 	t_strat		*strat;
@@ -57,6 +57,12 @@ static void	cell_to_move(int cell)
 	*ptr++ = ' ';
 	ptr = ft_tobase(coord.x, 10, ptr);
 	data->temp = ft_strdup(buf);
+	if (DEBUG)
+	{
+		ft_putstr_fd("Chose this move: [", 2);
+		ft_putstr_fd(buf, 2);
+		ft_putendl_fd("]", 2);
+	}
 }
 
 static int	can_make_move(t_data *data, int *error, t_strat *strat)

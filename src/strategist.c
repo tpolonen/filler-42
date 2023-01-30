@@ -15,7 +15,7 @@
 
 static int	should_switch_target(int turncount)
 {
-	return (turncount % 2 == 0);
+	return (turncount);
 }
 
 static void	choose_target(t_strat *strat)

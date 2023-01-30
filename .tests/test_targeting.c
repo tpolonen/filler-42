@@ -4,7 +4,6 @@
 int main(void)
 {
 	t_data		*test_data;
-	t_dintarr	*shape = get_enemy_shape();
 	t_strat		*strat = get_strat();
 	char		*output;
 	size_t		board_size;
@@ -21,7 +20,7 @@ int main(void)
 		ft_getline(0, &(test_data->temp));
 	}
 	printf("buffer contents: %s\n", test_data->temp);
-	can_read_board(test_data, shape);
+	can_read_board(test_data, strat);
 	board_size = test_data->width * test_data->height;
 	output = xalloc(board_size);
 	find_new_target(strat);

@@ -20,14 +20,6 @@ typedef struct s_coord
 	int	y;
 }	t_coord;
 
-typedef struct s_margin
-{
-	int	top;
-	int	right;
-	int	bottom;
-	int	left;
-}	t_margin;
-
 typedef struct s_rect
 {
 	int	x1;
@@ -51,7 +43,6 @@ typedef struct s_piece
 {
 	int			width;
 	int			height;
-	t_margin	margin;
 	t_rect		rect;
 	char		*ptr;
 	t_dintarr	*shape;
@@ -62,7 +53,7 @@ typedef struct s_strategy
 	char		*enemy;
 	char		*player;
 	char		*target_ptr;
-	int			*values_arr;
+	t_dintarr	*values_darr;
 	t_dintarr	*target_shape;
 	t_dintarr	*enemy_shape;
 	int			free_space;
