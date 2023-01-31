@@ -1,3 +1,0 @@
-settings set target.load-cwd-lldbinit true
-settings set target.input-path ./testmap2
-b floodfill

@@ -38,7 +38,6 @@ CC			:= gcc
 CFLAGS		:= -g -c -Wall -Wextra -Werror 
 CPPFLAGS 	:= -I$(LIBHEADER_DIR) -I$(HEADER_DIR) 
 LDFLAGS 	:= -L$(LIB_DIR)
-#LDFLAGS		+= -fsanitize=address -fsanitize=undefined -fno-sanitize-recover=all -fsanitize=float-divide-by-zero -fsanitize=float-cast-overflow -fno-sanitize=null -fno-sanitize=alignment 
 LDLIBS 		:= -lft
 
 BIN := tpolonen.filler
@@ -56,13 +55,15 @@ endif
 
 .PHONY: all clean fclean re debug
 
-all: lib $(BIN)
+all: $(LIB_DIR)libft.a $(BIN)
 
 debug: CPPFLAGS += -DDEBUG_ON
 debug: CFLAGS += -DDEBUG_ON
-debug: lib $(BIN)
+debug: LDFLAGS += -fsanitize=address -fsanitize=undefined \
+	-fno-sanitize-recover=all -fno-sanitize=null -fno-sanitize=alignment 
+debug: all
 
-lib:
+$(LIB_DIR)libft.a:
 	@make -C $(LIB_DIR)
 	@echo "Compiled library"
 

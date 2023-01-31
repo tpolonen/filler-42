@@ -120,7 +120,7 @@ int	get_next_move(void)
 
 	nearest = 0;
 	best = -1;
-	if (get_strat()->victory > 1)
+	if (DEBUG && get_strat()->victory > 1)
 		return (0);
 	if (best_move_exists(get_piece(), &nearest, &best))
 		return (best);
