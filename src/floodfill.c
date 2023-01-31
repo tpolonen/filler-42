@@ -49,7 +49,7 @@ static void	explore(char *board, int cell, int wall, t_dintarr *area)
 				ft_dintarr_add(&area, next);
 			}
 		}
-		dir++;		
+		dir++;
 	}
 }
 

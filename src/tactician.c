@@ -63,16 +63,18 @@ void	find_values(t_strat *strat)
 	cell_index = 0;
 	while (cell_index < strat->enemy_shape->len)
 	{
-		dir = -1;
+		dir = 0;
 		value = 0;
-		while (++dir < 8)
+		while (dir < 8)
 		{
-			if (out_of_bounds(dir, strat->enemy_shape->arr[cell_index], \
+			if (!out_of_bounds(dir, strat->enemy_shape->arr[cell_index], \
 						data->width, data->height))
-				continue ;
-			if (!data->xoboard_ptr[next_cell(dir, \
-						strat->enemy_shape->arr[cell_index], data->width)])
-				value++;
+			{
+				if (!data->xoboard_ptr[next_cell(dir, \
+							strat->enemy_shape->arr[cell_index], data->width)])
+					value++;
+			}
+			dir++;
 		}
 		ft_dintarr_add(&strat->values_darr, value);
 		cell_index++;
