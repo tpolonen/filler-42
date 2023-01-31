@@ -6,7 +6,7 @@
 /*   By: tpolonen <tpolonen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/01 19:16:16 by tpolonen          #+#    #+#             */
-/*   Updated: 2022/10/12 19:46:21 by tpolonen         ###   ########.fr       */
+/*   Updated: 2023/01/31 19:07:00 by tpolonen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,7 +61,7 @@ static void	cell_to_move(int cell)
 	{
 		ft_putstr_fd("Chose this move: [", 2);
 		ft_putstr_fd(buf, 2);
-		ft_putendl_fd("]", 2);
+		ft_putendl_fd("]\n", 2);
 	}
 }
 

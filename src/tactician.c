@@ -6,7 +6,7 @@
 /*   By: tpolonen <tpolonen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/01 17:48:51 by tpolonen          #+#    #+#             */
-/*   Updated: 2023/01/14 19:32:48 by tpolonen         ###   ########.fr       */
+/*   Updated: 2023/01/31 19:07:41 by tpolonen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,8 +19,8 @@ static inline int	out_of_bounds(int dir, int cell, int width, int height)
 
 	return ((cell % width == 0 && dirs[dir][0] < 0) || \
 				(cell % width == width - 1 && dirs[dir][0] > 0) || \
-				(cell < width && dirs[dir][1] < 0) || \
-				(cell > width * (height - 1) && dirs[dir][1] > 0));
+				((cell < width) && (dirs[dir][1] < 0)) || \
+				((cell >= (width * (height - 1))) && (dirs[dir][1] > 0)));
 }
 
 static inline int	next_cell(int dir, int cell, int width)
@@ -31,7 +31,7 @@ static inline int	next_cell(int dir, int cell, int width)
 	return (cell + dirs[dir][0] + (dirs[dir][1] * width));
 }
 
-static void	find_source(int *values, t_dintarr *shape, t_dintarr *source)
+static void	find_source(t_dintarr *values, t_dintarr *shape, t_dintarr *source)
 {
 	int			max;
 	int			i;
@@ -40,14 +40,14 @@ static void	find_source(int *values, t_dintarr *shape, t_dintarr *source)
 	i = 0;
 	while ((size_t) i < shape->len)
 	{
-		if (values[i] > max)
-			max = values[i];
+		if (values->arr[i] > max)
+			max = values->arr[i];
 		i++;
 	}
 	i = 0;
 	while ((size_t) i < shape->len)
 	{
-		if (values[i] == max)
+		if (values->arr[i] == max)
 			ft_dintarr_add(&source, shape->arr[i]);
 		i++;
 	}
@@ -93,7 +93,7 @@ void	find_new_target(t_strat *strat)
 	tactics = get_tactics();
 	if (!ft_dintarr_clear(&tactics->source))
 		ft_dintarr_create(&tactics->source, 64, "Source");
-	find_source(strat->values_darr->arr, strat->enemy_shape, tactics->source);
+	find_source(strat->values_darr, strat->enemy_shape, tactics->source);
 	floodfill(tactics, strat, data->xoboard_ptr, \
 			ft_min(25, strat->free_space / 3));
 	ft_bzero((void *)strat->target_ptr, data->width * data->height);

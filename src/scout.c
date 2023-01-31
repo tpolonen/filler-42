@@ -6,13 +6,13 @@
 /*   By: tpolonen <tpolonen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/06 16:43:16 by tpolonen          #+#    #+#             */
-/*   Updated: 2022/10/12 17:52:40 by tpolonen         ###   ########.fr       */
+/*   Updated: 2023/01/31 19:17:09 by tpolonen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "filler.h"
 
-static void	check_board_cell(t_data *data, int pad, t_coord coord,
+static int	can_read_board_cell(t_data *data, int pad, t_coord coord,
 		t_strat *strat)
 {
 	if (data->temp[pad + coord.x] == 'o' || data->temp[pad + coord.x] == 'O')
@@ -20,13 +20,17 @@ static void	check_board_cell(t_data *data, int pad, t_coord coord,
 		data->oboard_ptr[coord.y * data->width + coord.x] = 1;
 		data->xoboard_ptr[coord.y * data->width + coord.x] = 1;
 	}
-	if (data->temp[pad + coord.x] == 'x' || data->temp[pad + coord.x] == 'X')
+	else if (data->temp[pad + coord.x] == 'x' || \
+			data->temp[pad + coord.x] == 'X')
 	{
 		data->xboard_ptr[coord.y * data->width + coord.x] = 1;
 		data->xoboard_ptr[coord.y * data->width + coord.x] = 1;
 	}
+	else if (data->temp[pad + coord.x] != '.')
+		return (0);
 	if (strat->enemy[coord.x + coord.y * data->width])
 		ft_dintarr_add(&strat->enemy_shape, coord.x + coord.y * data->width);
+	return (1);
 }
 
 int	can_read_board(t_data *data, t_strat *strat)
@@ -40,7 +44,8 @@ int	can_read_board(t_data *data, t_strat *strat)
 		coord.x = 0;
 		while (coord.x < data->width)
 		{
-			check_board_cell(data, pad, coord, strat);
+			if (!can_read_board_cell(data, pad, coord, strat))
+				return (0);
 			coord.x++;
 		}
 		coord.y++;
@@ -52,13 +57,11 @@ int	can_read_board(t_data *data, t_strat *strat)
 	return (ft_strncmp(data->temp, "Piece ", 6) == 0);
 }
 
-static void	check_piece_row(t_data *data, t_piece *piece, int row)
+static int	can_read_piece_row(t_data *data, t_piece *piece, int row)
 {
 	int	cell_idx;
 	int	col;
 
-	ft_memdel((void **)&data->temp);
-	ft_getline(0, &(data->temp));
 	col = 0;
 	while (col < piece->width)
 	{
@@ -75,8 +78,11 @@ static void	check_piece_row(t_data *data, t_piece *piece, int row)
 				piece->rect.y1 = row;
 			ft_dintarr_add(&piece->shape, cell_idx);
 		}
+		else if (data->temp[col] != '.')
+			return (0);
 		col++;
 	}
+	return (1);
 }
 
 int	can_read_piece(t_data *data, t_piece *piece)
@@ -93,7 +99,12 @@ int	can_read_piece(t_data *data, t_piece *piece)
 		ft_dintarr_create(&piece->shape, 32, "Piece");
 	row = 0;
 	while (row < piece->height)
-		check_piece_row(data, piece, row++);
+	{
+		ft_memdel((void **)&data->temp);
+		ft_getline(0, &(data->temp));
+		if (!can_read_piece_row(data, piece, row++))
+			return (0);
+	}
 	if ((piece->rect.x2 - piece->rect.x1 <= data->width) && \
 			(piece->rect.y2 - piece->rect.y2 <= data->height))
 		piece->ptr = make_piece_bitmap(piece, data->width);

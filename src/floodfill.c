@@ -11,7 +11,6 @@
 /* ************************************************************************** */
 
 #include "filler.h"
-#include "libft.h"
 #include <stdio.h>
 
 static inline int	out_of_bounds(int dir, int cell, int width, int height)
@@ -20,8 +19,8 @@ static inline int	out_of_bounds(int dir, int cell, int width, int height)
 
 	return ((cell % width == 0 && dirs[dir][0] < 0) || \
 				(cell % width == width - 1 && dirs[dir][0] > 0) || \
-				(cell < width && dirs[dir][1] < 0) || \
-				(cell > width * (height - 1) && dirs[dir][1] > 0));
+				((cell < width) && (dirs[dir][1] < 0)) || \
+				((cell >= (width * (height - 1))) && (dirs[dir][1] > 0)));
 }
 
 static inline int	next_cell(int dir, int cell, int width)
@@ -38,17 +37,19 @@ static void	explore(char *board, int cell, int wall, t_dintarr *area)
 	const int	width = get_data()->width;
 	const int	height = get_data()->height;
 
-	dir = -1;
-	while (++dir < 4)
+	dir = 0;
+	while (dir < 4)
 	{
-		next = next_cell(dir, cell, width);
-		if (next >= width * height || out_of_bounds(dir, cell, width, height))
-			continue ;
-		if (board[next] != wall)
+		if (!out_of_bounds(dir, cell, width, height))
 		{
-			board[next] = wall;
-			ft_dintarr_add(&area, next);
+			next = next_cell(dir, cell, width);
+			if (board[next] != wall)
+			{
+				board[next] = wall;
+				ft_dintarr_add(&area, next);
+			}
 		}
+		dir++;		
 	}
 }
 
@@ -56,14 +57,13 @@ void	floodfill(t_tactics *tactics, t_strat *strat, char *board,
 		size_t max_area)
 {
 	const t_data	*data = get_data();
+	const int		wall = 1;
 	char			*copy;
-	int				wall;
 	size_t			i;
 
 	copy = (char *)xalloc(data->width * data->height);
 	if (!copy)
 		return ;
-	wall = board[tactics->source->arr[0]];
 	ft_memcpy(copy, board, data->width * data->height);
 	i = 0;
 	while (i < tactics->source->len)

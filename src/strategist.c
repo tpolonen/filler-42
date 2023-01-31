@@ -6,12 +6,11 @@
 /*   By: tpolonen <tpolonen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/07 17:48:51 by tpolonen          #+#    #+#             */
-/*   Updated: 2022/10/12 20:00:35 by tpolonen         ###   ########.fr       */
+/*   Updated: 2023/01/31 19:17:09 by tpolonen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "filler.h"
-#include "libft.h"
 
 static int	should_switch_target(int turncount)
 {

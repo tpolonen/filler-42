@@ -6,7 +6,7 @@
 /*   By: tpolonen <tpolonen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/07 17:48:58 by tpolonen          #+#    #+#             */
-/*   Updated: 2022/10/07 18:34:17 by tpolonen         ###   ########.fr       */
+/*   Updated: 2023/01/31 19:06:38 by tpolonen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,7 @@ static void	fill_debug_board(char *output, t_data *data, t_strat *strat,
 	i = 0;
 	while (i < (int)valid_moves->len)
 	{
-		output[valid_moves->arr[i]] = 'A' + i;
+		output[valid_moves->arr[i]] = 'A' + (i % 52);
 		i++;
 	}
 }
@@ -76,7 +76,7 @@ void	print_valid_moves(t_data *data, t_dintarr *valid_moves)
 
 void	print_debug_choice(int hit, int score, const char *type)
 {
-	ft_putchar_fd('A' + hit, 2);
+	ft_putchar_fd('A' + (hit % 52), 2);
 	ft_putstr_fd(" was chosen for it's ", 2);
 	ft_putstr_fd(type, 2);
 	ft_putstr_fd(" with score of ", 2);
